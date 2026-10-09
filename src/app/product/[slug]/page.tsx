@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { products } from "@/data/store";
 import ProductDetailClient from "@/components/ProductDetailClient";
 
+export const instant = false;
+
 type Props = {
   params: Promise<{
     slug: string;
@@ -25,7 +27,5 @@ export default async function ProductPage({ params }: Props) {
     notFound();
   }
 
-  return (
-    <ProductDetailClient product={product} />
-  );
+  return <ProductDetailClient product={product} />;
 }
