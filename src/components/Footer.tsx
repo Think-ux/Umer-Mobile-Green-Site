@@ -3,190 +3,117 @@
 import Link from "next/link";
 
 export default function Footer() {
-  const whatsappNumber = "923000000000";
+  const phone = "03008897768";
+  const whatsapp = "923008897768";
 
   return (
-    <footer className="border-t bg-slate-950 text-white">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:grid-cols-4">
+    <footer className="border-t border-slate-800 bg-slate-950 text-white">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
 
-        {/* BRAND */}
         <div>
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500 text-xl font-black">
               U
             </div>
-
             <div>
-              <div className="text-lg font-black">
-                Umer
-              </div>
-              <div className="text-xs font-bold text-orange-400">
+              <div className="text-lg font-black">Umer</div>
+              <div className="text-xs font-bold tracking-wider text-orange-400">
                 MOBILE PARTS
               </div>
             </div>
-          </div>
+          </Link>
 
           <p className="mt-5 text-sm leading-6 text-slate-400">
-            Quality mobile spare parts, displays, batteries,
-            charging parts and accessories across Pakistan.
+            Find mobile spare parts for your device, including displays,
+            batteries, charging parts and other replacement components.
           </p>
         </div>
 
-        {/* QUICK LINKS */}
         <div>
-          <h3 className="text-lg font-black">
-            Quick Links
-          </h3>
-
+          <h3 className="text-base font-bold">Quick Links</h3>
           <div className="mt-5 flex flex-col gap-3 text-sm text-slate-400">
-            <Link
-              href="/"
-              className="transition hover:text-orange-400"
-            >
-              Home
-            </Link>
-
-            <Link
-              href="/shop/displays"
-              className="transition hover:text-orange-400"
-            >
-              Shop
-            </Link>
-
-            <Link
-              href="/search"
-              className="transition hover:text-orange-400"
-            >
-              Search Parts
-            </Link>
-
-            <Link
-              href="/cart"
-              className="transition hover:text-orange-400"
-            >
-              Shopping Cart
-            </Link>
-
-            <Link
-              href="/retailer"
-              className="transition hover:text-orange-400"
-            >
-              For Retailers
-            </Link>
+            <Link className="hover:text-orange-400" href="/">Home</Link>
+            <Link className="hover:text-orange-400" href="/shop/displays">Shop Products</Link>
+            <Link className="hover:text-orange-400" href="/search">Search Products</Link>
+            <Link className="hover:text-orange-400" href="/cart">Shopping Cart</Link>
+            <Link className="hover:text-orange-400" href="/track-order">Track Order</Link>
+            <Link className="hover:text-orange-400" href="/retailer">For Retailers</Link>
           </div>
         </div>
 
-        {/* CUSTOMER CARE */}
         <div>
-          <h3 className="text-lg font-black">
-            Customer Care
-          </h3>
+          <h3 className="text-base font-bold">Product Categories</h3>
+          <div className="mt-5 flex flex-col gap-3 text-sm text-slate-400">
+            <Link className="hover:text-orange-400" href="/shop/displays">Displays</Link>
+            <Link className="hover:text-orange-400" href="/shop/batteries">Batteries</Link>
+            <Link className="hover:text-orange-400" href="/shop/charging-parts">Charging Parts</Link>
+            <Link className="hover:text-orange-400" href="/shop/camera-parts">Camera Parts</Link>
+            <Link className="hover:text-orange-400" href="/shop/housing">Housing</Link>
+            <Link className="hover:text-orange-400" href="/shop/flex">Flex</Link>
+          </div>
+        </div>
 
-          <div className="mt-5 space-y-4 text-sm">
+        <div>
+          <h3 className="text-base font-bold">Contact Us</h3>
 
+          <div className="mt-5 flex flex-col gap-5 text-sm">
             <a
-              href={`https://wa.me/${whatsappNumber}`}
+              href={`https://wa.me/${whatsapp}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 text-slate-300 transition hover:text-green-400"
+              className="flex items-start gap-3 text-slate-300 hover:text-green-400"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-500 font-black text-white">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-green-600 text-xl">
                 W
               </span>
-
-              <div>
-                <div className="font-bold">
-                  WhatsApp
-                </div>
-                <div className="text-xs text-slate-500">
-                  Chat with us
-                </div>
-              </div>
+              <span>
+                <span className="block font-bold">WhatsApp</span>
+                <span className="mt-1 block text-slate-400">{phone}</span>
+                <span className="block text-xs text-slate-500">Chat with us</span>
+              </span>
             </a>
 
             <a
-              href="tel:+923000000000"
-              className="flex items-center gap-3 text-slate-300 transition hover:text-orange-400"
+              href={`tel:+92${phone.substring(1)}`}
+              className="flex items-start gap-3 text-slate-300 hover:text-orange-400"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-500 font-black text-white">
-                ☎
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-orange-500 text-xl">
+                {"\u260E"}
               </span>
-
-              <div>
-                <div className="font-bold">
-                  Call Us
-                </div>
-                <div className="text-xs text-slate-500">
-                  0300 0000000
-                </div>
-              </div>
+              <span>
+                <span className="block font-bold">Mobile Contact</span>
+                <span className="mt-1 block text-slate-400">{phone}</span>
+                <span className="block text-xs text-slate-500">Call us</span>
+              </span>
             </a>
 
-            <div className="text-slate-400">
-              <div className="font-bold text-slate-300">
-                Business Hours
-              </div>
-              <div className="mt-1">
-                Monday - Saturday
-              </div>
-              <div>
-                10:00 AM - 8:00 PM
-              </div>
+            <div className="flex items-start gap-3 text-slate-300">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-800 text-xl">
+                {"\u{1F4CD}"}
+              </span>
+              <span>
+                <span className="block font-bold">Our Location</span>
+                <span className="mt-1 block leading-6 text-slate-400">
+                  Zam Zam Mall, Singhpura, Lahore
+                </span>
+                <a
+                  className="mt-2 inline-block text-xs font-semibold text-orange-400 hover:text-orange-300"
+                  href="https://www.google.com/maps/search/?api=1&query=Zam+Zam+Mall+Singhpura+Lahore"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View on Map
+                </a>
+              </span>
             </div>
-
           </div>
         </div>
-
-        {/* CONTACT */}
-        <div>
-          <h3 className="text-lg font-black">
-            Contact
-          </h3>
-
-          <div className="mt-5 space-y-4 text-sm text-slate-400">
-
-            <div>
-              <div className="font-bold text-slate-300">
-                Location
-              </div>
-              <div className="mt-1">
-                Lahore, Pakistan
-              </div>
-            </div>
-
-            <div>
-              <div className="font-bold text-slate-300">
-                Phone
-              </div>
-              <div className="mt-1">
-                0300 0000000
-              </div>
-            </div>
-
-            <div>
-              <div className="font-bold text-slate-300">
-                Email
-              </div>
-              <div className="mt-1">
-                support@umermobileparts.com
-              </div>
-            </div>
-
-          </div>
-        </div>
-
       </div>
 
-      {/* BOTTOM */}
       <div className="border-t border-slate-800">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-5 text-center text-xs text-slate-500 md:flex-row md:items-center md:justify-between md:text-left">
-          <p>
-            © 2026 Umer Mobile Parts. All rights reserved.
-          </p>
-
-          <p>
-            Trusted Mobile Parts Store in Pakistan
-          </p>
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-5 text-center text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+          <p>{"\u00A9"} 2026 Umer Mobile Parts. All rights reserved.</p>
+          <p>Mobile Spare Parts - Singhpura, Lahore</p>
         </div>
       </div>
     </footer>
