@@ -1,0 +1,70 @@
+
+> mobile-studio@0.1.0 build
+> next build
+
+▲ Next.js 16.4.0 (Turbopack)
+⚠ Warning: Next.js ignored package-lock.json in C:\Users\M.Zohaib\Desktop\MOBILE STUDIO because it is outside the current Git repository (C:\Users\M.Zohaib\Desktop\MOBILE STUDIO\Mobile-Studio).
+ To use this directory, set `turbopack.root` in your Next.js config.
+
+✓ Running next.config.ts took 54ms
+- Cache Components enabled
+- Partial Prefetching enabled
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 4 errors:
+./src/app/track-order/page.tsx:1:53
+Error: The "use client" directive must be placed before other expressions. Move it to the top of the file to resolve this issue.
+[31m[1m>[0m [90m1 |[0m ﻿[36mimport[0m { useSearchParams } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m  |[0m                                                  [31m[1m^[0m
+[31m[1m>[0m [90m2 |[0m [32m"use client"[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^[0m
+  [90m3 |[0m [36mimport[0m [33mLink[0m [36mfrom[0m [32m"next/link"[0m;
+  [90m4 |[0m [36mimport[0m { useEffect, useState } [36mfrom[0m [32m"react"[0m;
+  [90m5 |[0m
+
+Ecmascript file had an error
+
+
+./src/app/track-order/page.tsx:4:7
+Error: You're importing a module that depends on `useEffect` into a React Server Component module. This API is only available in Client Components. To fix, mark the file (or its parent) with the `"use client"` directive.
+    Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+  [90m2 |[0m [32m"use client"[0m;
+  [90m3 |[0m [36mimport[0m [33mLink[0m [36mfrom[0m [32m"next/link"[0m;
+[31m[1m>[0m [90m4 |[0m [36mimport[0m { useEffect, useState } [36mfrom[0m [32m"react"[0m;
+  [90m  |[0m       [31m[1m^^^^^^^^^[0m
+  [90m5 |[0m
+  [90m6 |[0m [36mtype[0m [33mOrder[0m = {
+  [90m7 |[0m   orderNumber: string;
+
+Ecmascript file had an error
+
+
+./src/app/track-order/page.tsx:1:10
+Error: You're importing a module that depends on `useSearchParams` into a React Server Component module. This API is only available in Client Components. To fix, mark the file (or its parent) with the `"use client"` directive.
+    Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+[31m[1m>[0m [90m1 |[0m ﻿[36mimport[0m { useSearchParams } [36mfrom[0m [32m"next/navigation"[0m;
+  [90m  |[0m       [31m[1m^^^^^^^^^^^^^^^[0m
+  [90m2 |[0m [32m"use client"[0m;
+  [90m3 |[0m [36mimport[0m [33mLink[0m [36mfrom[0m [32m"next/link"[0m;
+  [90m4 |[0m [36mimport[0m { useEffect, useState } [36mfrom[0m [32m"react"[0m;
+
+Ecmascript file had an error
+
+
+./src/app/track-order/page.tsx:4:18
+Error: You're importing a module that depends on `useState` into a React Server Component module. This API is only available in Client Components. To fix, mark the file (or its parent) with the `"use client"` directive.
+    Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+  [90m2 |[0m [32m"use client"[0m;
+  [90m3 |[0m [36mimport[0m [33mLink[0m [36mfrom[0m [32m"next/link"[0m;
+[31m[1m>[0m [90m4 |[0m [36mimport[0m { useEffect, useState } [36mfrom[0m [32m"react"[0m;
+  [90m  |[0m                  [31m[1m^^^^^^^^[0m
+  [90m5 |[0m
+  [90m6 |[0m [36mtype[0m [33mOrder[0m = {
+  [90m7 |[0m   orderNumber: string;
+
+Ecmascript file had an error
+
+
+    at ignore-listed frames

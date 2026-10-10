@@ -1,0 +1,20 @@
+
+> mobile-studio@0.1.0 build
+> next build
+
+▲ Next.js 16.4.0 (Turbopack)
+⚠ Warning: Next.js ignored package-lock.json in C:\Users\M.Zohaib\Desktop\MOBILE STUDIO because it is outside the current Git repository (C:\Users\M.Zohaib\Desktop\MOBILE STUDIO\Mobile-Studio).
+ To use this directory, set `turbopack.root` in your Next.js config.
+
+✓ Running next.config.ts took 39ms
+- Cache Components enabled
+- Partial Prefetching enabled
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1953ms
+  Running TypeScript ...
+backups/track-order-final-20261010-065206.tsx(61,59): error TS2552: Cannot find name 'setNumber'. Did you mean 'number'?
+src/app/track-order/page.tsx(18,24): error TS2552: Cannot find name 'useSearchParams'. Did you mean 'searchParams'?
+src/app/track-order/page.tsx(60,59): error TS2552: Cannot find name 'setNumber'. Did you mean 'number'?
+Failed to type check.
+

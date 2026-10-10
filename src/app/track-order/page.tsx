@@ -1,6 +1,6 @@
 ﻿"use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from 'react';
 
 type Order = {
   orderNumber: string;
@@ -15,14 +15,15 @@ type Order = {
 const steps = ["Pending", "Processing", "Packed", "Dispatched", "Delivered"];
 
 export default function TrackOrderPage() {
-  const [number, setNumber] = useState("");
+
+const [number, setNumber] = useState("");
+// eslint-disable-next-line react-hooks/set-state-in-effect
+  const initialOrder = typeof window !== "undefined"
+    ? new URLSearchParams(window.location.search).get("order") || ""
+    : "";
   const [phone, setPhone] = useState("");
   const [order, setOrder] = useState<Order | null>(null);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    setNumber(new URLSearchParams(window.location.search).get("order") || "");
-  }, []);
 
   function track(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -53,7 +54,7 @@ export default function TrackOrderPage() {
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-12">
       <div className="mx-auto max-w-2xl">
-        <Link href="/" className="font-bold text-orange-600">← Home</Link>
+        <Link href="/" className="font-bold text-orange-600">â† Home</Link>
         <h1 className="mt-5 text-3xl font-black">Track Your Order</h1>
         <p className="mt-2 text-slate-500">Enter order number and checkout phone number.</p>
 
@@ -92,7 +93,7 @@ export default function TrackOrderPage() {
                   <div key={step} className="flex items-center gap-3">
                     <span className={`flex h-8 w-8 items-center justify-center rounded-full font-black ${
                       index >= 0 && i <= index ? "bg-green-600 text-white" : "bg-slate-100 text-slate-400"
-                    }`}>{index >= 0 && i <= index ? "✓" : i + 1}</span>
+                    }`}>{index >= 0 && i <= index ? "âœ“" : i + 1}</span>
                     <span className={index >= 0 && i <= index ? "font-bold" : "text-slate-400"}>{step}</span>
                   </div>
                 ))}
@@ -111,3 +112,5 @@ export default function TrackOrderPage() {
     </main>
   );
 }
+
+
