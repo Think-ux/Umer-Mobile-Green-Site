@@ -10,6 +10,7 @@ import {
 } from "react";
 
 import type { Product } from "@/data/store";
+import { useCatalog } from "@/components/CatalogProvider";
 import {
   emptySnapshot,
   readStorage,
@@ -82,13 +83,34 @@ function persistCart(items: CartItem[]) {
 const subscribeCart = subscribeToStorage(CART_EVENT);
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { products, settings, status } = useCatalog();
   const raw = useSyncExternalStore(
     subscribeCart,
     getCartSnapshot,
     emptySnapshot
   );
 
-  const items = useMemo(() => parseCart(raw), [raw]);
+  const items = useMemo(() => {
+    const storedItems = parseCart(raw);
+
+    return storedItems.flatMap((item) => {
+      const currentProduct = products.find(
+        (product) => product.id === item.product.id
+      );
+
+      if (!currentProduct) {
+        return status === "ready" ? [] : [item];
+      }
+      if (currentProduct.stock <= 0) {
+        return [];
+      }
+
+      return [{
+        product: currentProduct,
+        quantity: Math.min(item.quantity, currentProduct.stock),
+      }];
+    });
+  }, [raw, products, status]);
 
   const addToCart = useCallback((product: Product, quantity = 1) => {
     const safeQuantity = Math.max(1, Math.min(quantity, product.stock));
@@ -156,7 +178,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
     [items]
   );
 
-  const delivery = subtotal > 0 ? 250 : 0;
+  const delivery =
+    subtotal > 0 &&
+    settings.deliveryCharge !== null &&
+    settings.freeDeliveryThreshold !== null &&
+    subtotal < settings.freeDeliveryThreshold
+      ? settings.deliveryCharge
+      : 0;
   const total = subtotal + delivery;
 
   const value = useMemo(
@@ -182,6 +210,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeFromCart,
       updateQuantity,
       clearCart,
+      settings.freeDeliveryThreshold,
     ]
   );
 

@@ -3,19 +3,29 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "@/components/CartProvider";
-import { categories } from "@/data/store";
+import { useCatalog } from "@/components/CatalogProvider";
+import { categorySlug } from "@/data/store";
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [activeCategoryName, setActiveCategoryName] = useState<string | null>(null);
+  const [mobileCategoryName, setMobileCategoryName] = useState<string | null>(null);
   const { itemCount } = useCart();
+  const { categories, products, settings } = useCatalog();
 
-  const categoryHref = (name: string) =>
-    `/shop/${name.toLowerCase().replace(/\s+/g, "-")}`;
+  const categoryHref = (name: string) => `/shop/${categorySlug(name)}`;
+  const activeCategory =
+    categories.find((category) => category.name === activeCategoryName) ??
+    categories[0];
+  const activeCategoryProducts = activeCategory
+    ? products.filter((product) => product.category === activeCategory.name)
+    : [];
 
   const closeMenus = () => {
     setMobileOpen(false);
     setCategoriesOpen(false);
+    setMobileCategoryName(null);
   };
 
   return (
@@ -24,7 +34,7 @@ export default function Header() {
       <div className="bg-slate-950 px-3 py-2 text-center text-xs font-medium text-white sm:text-sm">
         Umer Mobile Parts
         <span className="mx-2 text-orange-400">|</span>
-        Find the right part for your device
+        Wholesale &amp; Retail
       </div>
 
       {/* Main header */}
@@ -43,10 +53,10 @@ export default function Header() {
 
             <span className="leading-tight">
               <span className="block text-lg font-black tracking-tight text-slate-950 sm:text-xl">
-                Umer
+                {settings.storeName}
               </span>
               <span className="block text-[10px] font-extrabold tracking-[0.16em] text-orange-600 sm:text-xs">
-                MOBILE PARTS
+                WHOLESALE &amp; RETAIL
               </span>
             </span>
           </Link>
@@ -121,18 +131,24 @@ export default function Header() {
           {/* Category dropdown */}
           <div
             className="relative self-stretch"
-            onMouseEnter={() => setCategoriesOpen(true)}
+            onMouseEnter={() => {
+              setCategoriesOpen(true);
+              setActiveCategoryName((current) => current ?? categories[0]?.name ?? null);
+            }}
             onMouseLeave={() => setCategoriesOpen(false)}
           >
             <button
               type="button"
               aria-expanded={categoriesOpen}
               aria-controls="desktop-category-menu"
-              onClick={() => setCategoriesOpen((value) => !value)}
+              onClick={() => {
+                setCategoriesOpen((value) => !value);
+                setActiveCategoryName((current) => current ?? categories[0]?.name ?? null);
+              }}
               className={`flex h-full items-center gap-2 border-b-[3px] px-4 text-sm font-bold transition ${
                 categoriesOpen
-                  ? "border-orange-500 bg-orange-50 text-orange-700"
-                  : "border-transparent bg-orange-500 text-white hover:bg-orange-600"
+                  ? "border-orange-500 bg-transparent text-orange-600"
+                  : "border-transparent bg-transparent text-slate-700 hover:border-orange-400 hover:text-orange-600"
               }`}
             >
               <span aria-hidden="true">☰</span>
@@ -143,30 +159,109 @@ export default function Header() {
             {categoriesOpen && (
               <div
                 id="desktop-category-menu"
-                className="absolute left-0 top-full z-50 w-72 rounded-b-xl border border-slate-200 bg-white py-2 shadow-xl"
+                className="absolute left-0 top-full z-50 grid max-h-[70vh] w-[min(56rem,calc(100vw-2rem))] grid-cols-[minmax(13rem,0.8fr)_minmax(0,1.2fr)] overflow-hidden rounded-b-2xl border border-slate-200 bg-white shadow-xl"
               >
-                {categories.map((category) => (
+                <div className="max-h-[70vh] overflow-y-auto border-r border-slate-100 p-3">
+                  <p className="px-3 py-2 text-xs font-black uppercase tracking-wider text-slate-400">
+                    Browse categories
+                  </p>
+                  {categories.map((category) => {
+                    const productCount = products.filter(
+                      (product) => product.category === category.name
+                    ).length;
+                    const active = activeCategory?.name === category.name;
+                    return (
+                      <div
+                        key={category.name}
+                        onMouseEnter={() => setActiveCategoryName(category.name)}
+                        className={`flex items-center rounded-xl ${
+                          active ? "bg-orange-50" : "hover:bg-slate-50"
+                        }`}
+                      >
+                        <Link
+                          href={categoryHref(category.name)}
+                          onClick={closeMenus}
+                          className="min-w-0 flex-1 px-3 py-3 text-sm font-bold text-slate-800"
+                        >
+                          <span className="flex items-center gap-2">
+                            {category.icon_image_url ? (
+                              <img src={category.icon_image_url} alt="" className="h-8 w-8 rounded-md object-cover" />
+                            ) : (
+                              <span aria-hidden="true" className="grid h-8 w-8 place-items-center rounded-md bg-orange-100 text-orange-600">
+                                {category.icon || "▣"}
+                              </span>
+                            )}
+                            <span className="block truncate">{category.name}</span>
+                          </span>
+                          <span className="mt-1 block text-xs font-medium text-slate-500">
+                            {productCount} {productCount === 1 ? "product" : "products"}
+                          </span>
+                        </Link>
+                        <button
+                          type="button"
+                          aria-label={`Show products in ${category.name}`}
+                          aria-pressed={active}
+                          onFocus={() => setActiveCategoryName(category.name)}
+                          onClick={() => setActiveCategoryName(category.name)}
+                          className="self-stretch px-4 text-lg text-orange-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-orange-500"
+                        >
+                          →
+                        </button>
+                      </div>
+                    );
+                  })}
                   <Link
-                    key={category.name}
-                    href={categoryHref(category.name)}
+                    href="/search"
                     onClick={closeMenus}
-                    className="flex items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-orange-50 hover:text-orange-700 focus:bg-orange-50 focus:outline-none"
+                    className="mt-2 block border-t border-slate-100 px-3 py-4 text-sm font-black text-orange-600 hover:text-orange-700"
                   >
-                    <span>{category.name}</span>
-                    <span aria-hidden="true" className="text-orange-500">
-                      →
-                    </span>
+                    Browse all products →
                   </Link>
-                ))}
-
-                <div className="mx-4 border-t border-slate-100 pt-2">
-                  <Link
-                    href="/shop/displays"
-                    onClick={closeMenus}
-                    className="block py-2 text-sm font-bold text-orange-600 hover:text-orange-700"
-                  >
-                    Browse Products →
-                  </Link>
+                </div>
+                <div className="min-h-0 overflow-y-auto p-5">
+                  {activeCategory ? (
+                    <>
+                      <div className="flex items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                        <div>
+                          <p className="text-xs font-black uppercase tracking-wider text-slate-400">
+                            Products in
+                          </p>
+                          <h2 className="mt-1 text-lg font-black text-slate-900">
+                            {activeCategory.name}
+                          </h2>
+                        </div>
+                        <Link
+                          href={categoryHref(activeCategory.name)}
+                          onClick={closeMenus}
+                          className="shrink-0 text-sm font-bold text-orange-600 hover:text-orange-700"
+                        >
+                          View category →
+                        </Link>
+                      </div>
+                      {activeCategoryProducts.length > 0 ? (
+                        <div className="mt-3 grid gap-1 sm:grid-cols-2">
+                          {activeCategoryProducts.map((product) => (
+                            <Link
+                              key={product.id}
+                              href={`/product/${product.slug}`}
+                              onClick={closeMenus}
+                              className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-700"
+                            >
+                              {product.name}
+                            </Link>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="py-8 text-sm text-slate-500">
+                          No published products in this category yet.
+                        </p>
+                      )}
+                    </>
+                  ) : (
+                    <p className="py-8 text-sm text-slate-500">
+                      Categories will appear here when they are published.
+                    </p>
+                  )}
                 </div>
               </div>
             )}
@@ -180,7 +275,7 @@ export default function Header() {
           </Link>
 
           <Link
-            href="/shop/displays"
+            href="/search"
             className="text-sm font-semibold text-slate-700 transition hover:text-orange-600"
           >
             Shop
@@ -244,7 +339,7 @@ export default function Header() {
               </Link>
 
               <Link
-                href="/shop/displays"
+                href="/search"
                 onClick={closeMenus}
                 className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-800 hover:bg-orange-50 hover:text-orange-700"
               >
@@ -270,16 +365,63 @@ export default function Header() {
                   id="mobile-category-menu"
                   className="ml-3 border-l-2 border-orange-200 pl-3"
                 >
-                  {categories.map((category) => (
-                    <Link
-                      key={category.name}
-                      href={categoryHref(category.name)}
-                      onClick={closeMenus}
-                      className="block rounded-lg px-3 py-3 text-sm text-slate-600 hover:bg-orange-50 hover:text-orange-700"
-                    >
-                      {category.name}
-                    </Link>
-                  ))}
+                  {categories.map((category) => {
+                    const categoryProducts = products.filter(
+                      (product) => product.category === category.name
+                    );
+                    const expanded = mobileCategoryName === category.name;
+
+                    return (
+                      <div key={category.name} className="border-b border-slate-100 last:border-0">
+                        <div className="flex items-center">
+                          <Link
+                            href={categoryHref(category.name)}
+                            onClick={closeMenus}
+                            className="flex min-w-0 flex-1 items-center gap-2 rounded-lg px-3 py-3 text-sm font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-700"
+                          >
+                            {category.icon_image_url ? (
+                              <img src={category.icon_image_url} alt="" className="h-8 w-8 shrink-0 rounded-md object-cover" />
+                            ) : (
+                              <span aria-hidden="true" className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-orange-100 text-orange-600">
+                                {category.icon || "▣"}
+                              </span>
+                            )}
+                            {category.name}
+                            <span className="ml-2 text-xs font-medium text-slate-400">
+                              {categoryProducts.length}
+                            </span>
+                          </Link>
+                          <button
+                            type="button"
+                            aria-label={`${expanded ? "Hide" : "Show"} products in ${category.name}`}
+                            aria-expanded={expanded}
+                            onClick={() => setMobileCategoryName(expanded ? null : category.name)}
+                            className="rounded-lg px-4 py-3 text-orange-600"
+                          >
+                            {expanded ? "−" : "+"}
+                          </button>
+                        </div>
+                        {expanded && (
+                          <div className="mb-2 ml-3 border-l border-orange-200 pl-3">
+                            {categoryProducts.length > 0 ? categoryProducts.map((product) => (
+                              <Link
+                                key={product.id}
+                                href={`/product/${product.slug}`}
+                                onClick={closeMenus}
+                                className="block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-orange-50 hover:text-orange-700"
+                              >
+                                {product.name}
+                              </Link>
+                            )) : (
+                              <p className="px-3 py-2 text-xs text-slate-500">
+                                No published products yet.
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
 

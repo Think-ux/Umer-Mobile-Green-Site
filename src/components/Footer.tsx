@@ -1,121 +1,134 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
+import { useCatalog } from "@/components/CatalogProvider";
+import { categorySlug } from "@/data/store";
+
+const linkClass = "text-sm text-slate-400 transition hover:text-orange-400";
 
 export default function Footer() {
-  const phone = "03008897768";
-  const whatsapp = "923008897768";
+  const { categories, settings } = useCatalog();
+  const whatsapp = settings.whatsapp.replace(/\D/g, "");
+  const featuredCategories = categories.slice(0, 4);
+  const socialLinks = [
+    ["Instagram", settings.social.instagram],
+    ["Facebook", settings.social.facebook],
+    ["TikTok", settings.social.tiktok],
+  ].filter(([, value]) => isHttpsUrl(value));
 
   return (
     <footer className="border-t border-slate-800 bg-slate-950 text-white">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
-
+      <div className="mx-auto grid max-w-7xl gap-9 px-4 py-10 sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_1.1fr] lg:px-8">
         <div>
           <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500 text-xl font-black">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500 text-xl font-black">
               U
-            </div>
-            <div>
-              <div className="text-lg font-black">Umer</div>
-              <div className="text-xs font-bold tracking-wider text-orange-400">
+            </span>
+            <span>
+              <span className="block text-lg font-black">{settings.storeName}</span>
+              <span className="block text-xs font-bold tracking-wider text-orange-400">
                 MOBILE PARTS
-              </div>
-            </div>
+              </span>
+            </span>
           </Link>
-
-          <p className="mt-5 text-sm leading-6 text-slate-400">
-            Find mobile spare parts for your device, including displays,
-            batteries, charging parts and other replacement components.
+          <p className="mt-4 max-w-xs text-sm leading-6 text-slate-400">
+            Find mobile spare parts by category, brand and device model.
           </p>
         </div>
 
         <div>
-          <h3 className="text-base font-bold">Quick Links</h3>
-          <div className="mt-5 flex flex-col gap-3 text-sm text-slate-400">
-            <Link className="hover:text-orange-400" href="/">Home</Link>
-            <Link className="hover:text-orange-400" href="/shop/displays">Shop Products</Link>
-            <Link className="hover:text-orange-400" href="/search">Search Products</Link>
-            <Link className="hover:text-orange-400" href="/cart">Shopping Cart</Link>
-            <Link className="hover:text-orange-400" href="/track-order">Track Order</Link>
-            <Link className="hover:text-orange-400" href="/retailer">For Retailers</Link>
-          </div>
+          <h2 className="text-sm font-black uppercase tracking-wider">Browse</h2>
+          <nav aria-label="Browse links" className="mt-4 flex flex-col items-start gap-3">
+            <Link className={linkClass} href="/search">All products</Link>
+            {featuredCategories.map((category) => (
+              <Link
+                className={linkClass}
+                href={`/shop/${categorySlug(category.name)}`}
+                key={category.name}
+              >
+                {category.name}
+              </Link>
+            ))}
+            <Link className="text-sm font-bold text-orange-400 hover:text-orange-300" href="/#categories">
+              All categories →
+            </Link>
+          </nav>
         </div>
 
         <div>
-          <h3 className="text-base font-bold">Product Categories</h3>
-          <div className="mt-5 flex flex-col gap-3 text-sm text-slate-400">
-            <Link className="hover:text-orange-400" href="/shop/displays">Displays</Link>
-            <Link className="hover:text-orange-400" href="/shop/batteries">Batteries</Link>
-            <Link className="hover:text-orange-400" href="/shop/charging-parts">Charging Parts</Link>
-            <Link className="hover:text-orange-400" href="/shop/camera-parts">Camera Parts</Link>
-            <Link className="hover:text-orange-400" href="/shop/housing">Housing</Link>
-            <Link className="hover:text-orange-400" href="/shop/flex">Flex</Link>
-          </div>
+          <h2 className="text-sm font-black uppercase tracking-wider">Help</h2>
+          <nav aria-label="Help and policy links" className="mt-4 flex flex-col items-start gap-3">
+            <Link className={linkClass} href="/customer-care">Contact &amp; FAQs</Link>
+            <Link className={linkClass} href="/track-order">Track order</Link>
+            <Link className={linkClass} href="/shipping-policy">Shipping</Link>
+            <Link className={linkClass} href="/returns-policy">Returns</Link>
+            <Link className={linkClass} href="/privacy-policy">Privacy</Link>
+            <Link className={linkClass} href="/terms">Terms</Link>
+          </nav>
         </div>
 
         <div>
-          <h3 className="text-base font-bold">Contact Us</h3>
-
-          <div className="mt-5 flex flex-col gap-5 text-sm">
-            <a
-              href={`https://wa.me/${whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-start gap-3 text-slate-300 hover:text-green-400"
-            >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-green-600 text-xl">
-                W
-              </span>
-              <span>
-                <span className="block font-bold">WhatsApp</span>
-                <span className="mt-1 block text-slate-400">{phone}</span>
-                <span className="block text-xs text-slate-500">Chat with us</span>
-              </span>
-            </a>
-
-            <a
-              href={`tel:+92${phone.substring(1)}`}
-              className="flex items-start gap-3 text-slate-300 hover:text-orange-400"
-            >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-orange-500 text-xl">
-                {"\u260E"}
-              </span>
-              <span>
-                <span className="block font-bold">Mobile Contact</span>
-                <span className="mt-1 block text-slate-400">{phone}</span>
-                <span className="block text-xs text-slate-500">Call us</span>
-              </span>
-            </a>
-
-            <div className="flex items-start gap-3 text-slate-300">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-800 text-xl">
-                {"\u{1F4CD}"}
-              </span>
-              <span>
-                <span className="block font-bold">Our Location</span>
-                <span className="mt-1 block leading-6 text-slate-400">
-                  Zam Zam Mall, Singhpura, Lahore
-                </span>
-                <a
-                  className="mt-2 inline-block text-xs font-semibold text-orange-400 hover:text-orange-300"
-                  href="https://www.google.com/maps/search/?api=1&query=Zam+Zam+Mall+Singhpura+Lahore"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View on Map
-                </a>
-              </span>
-            </div>
+          <h2 className="text-sm font-black uppercase tracking-wider">Contact</h2>
+          <div className="mt-4 flex flex-col items-start gap-4">
+            {settings.phone && (
+              <a className={linkClass} href={`tel:${settings.phone}`}>
+                Call: {settings.phone}
+              </a>
+            )}
+            {settings.whatsapp && (
+              <a
+                className={linkClass}
+                href={`https://wa.me/${whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                WhatsApp: {settings.whatsapp}
+              </a>
+            )}
+            {settings.supportEmail && (
+              <a className={linkClass} href={`mailto:${settings.supportEmail}`}>
+                {settings.supportEmail}
+              </a>
+            )}
+            {socialLinks.map(([label, url]) => (
+              <a
+                className={linkClass}
+                href={url}
+                key={label}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {label}
+              </a>
+            ))}
+            {!settings.phone &&
+              !settings.whatsapp &&
+              !settings.supportEmail &&
+              socialLinks.length === 0 && (
+              <p className="max-w-xs text-sm leading-6 text-slate-400">
+                Contact details are being confirmed. Check the FAQs for current information.
+              </p>
+            )}
           </div>
         </div>
       </div>
 
       <div className="border-t border-slate-800">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-5 text-center text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <p>{"\u00A9"} 2026 Umer Mobile Parts. All rights reserved.</p>
-          <p>Mobile Spare Parts - Singhpura, Lahore</p>
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between lg:px-8">
+          <p>{"\u00A9"} 2026 {settings.storeName}. All rights reserved.</p>
+          <Link className="hover:text-slate-300" href="/retailer">
+            Retailer enquiries
+          </Link>
         </div>
       </div>
     </footer>
   );
+}
+
+function isHttpsUrl(value: string) {
+  try {
+    return new URL(value).protocol === "https:";
+  } catch {
+    return false;
+  }
 }

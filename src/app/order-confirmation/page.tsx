@@ -1,98 +1,71 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
-import { useMemo, useSyncExternalStore } from "react";
-import { LAST_ORDER_EVENT, LAST_ORDER_KEY } from "@/lib/orders";
-import {
-  emptySnapshot,
-  readStorage,
-  subscribeToStorage,
-} from "@/lib/storage";
-
-type Order = {
-  orderNumber: string;
-  customer: {
-    name: string;
-    phone: string;
-    address: string;
-    city: string;
-    payment: string;
-  };
-  total: number;
-};
-
-const subscribeLastOrder = subscribeToStorage(LAST_ORDER_EVENT);
-
-function parseLastOrder(raw: string): Order | null {
-  if (!raw) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(raw) as Order;
-  } catch {
-    return null;
-  }
-}
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function OrderConfirmationPage() {
-  const raw = useSyncExternalStore(
-    subscribeLastOrder,
-    () => readStorage(LAST_ORDER_KEY),
-    emptySnapshot
+  return (
+    <Suspense fallback={<main className="p-8 text-center text-slate-500">Loading order details…</main>}>
+      <ConfirmationContent />
+    </Suspense>
   );
-  const order = useMemo(() => parseLastOrder(raw), [raw]);
+}
+
+function ConfirmationContent() {
+  const searchParams = useSearchParams();
+  const orderNumber = searchParams.get("order");
+
+  if (!orderNumber || !/^UMP-[A-F0-9]{12}$/i.test(orderNumber)) {
+    return (
+      <main className="min-h-[65vh] bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
+        <section className="ui-card mx-auto max-w-2xl p-7 text-center sm:p-10">
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-600">Order information</p>
+          <h1 className="mt-3 text-3xl font-black">We couldn&apos;t verify an order</h1>
+          <p role="status" className="mt-4 leading-7 text-slate-600">
+            We could not find an order number in this link. You can still look up a saved order using its order number and checkout phone.
+          </p>
+          <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+            <Link href="/my-orders" className="ui-button-primary">Find my orders</Link>
+            <Link href="/search" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 font-bold hover:border-orange-300 hover:text-orange-700">
+              Continue shopping
+            </Link>
+          </div>
+        </section>
+      </main>
+    );
+  }
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-12">
+    <main className="min-h-screen bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
-
-        <div className="rounded-3xl bg-white p-7 text-center shadow-sm md:p-12">
-
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100 text-3xl text-green-600">
+        <section className="rounded-[32px] border border-green-100 bg-white p-7 text-center shadow-[0_20px_60px_rgba(15,23,42,0.08)] md:p-12">
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100 text-3xl font-black text-green-700">
             ✓
           </div>
-
-          <p className="mt-6 text-sm font-black uppercase tracking-widest text-green-600">
-            Order Confirmed
-          </p>
-
-          <h1 className="mt-2 text-4xl font-black">
-            Thank you for your order!
+          <p className="mt-6 text-sm font-black uppercase tracking-[0.22em] text-green-700">Order received</p>
+          <h1 className="mt-3 text-4xl font-black tracking-tight text-slate-950 md:text-5xl">
+            Thank you for your order
           </h1>
-
-          <p className="mx-auto mt-4 max-w-xl leading-7 text-slate-500">
-            Your order has been successfully placed. We will process
-            your order and contact you using the provided phone number.
+          <p className="mx-auto mt-4 max-w-xl leading-7 text-slate-600">
+            Your order has been recorded in the store’s shared order system. Keep this order number; payment and delivery arrangements will be confirmed by the store.
           </p>
 
-          <div className="mt-8 rounded-2xl bg-slate-50 p-6 text-left">
-
-            <div className="flex justify-between gap-4 border-b pb-4">
-              <span className="text-slate-500">
-                Order Number
-              </span>
-
-              <span className="font-black">
-                {order?.orderNumber || "UMP-DEMO"}
-              </span>
-            </div>
-
-            {order && (
-              <>
-                <div className="flex justify-between gap-4 border-b py-4">
-                  <span className="text-slate-500">
-                    Customer
-                  </span>
-
-                  <span className="font-bold">
-                    {order.customer.name}
-                  </span>
-                </div>
-              </>
-            )}
+          <div className="mt-8 rounded-3xl border border-slate-200 bg-slate-50 p-6 text-left">
+            <p className="text-slate-600">Order number</p>
+            <p className="mt-2 break-all text-2xl font-black text-slate-900">{orderNumber}</p>
+            <p className="mt-4 text-sm leading-6 text-slate-600">You can view the current status and order summary by entering this number and the same phone number at checkout.</p>
           </div>
-        </div>
+
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <Link href="/search" className="inline-flex min-h-11 items-center justify-center rounded-xl border-2 border-slate-900 px-6 py-3 font-black text-slate-900 transition hover:bg-slate-900 hover:text-white">
+              Continue shopping
+            </Link>
+            <Link href={`/track-order?order=${encodeURIComponent(orderNumber)}`} className="ui-button-primary">
+              Track order
+            </Link>
+          </div>
+        </section>
       </div>
     </main>
   );

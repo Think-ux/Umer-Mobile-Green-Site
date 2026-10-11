@@ -3,6 +3,7 @@ import "./globals.css";
 
 import Layout from "@/components/Layout";
 import { CartProvider } from "@/components/CartProvider";
+import { CatalogProvider } from "@/components/CatalogProvider";
 
 export const metadata: Metadata = {
   title: "Umer Mobile Parts",
@@ -18,13 +19,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <CartProvider>
-          <Layout>
-            {children}
-          </Layout>
-        </CartProvider>
+        <CatalogProvider>
+          <CartProvider>
+            <Layout>{children}</Layout>
+          </CartProvider>
+        </CatalogProvider>
       </body>
     </html>
   );
 }
-

@@ -1,107 +1,21 @@
-﻿"use client";
 import Link from "next/link";
-import { useState } from "react";
-
-type Order = {
-  orderNumber: string;
-  orderType?: string;
-  customer?: { name?: string; phone?: string; shopName?: string };
-  total?: number;
-  status?: string;
-  paymentStatus?: string;
-  createdAt?: string;
-  items?: { product?: { id?: number; name?: string }; quantity?: number }[];
-};
 
 export default function RetailerOrdersPage() {
-  const [phone, setPhone] = useState("");
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [searched, setSearched] = useState(false);
-  const [error, setError] = useState("");
-
-  function findOrders(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setSearched(true);
-    setError("");
-    const digits = phone.replace(/\D/g, "");
-
-    if (digits.length < 10) {
-      setOrders([]);
-      setError("Enter the phone number used for your retailer order.");
-      return;
-    }
-
-    try {
-      const raw = localStorage.getItem("umer-orders");
-      const parsed: unknown = raw ? JSON.parse(raw) : [];
-      const all: Order[] = Array.isArray(parsed) ? parsed : [];
-      setOrders(all.filter(o =>
-        o.orderType === "retailer" &&
-        o.customer?.phone?.replace(/\D/g, "") === digits
-      ));
-    } catch {
-      setOrders([]);
-      setError("Could not read saved orders.");
-    }
-  }
-
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-12">
-      <div className="mx-auto max-w-4xl">
-        <Link href="/retailer/dashboard" className="font-bold text-orange-600">← Retailer Dashboard</Link>
-        <h1 className="mt-5 text-3xl font-black">Retailer Order History</h1>
-        <p className="mt-2 text-slate-500">Enter your checkout phone number.</p>
-
-        <form onSubmit={findOrders} className="mt-6 flex flex-col gap-3 rounded-2xl border bg-white p-5 sm:flex-row">
-          <input required value={phone} onChange={e => setPhone(e.target.value)}
-            placeholder="Retailer phone number" inputMode="tel"
-            className="min-w-0 flex-1 rounded-xl border px-4 py-3" />
-          <button className="rounded-xl bg-orange-500 px-6 py-3 font-black text-white">
-            Find Retailer Orders
-          </button>
-        </form>
-
-        {error && <p className="mt-4 text-red-600">{error}</p>}
-        {searched && !error && orders.length === 0 && (
-          <p className="mt-6 rounded-xl border bg-white p-6">No retailer orders found.</p>
-        )}
-
-        <div className="mt-6 space-y-4">
-          {orders.map(order => (
-            <article key={order.orderNumber} className="rounded-2xl border bg-white p-5">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <h2 className="font-black">#{order.orderNumber}</h2>
-                  <p className="mt-1 text-sm text-slate-500">
-                    {order.customer?.shopName || order.customer?.name || "Retailer"}
-                  </p>
-                  <p className="mt-1 text-xs text-slate-500">
-                    {order.createdAt ? new Date(order.createdAt).toLocaleString() : ""}
-                  </p>
-                </div>
-                <span className="rounded-full bg-purple-100 px-4 py-2 font-bold text-purple-700">
-                  {order.status || "Pending"}
-                </span>
-              </div>
-              <div className="mt-4 space-y-2 border-t pt-4">
-                {(order.items || []).map((item, i) => (
-                  <p key={i} className="text-sm">{item.product?.name || "Product"} × {item.quantity}</p>
-                ))}
-              </div>
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t pt-4">
-                <div>
-                  <p className="text-sm text-slate-500">Payment: {order.paymentStatus || "Unpaid"}</p>
-                  <p className="mt-1 text-xl font-black">Rs. {(order.total || 0).toLocaleString()}</p>
-                </div>
-                <Link href={`/track-order?order=${encodeURIComponent(order.orderNumber)}`}
-                  className="rounded-xl bg-slate-950 px-5 py-3 font-bold text-white">
-                  Track Order
-                </Link>
-              </div>
-            </article>
-          ))}
+    <main className="min-h-[65vh] bg-slate-50 px-4 py-12">
+      <section className="mx-auto max-w-2xl rounded-3xl border border-slate-200 bg-white p-7 text-center shadow-sm sm:p-10">
+        <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-600">Retailer orders</p>
+        <h1 className="mt-3 text-3xl font-black">Wholesale ordering is not enabled yet</h1>
+        <p className="mt-4 leading-7 text-slate-600">
+          The store has not confirmed retailer prices and ordering terms. Retailer orders are not being accepted or stored yet. Apply for retailer access or contact the store before placing a wholesale order.
+        </p>
+        <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+          <Link href="/retailer" className="ui-button-primary">Retailer information</Link>
+          <Link href="/customer-care" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 font-bold hover:border-orange-300 hover:text-orange-700">
+            Contact the store
+          </Link>
         </div>
-      </div>
+      </section>
     </main>
   );
 }

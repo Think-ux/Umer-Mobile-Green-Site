@@ -1,26 +1,52 @@
-﻿import { test, expect, type Page } from '@playwright/test';
-
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    if (!sessionStorage.getItem('pw-storage-reset')) {
-      localStorage.clear();
-      sessionStorage.setItem('pw-storage-reset', '1');
-    }
-  });
-});
+import { test, expect, type Page } from '@playwright/test';
 
 async function addIphone13Lcd(page: Page) {
   await page.goto('/');
   const product = page.locator('article').filter({ hasText: 'iPhone 13 LCD Premium' });
-  await product.getByRole('button', { name: 'Add' }).click();
-  await expect(page.getByRole('link', { name: /Cart/ }).first()).toContainText('1');
+  const addButton = product.getByRole('button', { name: 'Add to Cart' });
+  await page.waitForLoadState('networkidle');
+  await addButton.click();
 }
 
 test('Homepage displays products', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: /Quality Mobile Parts/i })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Best Selling Parts' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Add' }).first()).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Find Quality Mobile Spare Parts/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Featured Products' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'More Products' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Shop by Mobile Brand' })).toBeVisible();
+  await expect(page.getByText('Wholesale & Retail').first()).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Add to Cart' }).first()).toBeVisible();
+});
+
+test('Category navigation links to category products', async ({ page }) => {
+  await page.goto('/');
+  const menu = page.locator('#desktop-category-menu');
+  await page.getByRole('button', { name: 'All Categories' }).hover();
+  await menu.getByRole('button', { name: 'Show products in Displays' }).click();
+
+  const productLink = menu.locator('a[href^="/product/"]').first();
+  await expect(productLink).toBeVisible();
+  const productPath = await productLink.getAttribute('href');
+  const productName = (await productLink.textContent())?.trim() ?? "";
+  await productLink.click();
+
+  await expect(page).toHaveURL(new RegExp(`${productPath}$`));
+  await expect(page.getByRole('heading', { name: productName, exact: true })).toBeVisible();
+});
+
+test('Mobile category menu exposes category products', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Open navigation menu' }).click();
+  await page.getByRole('button', { name: 'All Categories' }).click();
+  await page.getByRole('button', { name: 'Show products in Displays' }).click();
+
+  const productLink = page.locator('#mobile-category-menu').getByRole('link', { name: 'iPhone 13 LCD Premium' });
+  await expect(productLink).toBeVisible();
+  await productLink.click();
+
+  await expect(page).toHaveURL(/\/product\/iphone-13-lcd-premium$/);
+  await expect(page.getByRole('heading', { name: 'iPhone 13 LCD Premium', exact: true })).toBeVisible();
 });
 
 test('Add product to cart', async ({ page }) => {
@@ -39,7 +65,7 @@ test('Cart quantity can be increased', async ({ page }) => {
   await page.getByRole('button', { name: '+', exact: true }).click();
 
   await expect(page.getByText('2 items in your cart')).toBeVisible();
-  await expect(page.getByText('Rs. 25,000')).toBeVisible();
+  await expect(page.getByText('Rs. 25,000', { exact: true }).last()).toBeVisible();
 });
 
 test('Product can be removed from cart', async ({ page }) => {
@@ -59,9 +85,9 @@ test('Checkout form rejects invalid customer details', async ({ page }) => {
   await page.getByPlaceholder('03001234567').fill('03001234567');
   await page.getByPlaceholder('House / Shop / Street / Area').fill('House 123, Main Road');
 
-  await page.getByRole('button', { name: 'Place Order' }).click();
+  await page.getByRole('button', { name: 'Place order' }).click();
 
-  await expect(page.getByRole('alert')).toContainText('Please enter your full name.');
+  await expect(page.locator('div[role="alert"]').filter({ hasText: 'Please enter your full name.' })).toBeVisible();
   await expect(page).toHaveURL(/\/checkout$/);
 });
 
@@ -73,8 +99,8 @@ test('Checkout rejects invalid Pakistani phone number', async ({ page }) => {
   await page.getByPlaceholder('03001234567').fill('12345');
   await page.getByPlaceholder('House / Shop / Street / Area').fill('House 123, Main Road');
 
-  await page.getByRole('button', { name: 'Place Order' }).click();
+  await page.getByRole('button', { name: 'Place order' }).click();
 
-  await expect(page.getByRole('alert')).toContainText('Please enter a valid Pakistani phone number');
+  await expect(page.locator('div[role="alert"]').filter({ hasText: 'Please enter a valid Pakistani phone number' })).toBeVisible();
   await expect(page).toHaveURL(/\/checkout$/);
 });

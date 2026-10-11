@@ -11,6 +11,7 @@
   stock: number;
   rating: number;
   image: string;
+  is_featured?: boolean;
 };
 
 export const products: Product[] = [
@@ -27,6 +28,7 @@ export const products: Product[] = [
     stock: 12,
     rating: 4.8,
     image: "https://images.unsplash.com/photo-1592286927505-2fd7b8e6b9a0?auto=format&fit=crop&w=900&q=80",
+    is_featured: true,
   },
   {
     id: 2,
@@ -41,6 +43,7 @@ export const products: Product[] = [
     stock: 18,
     rating: 4.7,
     image: "https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=900&q=80",
+    is_featured: true,
   },
   {
     id: 3,
@@ -55,6 +58,7 @@ export const products: Product[] = [
     stock: 25,
     rating: 4.6,
     image: "https://images.unsplash.com/photo-1609592424274-7f7f8f6e8b35?auto=format&fit=crop&w=900&q=80",
+    is_featured: true,
   },
   {
     id: 4,
@@ -101,10 +105,19 @@ export const products: Product[] = [
 ];
 
 export const categories = [
-  { name: "Displays", icon: "▣", count: 124 },
-  { name: "Batteries", icon: "▰", count: 86 },
-  { name: "Charging Parts", icon: "⚡", count: 72 },
-  { name: "Camera Parts", icon: "◉", count: 54 },
-  { name: "Housing", icon: "▱", count: 61 },
-  { name: "Flex", icon: "≋", count: 48 },
+  { name: "Displays", icon: "▣", icon_image_url: "", count: 2 },
+  { name: "Batteries", icon: "▰", icon_image_url: "", count: 1 },
+  { name: "Charging Parts", icon: "⚡", icon_image_url: "", count: 1 },
+  { name: "Camera Parts", icon: "◉", icon_image_url: "", count: 1 },
+  { name: "Housing", icon: "▱", icon_image_url: "", count: 1 },
+  { name: "Flex", icon: "≋", icon_image_url: "", count: 0 },
 ];
+
+export function categorySlug(name: string) {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}

@@ -1,0 +1,112 @@
+"use client";
+
+import { FormEvent, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
+
+export default function AdminLoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const configured = Boolean(getSupabaseBrowserClient());
+
+  async function signIn(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
+    const supabase = getSupabaseBrowserClient();
+
+    if (!supabase) {
+      setError("Supabase is not configured. Follow the project setup instructions first.");
+      return;
+    }
+
+    setBusy(true);
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (signInError) {
+      setError(signInError.message);
+      setBusy(false);
+      return;
+    }
+
+    if (data.user?.app_metadata.role !== "admin") {
+      await supabase.auth.signOut();
+      setError("This account does not have CMS admin access.");
+      setBusy(false);
+      return;
+    }
+
+    router.replace("/admin");
+  }
+
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12">
+      <section className="w-full max-w-md rounded-3xl border border-white/10 bg-white p-7 shadow-2xl sm:p-9">
+        <Link href="/" className="text-sm font-bold text-orange-600 hover:text-orange-700">
+          ← Storefront
+        </Link>
+        <p className="mt-7 text-xs font-black uppercase tracking-[0.22em] text-orange-500">
+          Secure access
+        </p>
+        <h1 className="mt-2 text-3xl font-black tracking-tight">Sign in to CMS</h1>
+        <p className="mt-2 text-sm leading-6 text-slate-500">
+          Sign in with the Supabase account assigned the CMS admin role.
+        </p>
+
+        {!configured && (
+          <p className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
+            Supabase connection details are missing. Set
+            {" "}
+            <code>NEXT_PUBLIC_SUPABASE_URL</code> and
+            {" "}
+            <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> in{" "}
+            <code>.env.local</code> and restart the server.
+          </p>
+        )}
+
+        {error && (
+          <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+            {error}
+          </p>
+        )}
+
+        <form onSubmit={signIn} className="mt-6 space-y-4">
+          <label className="block text-sm font-bold text-slate-700">
+            Email
+            <input
+              required
+              type="email"
+              autoComplete="username"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-orange-500"
+            />
+          </label>
+          <label className="block text-sm font-bold text-slate-700">
+            Password
+            <input
+              required
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-orange-500"
+            />
+          </label>
+          <button
+            disabled={!configured || busy}
+            className="w-full rounded-xl bg-orange-500 px-5 py-3.5 font-black text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-slate-300"
+          >
+            {busy ? "Signing in…" : "Sign in"}
+          </button>
+        </form>
+      </section>
+    </main>
+  );
+}

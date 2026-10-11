@@ -4,16 +4,11 @@ import Link from "next/link";
 import { FormEvent, Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCart } from "@/components/CartProvider";
-import { products } from "@/data/store";
+import { useCatalog } from "@/components/CatalogProvider";
 import {
-  LAST_ORDER_EVENT,
-  LAST_ORDER_KEY,
-  ORDERS_EVENT,
-  ORDERS_KEY,
-  createOrderNumber,
-  nowIso,
+  normalizeSavedOrder,
 } from "@/lib/orders";
-import { readStorage, writeStorage } from "@/lib/storage";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type CustomerForm = {
   name: string;
@@ -33,57 +28,35 @@ export default function CheckoutPage() {
 
 function CheckoutForm() {
   const { items: cartItems, clearCart } = useCart();
+  const { settings } = useCatalog();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const orderType =
-    searchParams.get("type") === "retailer" ? "retailer" : "customer";
-  const productId = Number(searchParams.get("product"));
-  const retailerProductId =
-    Number.isInteger(productId) && productId > 0 ? productId : null;
-
-  const selectedRetailerProduct =
-    orderType === "retailer" && retailerProductId !== null
-      ? products.find((product) => product.id === retailerProductId)
-      : undefined;
-
-  const items =
-    orderType === "retailer" && selectedRetailerProduct
-      ? [{
-          product: {
-            ...selectedRetailerProduct,
-            price: Math.round(selectedRetailerProduct.price * 0.82),
-          },
-          quantity: 1,
-        }]
-      : orderType === "retailer"
-        ? cartItems.map((item) => ({
-            ...item,
-            product: {
-              ...item.product,
-              price: Math.round(item.product.price * 0.82),
-            },
-          }))
-        : cartItems;
-
+  const retailerCheckout = searchParams.get("type") === "retailer";
+  const items = cartItems;
   const subtotal = items.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
-  const delivery = subtotal > 0 ? 250 : 0;
-  const total = subtotal + delivery;
+  const delivery = settings.deliveryCharge !== null &&
+    settings.freeDeliveryThreshold !== null
+    ? subtotal > 0 &&
+      subtotal < settings.freeDeliveryThreshold
+      ? settings.deliveryCharge
+      : 0
+    : null;
+  const total = delivery === null ? null : subtotal + delivery;
 
   const [form, setForm] = useState<CustomerForm>({
     name: "",
     phone: "",
     address: "",
-    city: "Lahore",
-    payment: "Cash on Delivery",
+    city: "",
+    payment: "To be confirmed with the store",
   });
 
   const [error, setError] = useState("");
   const [placing, setPlacing] = useState(false);
 
-  const [paymentReference, setPaymentReference] = useState("");
   function updateField(
     field: keyof CustomerForm,
     value: string
@@ -96,7 +69,7 @@ function CheckoutForm() {
     setError("");
   }
 
-  function submitOrder(event: FormEvent<HTMLFormElement>) {
+  async function submitOrder(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (placing) {
@@ -111,6 +84,7 @@ function CheckoutForm() {
     const name = form.name.trim();
     const phone = form.phone.trim();
     const address = form.address.trim();
+    const city = form.city.trim();
 
     if (name.length < 3) {
       setError("Please enter your full name.");
@@ -132,63 +106,63 @@ function CheckoutForm() {
       return;
     }
 
-    setPlacing(true);
-
-    const orderNumber = createOrderNumber();
-
-    const order = {
-      orderType,
-      orderNumber,
-      customer: {
-        ...form,
-        name,
-        phone,
-        address,
-      },
-      items,
-      subtotal,
-      delivery,
-      total,
-      status: "Pending",
-      createdAt: nowIso(),
-    };
-
-    try {
-      const existingOrdersRaw = readStorage(ORDERS_KEY);
-
-      let existingOrders: unknown[] = [];
-
-      if (existingOrdersRaw) {
-        try {
-          const parsed = JSON.parse(existingOrdersRaw);
-
-          if (Array.isArray(parsed)) {
-            existingOrders = parsed;
-          }
-        } catch {
-          existingOrders = [];
-        }
-      }
-
-      writeStorage(
-        ORDERS_KEY,
-        JSON.stringify([order, ...existingOrders]),
-        ORDERS_EVENT
-      );
-
-      writeStorage(LAST_ORDER_KEY, JSON.stringify(order), LAST_ORDER_EVENT);
-
-      if (orderType === "customer") clearCart();
-
-      router.push(
-        `/order-confirmation?order=${encodeURIComponent(orderNumber)}`
-      );
-    } catch {
-      setPlacing(false);
-      setError(
-        "Unable to place the order right now. Please try again."
-      );
+    if (city.length < 2) {
+      setError("Please enter your city.");
+      return;
     }
+
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      setPlacing(false);
+      setError("Order service is not configured. Please contact the store; your order was not placed.");
+      return;
+    }
+
+    setPlacing(true);
+    const { data, error: createError } = await supabase.rpc("create_customer_order", {
+      p_name: name,
+      p_phone: phone,
+      p_address: address,
+      p_city: city,
+      p_items: items.map(({ product, quantity }) => ({
+        product_id: product.id,
+        quantity,
+      })),
+    });
+    if (createError) {
+      setPlacing(false);
+      setError(`Order was not placed: ${createError.message}`);
+      return;
+    }
+
+    const order = normalizeSavedOrder(data);
+    if (!order) {
+      setPlacing(false);
+      setError("The store saved a response we could not verify. Contact the store with your phone number before retrying.");
+      return;
+    }
+    clearCart();
+    router.push(`/order-confirmation?order=${encodeURIComponent(order.orderNumber)}`);
+  }
+
+  if (retailerCheckout) {
+    return (
+      <main className="min-h-[65vh] bg-slate-50 px-4 py-16">
+        <section className="ui-card mx-auto max-w-2xl p-7 text-center sm:p-10">
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-600">Retailer ordering</p>
+          <h1 className="mt-3 text-3xl font-black">Wholesale checkout is not available yet</h1>
+          <p className="mt-4 leading-7 text-slate-600">
+            Retailer pricing and ordering terms have not been confirmed. No wholesale discount has been applied. Contact the store to discuss approved terms, or browse the catalog at its listed prices.
+          </p>
+          <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+            <Link href="/retailer" className="ui-button-primary">Retailer information</Link>
+            <Link href="/search" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 font-bold hover:border-orange-300 hover:text-orange-700">
+              Browse listed prices
+            </Link>
+          </div>
+        </section>
+      </main>
+    );
   }
 
   if (items.length === 0) {
@@ -221,270 +195,125 @@ function CheckoutForm() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-10">
+    <main className="min-h-screen bg-slate-50 px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-
         <div className="mb-8">
-          <p className="text-sm font-black uppercase tracking-widest text-orange-500">
-            Checkout
+          <p className="text-sm font-black uppercase tracking-[0.2em] text-orange-500">
+            Secure checkout
           </p>
-
-          <h1 className="mt-2 text-4xl font-black">
-            Complete Your Order
-          </h1>
-
+          <h1 className="mt-2 text-4xl font-black tracking-tight">Review Your Order</h1>
           <p className="mt-2 text-slate-500">
-            Enter your delivery details and choose a payment method.
+            Enter your delivery details to submit your order to the store.
           </p>
         </div>
 
-        <form
-          noValidate
-          onSubmit={submitOrder}
-          className="grid gap-8 lg:grid-cols-[1fr_360px]"
-        >
-
+        <form noValidate onSubmit={submitOrder} className="grid gap-8 lg:grid-cols-[1fr_360px]">
           <div className="space-y-6">
-
-            <section className="rounded-2xl border bg-white p-6 shadow-sm">
-              <h2 className="text-xl font-black">
-                Customer Information
-              </h2>
+            <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <h2 className="text-xl font-black text-slate-900">Customer Information</h2>
 
               <div className="mt-5 grid gap-4 sm:grid-cols-2">
-
                 <div>
-                  <label className="text-sm font-bold">
-                    Full Name
-                  </label>
-
+                  <label className="text-sm font-bold text-slate-700">Full Name</label>
                   <input
                     value={form.name}
-                    onChange={(event) =>
-                      updateField("name", event.target.value)
-                    }
+                    onChange={(event) => updateField("name", event.target.value)}
                     placeholder="Your full name"
-                    className="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
+                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-orange-500 focus:bg-white"
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm font-bold">
-                    Phone Number
-                  </label>
-
+                  <label className="text-sm font-bold text-slate-700">Phone Number</label>
                   <input
                     inputMode="numeric"
                     maxLength={11}
                     value={form.phone}
                     onChange={(event) =>
-                      updateField(
-                        "phone",
-                        event.target.value.replace(/\D/g, "").slice(0, 11)
-                      )
+                      updateField("phone", event.target.value.replace(/\D/g, "").slice(0, 11))
                     }
                     placeholder="03001234567"
-                    className="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
+                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-orange-500 focus:bg-white"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="text-sm font-bold">
-                    Delivery Address
-                  </label>
-
+                  <label className="text-sm font-bold text-slate-700">Delivery Address</label>
                   <textarea
                     value={form.address}
-                    onChange={(event) =>
-                      updateField("address", event.target.value)
-                    }
+                    onChange={(event) => updateField("address", event.target.value)}
                     placeholder="House / Shop / Street / Area"
                     rows={4}
-                    className="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
+                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-orange-500 focus:bg-white"
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm font-bold">
-                    City
-                  </label>
-
-                  <select
+                  <label className="text-sm font-bold text-slate-700">City</label>
+                  <input
+                    required
+                    autoComplete="address-level2"
                     value={form.city}
-                    onChange={(event) =>
-                      updateField("city", event.target.value)
-                    }
-                    className="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
-                  >
-                    <option>Lahore</option>
-                    <option>Karachi</option>
-                    <option>Islamabad</option>
-                    <option>Rawalpindi</option>
-                    <option>Faisalabad</option>
-                    <option>Multan</option>
-                    <option>Other</option>
-                  </select>
+                    onChange={(event) => updateField("city", event.target.value)}
+                    placeholder="Enter your city"
+                    className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-orange-500 focus:bg-white"
+                  />
                 </div>
-
               </div>
             </section>
 
-            <section className="rounded-2xl border bg-white p-6 shadow-sm">
-  <h2 className="text-xl font-black">Payment Method</h2>
-
-  <p className="mt-2 text-sm text-slate-500">
-    Select your preferred payment method. Online payments require
-    manual verification in this demo.
-  </p>
-
-  <div className="mt-5 space-y-3">
-    {[
-      "Cash on Delivery",
-      "Bank Transfer",
-      "JazzCash",
-      "Easypaisa",
-    ].map((method) => (
-      <label
-        key={method}
-        className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition ${
-          form.payment === method
-            ? "border-orange-500 bg-orange-50"
-            : "border-slate-200 hover:border-slate-400"
-        }`}
-      >
-        <input
-          type="radio"
-          name="payment"
-          value={method}
-          checked={form.payment === method}
-          onChange={(event) => {
-            updateField("payment", event.target.value);
-            setPaymentReference("");
-          }}
-          className="accent-orange-500"
-        />
-
-        <span className="font-bold">{method}</span>
-
-        <span className="ml-auto text-xs text-slate-500">
-          {method === "Cash on Delivery" ? "Pay on delivery" : "Manual payment"}
-        </span>
-      </label>
-    ))}
-  </div>
-
-  {form.payment === "Cash on Delivery" ? (
-    <div className="mt-5 rounded-xl border border-green-200 bg-green-50 p-4">
-      <p className="font-black text-green-800">
-        Cash on Delivery selected
-      </p>
-      <p className="mt-1 text-sm text-green-700">
-        Pay the delivery person when your order arrives.
-        No advance payment is required for this demo.
-      </p>
-    </div>
-  ) : (
-    <div className="mt-5 rounded-xl border bg-slate-50 p-5">
-      <h3 className="font-black">{form.payment} Instructions</h3>
-
-      <p className="mt-2 text-sm leading-6 text-slate-600">
-        Transfer the payment using the official account details
-        provided by Umer Mobile Parts. Enter your transaction ID
-        below after making the transfer.
-      </p>
-
-      <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
-        <p className="font-bold text-amber-900">
-          Merchant details required
-        </p>
-        <p className="mt-1 text-sm text-amber-800">
-          Add your verified {form.payment} merchant account number
-          and account title here before accepting real payments.
-          Do not use placeholder account details.
-        </p>
-      </div>
-
-      <label className="mt-5 block text-sm font-bold">
-        Transaction ID / Reference (optional for demo)
-        <input
-          value={paymentReference}
-          onChange={(event) => setPaymentReference(event.target.value)}
-          placeholder="Enter transaction reference"
-          maxLength={100}
-          className="mt-2 w-full rounded-xl border bg-white px-4 py-3 outline-none focus:border-orange-500"
-        />
-      </label>
-
-      <p className="mt-2 text-xs leading-5 text-slate-500">
-        Entering a reference does not confirm payment. Admin must
-        verify the transaction and update the payment status.
-      </p>
-    </div>
-  )}
-</section>
-
+            <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <h2 className="text-xl font-black text-slate-900">Payment</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Payment will be confirmed with the store. Submitting this order records your request; it does not process a payment.
+              </p>
+            </section>
           </div>
 
-          <aside className="h-fit rounded-2xl border bg-white p-6 shadow-sm">
-
-            <h2 className="text-xl font-black">
-              Your Order
-            </h2>
+          <aside className="h-fit rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-black text-slate-900">Your Order</h2>
+              <span className="rounded-full bg-orange-50 px-2.5 py-1 text-xs font-black text-orange-700">
+                {items.length} item{items.length !== 1 ? "s" : ""}
+              </span>
+            </div>
 
             <div className="mt-5 space-y-3">
               {items.map((item) => (
-                <div
-                  key={item.product.id}
-                  className="flex justify-between gap-4 text-sm"
-                >
+                <div key={item.product.id} className="flex justify-between gap-4 text-sm">
                   <span className="text-slate-600">
-                    {item.product.name} Ã— {item.quantity}
+                    {item.product.name} × {item.quantity}
                   </span>
-
-                  <span className="whitespace-nowrap font-bold">
-                    Rs.{" "}
-                    {(
-                      item.product.price *
-                      item.quantity
-                    ).toLocaleString()}
+                  <span className="whitespace-nowrap font-bold text-slate-900">
+                    Rs. {(item.product.price * item.quantity).toLocaleString()}
                   </span>
                 </div>
               ))}
             </div>
 
-            <div className="mt-6 space-y-3 border-t pt-5">
-
+            <div className="mt-6 space-y-3 border-t border-slate-200 pt-5">
               <div className="flex justify-between text-slate-600">
                 <span>Subtotal</span>
-                <span className="font-bold">
-                  Rs. {subtotal.toLocaleString()}
-                </span>
+                <span className="font-bold text-slate-900">Rs. {subtotal.toLocaleString()}</span>
               </div>
 
               <div className="flex justify-between text-slate-600">
                 <span>Delivery</span>
-                <span className="font-bold">
-                  Rs. {delivery.toLocaleString()}
+                <span className="font-bold text-slate-900">
+                  {delivery === null ? "To be confirmed" : delivery === 0 ? "FREE" : `Rs. ${delivery.toLocaleString()}`}
                 </span>
               </div>
 
-              <div className="flex justify-between border-t pt-4">
-                <span className="font-black">
-                  Total
-                </span>
-
-                <span className="text-2xl font-black">
-                  Rs. {total.toLocaleString()}
+              <div className="flex justify-between border-t border-slate-200 pt-4">
+                <span className="font-black text-slate-900">{total === null ? "Subtotal before delivery" : "Total"}</span>
+                <span className="text-2xl font-black text-slate-900">
+                  {total === null ? `Rs. ${subtotal.toLocaleString()}` : `Rs. ${total.toLocaleString()}`}
                 </span>
               </div>
-
             </div>
 
             {error && (
-              <div
-                role="alert"
-                className="mt-5 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-semibold text-red-600"
-              >
+              <div role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-semibold text-red-600">
                 {error}
               </div>
             )}
@@ -494,21 +323,15 @@ function CheckoutForm() {
               disabled={placing}
               className="mt-7 w-full rounded-xl bg-orange-500 px-6 py-4 font-black text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {placing ? "Placing Order..." : "Place Order"}
+              {placing ? "Submitting…" : "Place order"}
             </button>
 
             <p className="mt-4 text-center text-xs leading-5 text-slate-400">
-              Your order details are saved locally for this demo.
+              Your order will be stored securely so you can track it from any device.
             </p>
-
           </aside>
-
         </form>
       </div>
     </main>
   );
 }
-
-
-
-

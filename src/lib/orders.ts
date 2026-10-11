@@ -30,72 +30,82 @@ export type SavedOrder = {
     unitPrice: number;
   }[];
   subtotal: number;
-  delivery: number;
-  total: number;
+  delivery: number | null;
+  total: number | null;
   status: OrderStatus;
   createdAt: string;
 };
 
-export const ORDERS_KEY = "umer-orders";
-export const LAST_ORDER_KEY = "umer-last-order";
-export const ORDERS_EVENT = "umer-orders-changed";
-export const LAST_ORDER_EVENT = "umer-last-order-changed";
+export function normalizeSavedOrder(value: unknown): SavedOrder | null {
+  if (!value || typeof value !== "object") return null;
+  const order = value as Record<string, unknown>;
+  const customerValue = order.customer;
+  if (!customerValue || typeof customerValue !== "object") return null;
+  const customer = customerValue as Record<string, unknown>;
+  if (
+    typeof order.orderNumber !== "string" ||
+    (order.orderType !== "Customer" &&
+      order.orderType !== "Retailer" &&
+      order.orderType !== "customer" &&
+      order.orderType !== "retailer") ||
+    (typeof order.total !== "number" && order.total !== null) ||
+    typeof order.subtotal !== "number" ||
+    (typeof order.delivery !== "number" && order.delivery !== null) ||
+    typeof order.createdAt !== "string" ||
+    typeof order.status !== "string" ||
+    !["Pending", "Processing", "Packed", "Dispatched", "Delivered", "Cancelled"].includes(order.status) ||
+    typeof customer.name !== "string" ||
+    typeof customer.phone !== "string" ||
+    typeof customer.address !== "string" ||
+    typeof customer.city !== "string" ||
+    typeof customer.payment !== "string" ||
+    !Array.isArray(order.items)
+  ) return null;
 
-export function createOrderNumber() {
-  return "UMP-" + Date.now().toString().slice(-8);
-}
+  const items: SavedOrder["items"] = [];
+  for (const value of order.items) {
+    if (!value || typeof value !== "object") return null;
+    const item = value as Record<string, unknown>;
+    if (!item.product || typeof item.product !== "object") return null;
+    const product = item.product as Record<string, unknown>;
+    if (
+      typeof item.quantity !== "number" ||
+      typeof product.id !== "number" ||
+      typeof product.name !== "string" ||
+      typeof product.price !== "number"
+    ) return null;
 
-export function nowIso() {
-  return new Date().toISOString();
-}
-
-export function readOrders(): SavedOrder[] {
-  if (typeof window === "undefined") return [];
-
-  try {
-    const value = JSON.parse(
-      localStorage.getItem(ORDERS_KEY) || "[]"
-    );
-
-    return Array.isArray(value) ? value as SavedOrder[] : [];
-  } catch {
-    return [];
-  }
-}
-
-export function saveOrders(orders: SavedOrder[]) {
-  localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-  window.dispatchEvent(new Event(ORDERS_EVENT));
-}
-
-export function updateSavedOrder(
-  orderNumber: string,
-  status: OrderStatus
-) {
-  const orders = readOrders().map((order) =>
-    order.orderNumber === orderNumber
-      ? { ...order, status }
-      : order
-  );
-
-  saveOrders(orders);
-
-  const lastRaw = localStorage.getItem(LAST_ORDER_KEY);
-
-  if (lastRaw) {
-    try {
-      const last = JSON.parse(lastRaw);
-
-      if (last.orderNumber === orderNumber) {
-        localStorage.setItem(
-          LAST_ORDER_KEY,
-          JSON.stringify({ ...last, status })
-        );
-      }
-    } catch {
-      // Ignore malformed demo data.
-    }
+    items.push({
+      product: {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        ...(typeof product.slug === "string" ? { slug: product.slug } : {}),
+        ...(typeof product.image === "string" ? { image: product.image } : {}),
+      },
+      quantity: item.quantity,
+      unitPrice:
+        typeof item.unitPrice === "number" ? item.unitPrice : product.price,
+    });
   }
 
-  return orders;
+  return {
+    orderNumber: order.orderNumber,
+    orderType: order.orderType === "retailer" || order.orderType === "Retailer"
+      ? "Retailer"
+      : "Customer",
+    customer: {
+      name: customer.name,
+      phone: customer.phone,
+      address: customer.address,
+      city: customer.city,
+      payment: customer.payment,
+    },
+    items,
+    subtotal: order.subtotal,
+    delivery: order.delivery,
+    total: order.total,
+    status: order.status as OrderStatus,
+    createdAt: order.createdAt,
+  };
 }
