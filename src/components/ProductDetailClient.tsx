@@ -1,11 +1,19 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useCart } from "@/components/CartProvider";
 import { categorySlug, type Product } from "@/data/store";
+import {
+  getDevelopmentMockAccount,
+  isDevelopmentAuthMockEnabled,
+  subscribeToDevelopmentMockAccount,
+} from "@/lib/auth/development-mock";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { useCatalog } from "@/components/CatalogProvider";
+import { formatStorePrice, retailerPrice } from "@/lib/pricing";
+import StarRatingDisplay from "@/components/StarRatingDisplay";
 
 type Props = {
   product: Product;
@@ -13,23 +21,31 @@ type Props = {
 
 type ProductReview = {
   id: number;
-  reviewer_name: string;
   rating: number;
-  review_text: string;
-  created_at: string;
+  is_demo: boolean;
 };
 
 export default function ProductDetailClient({ product }: Props) {
   const { addToCart } = useCart();
+  const { isRetailer, retailerAccessError } = useCatalog();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [reviews, setReviews] = useState<ProductReview[]>([]);
-  const [reviewerName, setReviewerName] = useState("");
-  const [reviewText, setReviewText] = useState("");
-  const [reviewRating, setReviewRating] = useState(5);
+  const [accountName, setAccountName] = useState("");
+  const [developmentAccountEmail, setDevelopmentAccountEmail] = useState("");
+  const [developmentDemoRating, setDevelopmentDemoRating] = useState<number | null>(null);
+  const [identityLoading, setIdentityLoading] = useState(
+    () => !isDevelopmentAuthMockEnabled() && Boolean(getSupabaseBrowserClient()),
+  );
+  const [hasAuthenticatedSession, setHasAuthenticatedSession] = useState(false);
+  const [reviewRating, setReviewRating] = useState(0);
   const [reviewBusy, setReviewBusy] = useState(false);
   const [reviewError, setReviewError] = useState("");
   const [reviewNotice, setReviewNotice] = useState("");
+  const canChooseRating =
+    isDevelopmentAuthMockEnabled()
+      ? Boolean(developmentAccountEmail)
+      : hasAuthenticatedSession && !identityLoading;
 
   const inStock = product.stock > 0;
   const maxQuantity = Math.max(1, product.stock);
@@ -56,7 +72,7 @@ export default function ProductDetailClient({ product }: Props) {
     }
     const { data, error: queryError } = await supabase
       .from("reviews")
-      .select("id,reviewer_name,rating,review_text,created_at")
+      .select("id,rating,is_demo")
       .eq("product_id", product.id)
       .eq("status", "approved")
       .order("created_at", { ascending: false })
@@ -74,11 +90,121 @@ export default function ProductDetailClient({ product }: Props) {
     void Promise.resolve().then(loadReviews);
   }, [loadReviews]);
 
+  useEffect(() => {
+    if (!isDevelopmentAuthMockEnabled()) return;
+
+    const syncDevelopmentAccount = () => {
+      try {
+        const account = getDevelopmentMockAccount();
+        setDevelopmentAccountEmail(account?.email ?? "");
+        setAccountName(account?.fullName ?? "");
+        if (!account) {
+          setDevelopmentDemoRating(null);
+          setReviewRating(0);
+          return;
+        }
+
+        const storageKey = `mobile-studio-development-rating:${encodeURIComponent(account.email.toLowerCase())}:${product.id}`;
+        const storedRating = window.localStorage.getItem(storageKey);
+        if (storedRating === null) {
+          setDevelopmentDemoRating(null);
+          return;
+        }
+        const rating = Number(storedRating);
+        if (!Number.isFinite(rating) || rating < 0.5 || rating > 5 || rating * 2 !== Math.trunc(rating * 2)) {
+          throw new Error("The saved development rating is invalid. Clear this site's local storage and try again.");
+        }
+        setDevelopmentDemoRating(rating);
+      } catch (error) {
+        setReviewError(
+          error instanceof Error
+            ? error.message
+            : "Could not load the development demo rating.",
+        );
+      }
+    };
+
+    syncDevelopmentAccount();
+    return subscribeToDevelopmentMockAccount(syncDevelopmentAccount);
+  }, [product.id]);
+
+  useEffect(() => {
+    let active = true;
+    if (isDevelopmentAuthMockEnabled()) return;
+
+    const supabase = getSupabaseBrowserClient();
+
+    if (!supabase) return;
+    const client = supabase;
+
+    async function loadAccountName() {
+      try {
+        const { data, error: authError } = await client.auth.getSession();
+        if (!active) return;
+
+        if (authError) {
+          setReviewError(`Could not verify your account: ${authError.message}`);
+          return;
+        }
+
+        const user = data.session?.user;
+        setHasAuthenticatedSession(Boolean(user));
+        const metadataName = [
+          user?.user_metadata.full_name,
+          user?.user_metadata.name,
+          user?.user_metadata.display_name,
+        ].find((value): value is string => typeof value === "string" && value.trim().length > 0);
+        const name = metadataName?.trim() || user?.email?.trim() || "";
+        setAccountName(name.slice(0, 120));
+      } catch (error) {
+        if (active) {
+          setReviewError(
+            `Could not verify your account: ${error instanceof Error ? error.message : "Unknown error"}`,
+          );
+        }
+      } finally {
+        if (active) setIdentityLoading(false);
+      }
+    }
+
+    void loadAccountName();
+    return () => {
+      active = false;
+    };
+  }, []);
+
   async function submitReview(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (reviewRating === 0) {
+      setReviewError("Choose a rating before submitting.");
+      return;
+    }
     setReviewBusy(true);
     setReviewError("");
     setReviewNotice("");
+
+    if (isDevelopmentAuthMockEnabled()) {
+      if (!developmentAccountEmail) {
+        setReviewError("Sign in to a development account before choosing a demo rating.");
+        setReviewBusy(false);
+        return;
+      }
+      try {
+        const storageKey = `mobile-studio-development-rating:${encodeURIComponent(developmentAccountEmail.toLowerCase())}:${product.id}`;
+        window.localStorage.setItem(storageKey, String(reviewRating));
+        setDevelopmentDemoRating(reviewRating);
+        setReviewRating(0);
+        setReviewNotice(
+          `Demo rating saved: ${reviewRating.toFixed(1)} / 5. It is visible only in this browser and was not sent to the store.`,
+        );
+      } catch (error) {
+        setReviewError(
+          `Could not save the browser-only demo rating: ${error instanceof Error ? error.message : "Unknown error"}`,
+        );
+      }
+      setReviewBusy(false);
+      return;
+    }
 
     const supabase = getSupabaseBrowserClient();
     if (!supabase) {
@@ -87,21 +213,46 @@ export default function ProductDetailClient({ product }: Props) {
       return;
     }
 
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError) {
+      setReviewError(`Could not verify your account: ${sessionError.message}`);
+      setReviewBusy(false);
+      return;
+    }
+
+    const user = sessionData.session?.user;
+    if (!user) {
+      setHasAuthenticatedSession(false);
+      setReviewError("Sign in to a customer account before submitting a rating.");
+      setReviewBusy(false);
+      return;
+    }
+
+    const metadataName = [
+      user.user_metadata.full_name,
+      user.user_metadata.name,
+      user.user_metadata.display_name,
+    ].find((value): value is string => typeof value === "string" && value.trim().length > 0);
+    const name = metadataName?.trim() || user.email?.trim();
+    if (!name) {
+      setReviewError("Your account does not have a name or email to attach to this rating.");
+      setReviewBusy(false);
+      return;
+    }
+
     const { error: insertError } = await supabase.from("reviews").insert({
       product_id: product.id,
-      reviewer_name: reviewerName.trim(),
+      reviewer_name: name,
       rating: reviewRating,
-      review_text: reviewText.trim(),
+      review_text: "",
       status: "pending",
     });
 
     if (insertError) {
       setReviewError(`Could not submit your review: ${insertError.message}`);
     } else {
-      setReviewerName("");
-      setReviewText("");
-      setReviewRating(5);
-      setReviewNotice("Thanks for your feedback. Your review will appear after moderation.");
+      setReviewRating(0);
+      setReviewNotice("Thanks for your rating. It will appear after moderation.");
     }
     setReviewBusy(false);
   }
@@ -175,11 +326,127 @@ export default function ProductDetailClient({ product }: Props) {
               {product.name}
             </h1>
 
+            <form
+              id="quick-rating"
+              onSubmit={submitReview}
+              className="mt-4 rounded-2xl border border-amber-100 bg-amber-50/70 p-4"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h2 className="text-sm font-extrabold text-slate-900">Rate this product</h2>
+                  <p className="mt-1 text-xs text-slate-600">
+                    {isDevelopmentAuthMockEnabled()
+                      ? developmentAccountEmail
+                        ? `Browser-only demo rating for ${accountName || developmentAccountEmail}.`
+                        : "Sign in to rate. Guest ratings are disabled."
+                      : accountName
+                        ? `Rating as ${accountName}`
+                        : "Sign in to a customer account to rate this product."}
+                  </p>
+                </div>
+                <fieldset>
+                  <legend className="sr-only">Choose your rating</legend>
+                  <div role="group" aria-label="Choose a rating in half-star increments" className="flex items-center">
+                    {[0, 1, 2, 3, 4].map((index) => {
+                      const halfRating = index + 0.5;
+                      const fullRating = index + 1;
+                      const fill = Math.max(0, Math.min(1, reviewRating - index));
+                      return (
+                        <span key={index} className="relative inline-block h-9 w-8">
+                          <span aria-hidden="true" className="pointer-events-none absolute inset-0 text-center text-3xl leading-9 text-slate-300">☆</span>
+                          <span
+                            aria-hidden="true"
+                            className="pointer-events-none absolute inset-y-0 left-0 overflow-hidden whitespace-nowrap text-3xl leading-9 text-amber-500"
+                            style={{ width: `${fill * 100}%` }}
+                          >
+                            ★
+                          </span>
+                          <button
+                            type="button"
+                            aria-label={`${halfRating} stars`}
+                            aria-pressed={reviewRating === halfRating}
+                            disabled={!canChooseRating}
+                            onClick={() => setReviewRating(halfRating)}
+                            className="absolute inset-y-0 left-0 w-1/2 rounded-l focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 disabled:cursor-not-allowed"
+                          />
+                          <button
+                            type="button"
+                            aria-label={`${fullRating} ${fullRating === 1 ? "star" : "stars"}`}
+                            aria-pressed={reviewRating === fullRating}
+                            disabled={!canChooseRating}
+                            onClick={() => setReviewRating(fullRating)}
+                            className="absolute inset-y-0 right-0 w-1/2 rounded-r focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 disabled:cursor-not-allowed"
+                          />
+                        </span>
+                      );
+                    })}
+                  </div>
+                  <p className="mt-1 text-right text-xs font-semibold text-slate-600">
+                    {reviewRating ? `${reviewRating.toFixed(1)} / 5` : "Choose a rating"}
+                  </p>
+                </fieldset>
+              </div>
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                <button
+                  disabled={
+                    reviewBusy ||
+                    reviewRating === 0 ||
+                    !canChooseRating
+                  }
+                  className="rounded-xl bg-orange-500 px-4 py-2.5 text-sm font-black text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-slate-300"
+                >
+                  {reviewBusy
+                    ? "Submitting…"
+                    : isDevelopmentAuthMockEnabled()
+                      ? canChooseRating
+                        ? "Save demo rating"
+                        : "Sign in to rate"
+                      : canChooseRating
+                        ? "Submit rating"
+                        : "Sign in to rate"}
+                </button>
+                {!canChooseRating && (
+                  <Link href="/account" className="text-sm font-bold text-orange-700 hover:text-orange-800">
+                    Sign in or create an account
+                  </Link>
+                )}
+                {isDevelopmentAuthMockEnabled() && developmentDemoRating !== null && (
+                  <p className="flex items-center gap-2 text-sm font-semibold text-slate-600">
+                    Your saved demo rating:
+                    <StarRatingDisplay rating={developmentDemoRating} className="text-amber-500" />
+                    <span>{developmentDemoRating.toFixed(1)} / 5 (this browser only)</span>
+                  </p>
+                )}
+                {reviewNotice && (
+                  <p role="status" className="text-sm font-semibold text-emerald-700">{reviewNotice}</p>
+                )}
+              </div>
+            </form>
+            {reviewError && (
+              <p role="alert" className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                {reviewError}
+              </p>
+            )}
+
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <span className="text-sm font-bold text-amber-500">
-                ★ {product.rating}
-              </span>
-              <span className="text-sm text-slate-400">|</span>
+              <a
+                href="#quick-rating"
+                className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-bold text-amber-700 transition hover:bg-amber-100"
+              >
+                {reviews.some((review) => !review.is_demo) ? (
+                  <>
+                    <StarRatingDisplay rating={reviews.filter((review) => !review.is_demo).reduce((total, review) => total + review.rating, 0) / reviews.filter((review) => !review.is_demo).length} className="text-amber-500" />
+                    {(reviews.filter((review) => !review.is_demo).reduce((total, review) => total + review.rating, 0) / reviews.filter((review) => !review.is_demo).length).toFixed(1)}
+                    <span className="font-medium text-amber-800">
+                      ({reviews.filter((review) => !review.is_demo).length} {reviews.filter((review) => !review.is_demo).length === 1 ? "review" : "reviews"})
+                    </span>
+                  </>
+                ) : reviews.some((review) => review.is_demo) ? (
+                  "Demo review preview · no customer reviews yet"
+                ) : (
+                  "No reviews yet · Be the first"
+                )}
+              </a>
               <span className="text-sm text-slate-600">Model: {product.model}</span>
               <span className={`rounded-full px-3 py-1 text-xs font-bold ${
                 inStock ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-700"
@@ -202,6 +469,24 @@ export default function ProductDetailClient({ product }: Props) {
               {discounted && (
                 <p className="mt-2 text-sm font-bold text-emerald-700">
                   You save {formatPrice(product.oldPrice - product.price)} ({discount}% off)
+                </p>
+              )}
+              {isRetailer && product.retailerDiscountPercent > 0 && (
+                <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+                  <p className="text-xs font-black uppercase tracking-wide text-emerald-800">
+                    Retailer price · {product.retailerDiscountPercent}% off
+                  </p>
+                  <p className="mt-1 text-2xl font-black text-emerald-900">
+                    {formatStorePrice(retailerPrice(product))}
+                  </p>
+                  <p className="mt-1 text-xs text-emerald-800">
+                    Listed price: {formatStorePrice(product.price)}
+                  </p>
+                </div>
+              )}
+              {retailerAccessError && (
+                <p role="status" className="mt-3 text-xs text-amber-800">
+                  Retailer pricing could not be verified: {retailerAccessError}
                 </p>
               )}
               <p className="mt-2 text-xs text-slate-500">
@@ -290,72 +575,19 @@ export default function ProductDetailClient({ product }: Props) {
               </Link>
             </div>
 
-            <div className="mt-6 rounded-2xl border border-orange-100 bg-orange-50/70 p-4">
-              <h2 className="text-sm font-extrabold">Need help choosing the right part?</h2>
-              <p className="mt-1 text-sm leading-6 text-slate-600">
-                Confirm your exact mobile model and part compatibility before ordering.
-              </p>
-              <Link href="/customer-care" className="mt-2 inline-flex text-sm font-bold text-orange-700 hover:text-orange-800">
+            <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-slate-100 pt-4 text-sm font-bold text-orange-700">
+              <Link href="/customer-care" className="hover:text-orange-800">
                 Contact Customer Support →
               </Link>
-            </div>
-
-            <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <h2 className="text-sm font-extrabold">Delivery, warranty and returns</h2>
-              <p className="mt-1 text-sm leading-6 text-slate-600">
-                Delivery estimates and warranty or return terms must be confirmed with the store before ordering.
-              </p>
-              <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm font-bold text-orange-700">
-                <Link href="/shipping-policy" className="hover:text-orange-800">Shipping details</Link>
-                <Link href="/returns-policy" className="hover:text-orange-800">Returns &amp; warranty</Link>
-                <Link href="/customer-care" className="hover:text-orange-800">Contact support</Link>
-              </div>
+              <Link href="/shipping-policy" className="hover:text-orange-800">
+                Shipping details
+              </Link>
+              <Link href="/returns-policy" className="hover:text-orange-800">
+                Returns &amp; warranty
+              </Link>
             </div>
           </section>
         </div>
-
-        <section className="mt-8 grid gap-6 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8 lg:grid-cols-[1fr_0.8fr]">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-600">Customer feedback</p>
-            <h2 className="mt-2 text-2xl font-black">Reviews for {product.name}</h2>
-            {reviewError && <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">{reviewError}</p>}
-            <div className="mt-5 space-y-4">
-              {reviews.length === 0 && !reviewError ? (
-                <p className="text-sm text-slate-500">No approved reviews yet. Be the first to share your experience.</p>
-              ) : reviews.map((review) => (
-                <article key={review.id} className="rounded-2xl bg-slate-50 p-4">
-                  <div className="text-amber-500" aria-label={`${review.rating} out of 5 stars`}>
-                    {"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}
-                  </div>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">{review.review_text}</p>
-                  <p className="mt-3 text-sm font-bold text-slate-900">{review.reviewer_name}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-          <form onSubmit={submitReview} className="space-y-4 rounded-2xl bg-slate-50 p-5">
-            <h3 className="font-black">Write a review</h3>
-            <label className="block text-sm font-bold text-slate-700">
-              Your name
-              <input required maxLength={120} value={reviewerName} onChange={(event) => setReviewerName(event.target.value)} className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
-            </label>
-            <label className="block text-sm font-bold text-slate-700">
-              Rating
-              <select value={reviewRating} onChange={(event) => setReviewRating(Number(event.target.value))} className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3">
-                {[5, 4, 3, 2, 1].map((rating) => <option key={rating} value={rating}>{rating} {rating === 1 ? "star" : "stars"}</option>)}
-              </select>
-            </label>
-            <label className="block text-sm font-bold text-slate-700">
-              Your review
-              <textarea required minLength={3} maxLength={2000} value={reviewText} onChange={(event) => setReviewText(event.target.value)} className="mt-2 min-h-28 w-full rounded-xl border border-slate-200 bg-white px-4 py-3" />
-            </label>
-            {reviewError && <p role="alert" className="text-sm text-red-700">{reviewError}</p>}
-            {reviewNotice && <p role="status" className="text-sm text-emerald-700">{reviewNotice}</p>}
-            <button disabled={reviewBusy} className="w-full rounded-xl bg-orange-500 px-5 py-3 font-black text-white disabled:cursor-not-allowed disabled:bg-slate-300">
-              {reviewBusy ? "Submitting…" : "Submit review"}
-            </button>
-          </form>
-        </section>
 
         <section className="mt-8 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8">
           <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-600">Shop with confidence</p>

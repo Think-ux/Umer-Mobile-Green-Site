@@ -24,8 +24,8 @@ export default function MyOrdersPage() {
       return;
     }
     const normalizedOrderNumber = orderNumber.trim();
-    if (!/^UMP-[A-F0-9]{12}$/i.test(normalizedOrderNumber)) {
-      setError("Enter the order number from your checkout confirmation.");
+    if (!/^(?:\d{6}|UMP-[A-F0-9]{12})$/i.test(normalizedOrderNumber)) {
+      setError("Enter the six-digit tracking code from your checkout confirmation.");
       return;
     }
     const supabase = getSupabaseBrowserClient();
@@ -64,7 +64,7 @@ export default function MyOrdersPage() {
           <form onSubmit={findOrder} className="mt-6 grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
             <label className="text-sm font-bold text-slate-700">
               Order number
-              <input required value={orderNumber} onChange={(event) => setOrderNumber(event.target.value)} placeholder="UMP-XXXXXXXXXXXX" className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-orange-500" />
+              <input required value={orderNumber} onChange={(event) => setOrderNumber(event.target.value)} placeholder="123456" inputMode="numeric" maxLength={16} className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-orange-500" />
             </label>
             <label className="text-sm font-bold text-slate-700">
               Checkout phone
@@ -83,7 +83,7 @@ export default function MyOrdersPage() {
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400">Order</p>
-                  <h2 className="mt-1 text-xl font-black text-slate-900">#{order.orderNumber}</h2>
+                  <h2 className="mt-1 text-xl font-black text-slate-900">#{order.trackingCode ?? order.orderNumber}</h2>
                   <p className="mt-1 text-sm text-slate-500">{new Date(order.createdAt).toLocaleString("en-PK")}</p>
                 </div>
                 <span className="rounded-full bg-orange-50 px-4 py-2 text-sm font-black text-orange-700">{order.status}</span>
@@ -96,9 +96,12 @@ export default function MyOrdersPage() {
                   </div>
                 ))}
               </div>
+              <p className="mt-4 border-t border-slate-200 pt-4 text-sm text-slate-600">
+                Payment: {order.customer.payment} · {order.paymentStatus ?? "Unpaid"}
+              </p>
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4">
                 <p className="text-xl font-black text-slate-900">{order.total == null ? "Delivery to be confirmed" : `Rs. ${order.total.toLocaleString("en-PK")}`}</p>
-                <Link href={`/track-order?order=${encodeURIComponent(order.orderNumber)}`} className="rounded-xl bg-slate-950 px-5 py-3 font-black text-white transition hover:bg-slate-800">Track Order Status</Link>
+                <Link href={`/track-order?order=${encodeURIComponent(order.trackingCode ?? order.orderNumber)}`} className="rounded-xl bg-slate-950 px-5 py-3 font-black text-white transition hover:bg-slate-800">Track Order Status</Link>
               </div>
             </article>
           )}

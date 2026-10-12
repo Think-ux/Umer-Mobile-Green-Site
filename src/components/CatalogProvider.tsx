@@ -13,7 +13,13 @@ import {
   products as initialProducts,
   type Product,
 } from "@/data/store";
+import { normalizeDeliveryRates, type DeliveryRate } from "@/lib/delivery";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
+import {
+  hasRetailerDemoSession,
+  isRetailerDemoEnabled,
+  subscribeToRetailerDemoSession,
+} from "@/lib/auth/retailer-demo";
 
 export type StoreCategory = {
   name: string;
@@ -34,6 +40,7 @@ export type StoreReview = {
   reviewer_name: string;
   rating: number;
   review_text: string;
+  is_demo: boolean;
   created_at: string;
   product_name: string;
 };
@@ -57,8 +64,7 @@ export type StoreSettings = {
     facebook: string;
     tiktok: string;
   };
-  deliveryCharge: number | null;
-  freeDeliveryThreshold: number | null;
+  deliveryRates: DeliveryRate[];
   estimatedDelivery: string;
   deliveryVerified: boolean;
 };
@@ -75,6 +81,8 @@ type CatalogContextValue = {
   settings: StoreSettings;
   status: CatalogStatus;
   error: string;
+  isRetailer: boolean;
+  retailerAccessError: string;
   refresh: () => Promise<void>;
 };
 
@@ -105,9 +113,9 @@ export type HomepageContent = {
 
 const initialHomepage: HomepageContent = {
   eyebrow: "UMER MOBILE PARTS",
-  headline: "Find Quality Mobile Spare Parts",
+  headline: "Your Repair Starts With the Right Part",
   description:
-    "Displays, batteries, charging parts and other mobile spare parts — explore our catalog to find the part that matches your device.",
+    "Explore displays, batteries, charging parts and more. Browse the catalog to find the mobile parts you need for the repair ahead.",
   button_label: "Shop Parts",
   button_href: "/search",
   hero_highlights: [
@@ -142,8 +150,7 @@ const initialSettings: StoreSettings = {
   whatsapp: "",
   contactVerified: false,
   social: { instagram: "", facebook: "", tiktok: "" },
-  deliveryCharge: null,
-  freeDeliveryThreshold: null,
+  deliveryRates: [],
   estimatedDelivery: "",
   deliveryVerified: false,
 };
@@ -161,6 +168,8 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState(initialSettings);
   const [status, setStatus] = useState<CatalogStatus>("loading");
   const [error, setError] = useState("");
+  const [isRetailer, setIsRetailer] = useState(false);
+  const [retailerAccessError, setRetailerAccessError] = useState("");
 
   const refresh = useCallback(async () => {
     const supabase = getSupabaseBrowserClient();
@@ -175,6 +184,7 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
       setSettings(initialSettings);
       setStatus("unconfigured");
       setError("");
+      setRetailerAccessError("");
       return;
     }
 
@@ -184,10 +194,10 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
     const [productResult, categoryResult, brandResult, reviewResult, contentResult, bannerResult, settingsResult] = await Promise.all([
       supabase
         .from("products")
-        .select("id,slug,name,brand,model,category,quality,price,old_price,stock,rating,image,is_featured")
+        .select("id,slug,name,brand,model,category,quality,price,old_price,retailer_discount_percent,stock,rating,image,is_featured")
         .eq("is_published", true)
         .order("name")
-        .returns<(Omit<Product, "oldPrice"> & { old_price: number })[]>(),
+        .returns<(Omit<Product, "oldPrice" | "retailerDiscountPercent"> & { old_price: number; retailer_discount_percent: number })[]>(),
       supabase
         .from("categories")
         .select("name,icon,count,sort_order")
@@ -202,7 +212,7 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
         .returns<StoreBrand[]>(),
       supabase
         .from("reviews")
-        .select("id,product_id,reviewer_name,rating,review_text,created_at")
+        .select("id,product_id,reviewer_name,rating,review_text,is_demo,created_at")
         .eq("status", "approved")
         .order("created_at", { ascending: false })
         .limit(6),
@@ -255,9 +265,10 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    const publishedProducts = productResult.data.map(({ old_price, ...product }) => ({
+    const publishedProducts = productResult.data.map(({ old_price, retailer_discount_percent, ...product }) => ({
       ...product,
       oldPrice: old_price,
+      retailerDiscountPercent: Number(retailer_discount_percent),
     }));
     const { data: categoryImageData, error: categoryImageError } = await supabase
       .from("categories")
@@ -309,6 +320,13 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
         ? {
             ...initialHomepage,
             ...savedHomepage,
+            ...(savedHomepage.headline === "Find Quality Mobile Spare Parts"
+              ? { headline: initialHomepage.headline }
+              : {}),
+            ...(savedHomepage.description ===
+            "Displays, batteries, charging parts and other mobile spare parts — explore our catalog to find the part that matches your device."
+              ? { description: initialHomepage.description }
+              : {}),
             hero_highlights:
               "hero_highlights" in savedHomepage &&
               Array.isArray(savedHomepage.hero_highlights)
@@ -340,13 +358,6 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
     const contactVerified =
       storeSettings.contact_verified === true && hasAllContactDetails;
     const deliveryVerified = deliverySettings.details_verified === true;
-    const safeNumber = (value: unknown, fallback: number | null) => {
-      if (value === null || value === undefined || value === "") {
-        return fallback;
-      }
-      const parsed = Number(value);
-      return Number.isFinite(parsed) && parsed >= 0 ? parsed : fallback;
-    };
     setSettings({
       storeName:
         typeof storeSettings.name === "string"
@@ -379,14 +390,9 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
             ? socialSettings.tiktok
             : "",
       },
-      deliveryCharge: deliveryVerified ? safeNumber(
-        deliverySettings.charge,
-        null
-      ) : null,
-      freeDeliveryThreshold: deliveryVerified ? safeNumber(
-        deliverySettings.free_threshold,
-        null
-      ) : null,
+      deliveryRates: deliveryVerified
+        ? normalizeDeliveryRates(deliverySettings.zones)
+        : [],
       estimatedDelivery:
         deliveryVerified && typeof deliverySettings.estimated_time === "string"
           ? deliverySettings.estimated_time
@@ -397,12 +403,64 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
+    let active = true;
+    const refreshRetailerAccess = async () => {
+      if (isRetailerDemoEnabled()) {
+        try {
+          if (hasRetailerDemoSession()) {
+            setIsRetailer(true);
+            setRetailerAccessError("");
+            return;
+          }
+        } catch (accessError) {
+          setIsRetailer(false);
+          setRetailerAccessError(
+            accessError instanceof Error ? accessError.message : "Could not verify retailer demo access.",
+          );
+          return;
+        }
+      }
+
+      const supabase = getSupabaseBrowserClient();
+      if (!supabase) {
+        setIsRetailer(false);
+        setRetailerAccessError("");
+        return;
+      }
+      const { data, error: sessionError } = await supabase.auth.getSession();
+      if (!active) return;
+      if (sessionError) {
+        setIsRetailer(false);
+        setRetailerAccessError(`Could not verify retailer pricing access: ${sessionError.message}`);
+        return;
+      }
+      setIsRetailer(data.session?.user.app_metadata.role === "retailer");
+      setRetailerAccessError("");
+    };
+
+    void refreshRetailerAccess();
+    const supabase = getSupabaseBrowserClient();
+    const { data: authData } = supabase?.auth.onAuthStateChange(() => {
+      void refreshRetailerAccess();
+    }) ?? { data: { subscription: null } };
+    const unsubscribeDemo = subscribeToRetailerDemoSession(() => {
+      void refreshRetailerAccess();
+    });
+
+    return () => {
+      active = false;
+      authData.subscription?.unsubscribe();
+      unsubscribeDemo();
+    };
+  }, []);
+
+  useEffect(() => {
     void Promise.resolve().then(refresh);
   }, [refresh]);
 
   const value = useMemo(
-    () => ({ products, categories, brands, reviews, homepage, banners, settings, status, error, refresh }),
-    [products, categories, brands, reviews, homepage, banners, settings, status, error, refresh]
+    () => ({ products, categories, brands, reviews, homepage, banners, settings, status, error, isRetailer, retailerAccessError, refresh }),
+    [products, categories, brands, reviews, homepage, banners, settings, status, error, isRetailer, retailerAccessError, refresh]
   );
 
   return (

@@ -8,6 +8,7 @@
   quality: string;
   price: number;
   oldPrice: number;
+  retailerDiscountPercent: number;
   stock: number;
   rating: number;
   image: string;
@@ -25,6 +26,7 @@ export const products: Product[] = [
     quality: "Premium",
     price: 12500,
     oldPrice: 14000,
+    retailerDiscountPercent: 0,
     stock: 12,
     rating: 4.8,
     image: "https://images.unsplash.com/photo-1592286927505-2fd7b8e6b9a0?auto=format&fit=crop&w=900&q=80",
@@ -40,6 +42,7 @@ export const products: Product[] = [
     quality: "Original",
     price: 7200,
     oldPrice: 8000,
+    retailerDiscountPercent: 0,
     stock: 18,
     rating: 4.7,
     image: "https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=900&q=80",
@@ -55,6 +58,7 @@ export const products: Product[] = [
     quality: "Premium",
     price: 4200,
     oldPrice: 4800,
+    retailerDiscountPercent: 0,
     stock: 25,
     rating: 4.6,
     image: "https://images.unsplash.com/photo-1609592424274-7f7f8f6e8b35?auto=format&fit=crop&w=900&q=80",
@@ -70,6 +74,7 @@ export const products: Product[] = [
     quality: "Premium",
     price: 2800,
     oldPrice: 3200,
+    retailerDiscountPercent: 0,
     stock: 31,
     rating: 4.5,
     image: "https://images.unsplash.com/photo-1556656793-08538906a9f8?auto=format&fit=crop&w=900&q=80",
@@ -84,6 +89,7 @@ export const products: Product[] = [
     quality: "Original",
     price: 1600,
     oldPrice: 1900,
+    retailerDiscountPercent: 0,
     stock: 40,
     rating: 4.9,
     image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80",
@@ -98,6 +104,7 @@ export const products: Product[] = [
     quality: "Premium",
     price: 2300,
     oldPrice: 2600,
+    retailerDiscountPercent: 0,
     stock: 15,
     rating: 4.4,
     image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=900&q=80",

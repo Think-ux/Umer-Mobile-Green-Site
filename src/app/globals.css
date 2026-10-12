@@ -59,6 +59,48 @@ textarea {
   color: var(--foreground);
 }
 
+.hero-enter {
+  animation: hero-enter 650ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.hero-enter-delay-1 {
+  animation-delay: 100ms;
+}
+
+.hero-enter-delay-2 {
+  animation-delay: 220ms;
+}
+
+.hero-enter-delay-3 {
+  animation-delay: 340ms;
+}
+
+.hero-image-drift {
+  animation: hero-image-drift 18s ease-in-out both;
+}
+
+@keyframes hero-enter {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-image-drift {
+  from {
+    transform: scale(1.08);
+  }
+
+  to {
+    transform: scale(1.02);
+  }
+}
+
 .ui-card {
   border: 1px solid var(--border);
   border-radius: 1rem;
@@ -116,9 +158,8 @@ textarea {
 .admin-workspace input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus,
 .admin-workspace select:focus,
 .admin-workspace textarea:focus {
-  border-color: var(--brand-primary);
-  outline: 2px solid rgb(249 115 22 / 16%);
-  outline-offset: 1px;
+  border-color: var(--brand-primary-hover);
+  outline: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

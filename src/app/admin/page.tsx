@@ -140,7 +140,7 @@ export default function AdminPage() {
         </div>
 
         <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm leading-6 text-amber-900">
-          Customer orders are shared through Supabase and can be tracked from any device. Retailer applications and product reviews are managed in the same database.
+          Customer orders and registered accounts are shared through Supabase and can be managed from this CMS. Retailer applications and product reviews are managed here as well.
         </div>
       </div>
     </div>

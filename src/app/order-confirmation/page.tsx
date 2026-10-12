@@ -15,15 +15,16 @@ export default function OrderConfirmationPage() {
 function ConfirmationContent() {
   const searchParams = useSearchParams();
   const orderNumber = searchParams.get("order");
+  const isTrackingCode = Boolean(orderNumber && /^\d{6}$/.test(orderNumber));
 
-  if (!orderNumber || !/^UMP-[A-F0-9]{12}$/i.test(orderNumber)) {
+  if (!orderNumber || (!isTrackingCode && !/^UMP-[A-F0-9]{12}$/i.test(orderNumber))) {
     return (
       <main className="min-h-[65vh] bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
         <section className="ui-card mx-auto max-w-2xl p-7 text-center sm:p-10">
           <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-600">Order information</p>
           <h1 className="mt-3 text-3xl font-black">We couldn&apos;t verify an order</h1>
           <p role="status" className="mt-4 leading-7 text-slate-600">
-            We could not find an order number in this link. You can still look up a saved order using its order number and checkout phone.
+            We could not find an order tracking code in this link. You can still look up an order using its six-digit tracking code and checkout phone.
           </p>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
             <Link href="/my-orders" className="ui-button-primary">Find my orders</Link>
@@ -48,13 +49,13 @@ function ConfirmationContent() {
             Thank you for your order
           </h1>
           <p className="mx-auto mt-4 max-w-xl leading-7 text-slate-600">
-            Your order has been recorded in the store’s shared order system. Keep this order number; payment and delivery arrangements will be confirmed by the store.
+            Your order has been recorded in the store’s shared order system. Keep this tracking code; payment and delivery arrangements will be confirmed by the store.
           </p>
 
           <div className="mt-8 rounded-3xl border border-slate-200 bg-slate-50 p-6 text-left">
-            <p className="text-slate-600">Order number</p>
+            <p className="text-slate-600">{isTrackingCode ? "Your 6-digit tracking code" : "Legacy order number"}</p>
             <p className="mt-2 break-all text-2xl font-black text-slate-900">{orderNumber}</p>
-            <p className="mt-4 text-sm leading-6 text-slate-600">You can view the current status and order summary by entering this number and the same phone number at checkout.</p>
+            <p className="mt-4 text-sm leading-6 text-slate-600">Track your order by entering this code and the same phone number you used at checkout.</p>
           </div>
 
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">

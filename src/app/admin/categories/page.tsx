@@ -27,6 +27,7 @@ export default function AdminCategories() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
+  const [reorderingId, setReorderingId] = useState<number | null>(null);
 
   const loadCategories = useCallback(async () => {
     const supabase = getSupabaseBrowserClient();
@@ -240,6 +241,31 @@ export default function AdminCategories() {
     setNotice(`${category.name} is now ${category.is_enabled ? "hidden" : "visible"}.`);
   }
 
+  async function moveCategory(category: CategoryRow, direction: -1 | 1) {
+    setReorderingId(category.id);
+    setError("");
+    setNotice("");
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      setError("Supabase is not configured. Category order was not changed.");
+      setReorderingId(null);
+      return;
+    }
+    const { error: moveError } = await supabase.rpc("move_category", {
+      p_category_id: category.id,
+      p_direction: direction,
+    });
+    if (moveError) {
+      setError(`Could not move ${category.name}: ${moveError.message}. Apply the latest Supabase schema if category ordering is not installed.`);
+      setReorderingId(null);
+      return;
+    }
+    await loadCategories();
+    await refresh();
+    setNotice(`${category.name} moved ${direction < 0 ? "up" : "down"}.`);
+    setReorderingId(null);
+  }
+
   async function deleteCategory(category: CategoryRow) {
     if (!window.confirm(`Delete "${category.name}"? Categories with products cannot be deleted.`)) {
       return;
@@ -368,7 +394,10 @@ export default function AdminCategories() {
                 <p className="mt-1 text-sm text-slate-500">
                   {category.count} published {category.count === 1 ? "product" : "products"}
                 </p>
-                <div className="mt-5 flex flex-wrap gap-3 border-t border-slate-100 pt-4 text-sm font-bold">
+                <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-slate-100 pt-4 text-sm font-bold">
+                  <span className="mr-auto text-xs font-semibold text-slate-500">Sort order {category.sort_order}</span>
+                  <button type="button" aria-label={`Move ${category.name} up`} disabled={index === 0 || reorderingId !== null} onClick={() => void moveCategory(category, -1)} className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-slate-700 disabled:cursor-not-allowed disabled:opacity-40">↑</button>
+                  <button type="button" aria-label={`Move ${category.name} down`} disabled={index === rows.length - 1 || reorderingId !== null} onClick={() => void moveCategory(category, 1)} className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-slate-700 disabled:cursor-not-allowed disabled:opacity-40">↓</button>
                   <button type="button" onClick={() => editCategory(category)} className="text-orange-600">Edit</button>
                   <button type="button" onClick={() => void toggleVisibility(category)} className="text-slate-600">
                     {category.is_enabled ? "Hide" : "Show"}

@@ -3,17 +3,22 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
-import type { OrderStatus, SavedOrder } from "@/lib/orders";
+import { courierPreferenceLabel, type CourierPreference, type FulfillmentMethod, type OrderStatus, type PaymentStatus, type SavedOrder } from "@/lib/orders";
 
 type OrderRow = {
   id: number;
   order_number: string;
+  tracking_code: string;
   order_type: "Customer";
   customer_name: string;
   phone: string;
   address: string;
   city: string;
+  delivery_area: string;
+  fulfillment_method: FulfillmentMethod;
+  preferred_courier: CourierPreference;
   payment_method: string;
+  payment_status: PaymentStatus;
   subtotal: number;
   delivery: number | null;
   total: number | null;
@@ -32,7 +37,7 @@ type OrderItemRow = {
   quantity: number;
 };
 
-type AdminOrder = SavedOrder & { id: number };
+type AdminOrder = SavedOrder & { id: number; trackingCode: string; paymentStatus: PaymentStatus };
 
 const statuses: OrderStatus[] = [
   "Pending",
@@ -59,7 +64,7 @@ export default function OrdersPage() {
     }
     const { data: orderRows, error: orderError } = await supabase
       .from("customer_orders")
-      .select("id,order_number,order_type,customer_name,phone,address,city,payment_method,subtotal,delivery,total,status,created_at")
+      .select("id,order_number,tracking_code,order_type,customer_name,phone,address,city,delivery_area,fulfillment_method,preferred_courier,payment_method,payment_status,subtotal,delivery,total,status,created_at")
       .order("created_at", { ascending: false })
       .returns<OrderRow[]>();
     if (orderError) {
@@ -87,13 +92,17 @@ export default function OrdersPage() {
     setOrders(orderRows.map((row) => ({
       id: row.id,
       orderNumber: row.order_number,
+      trackingCode: row.tracking_code,
       orderType: row.order_type,
       customer: {
         name: row.customer_name,
         phone: row.phone,
         address: row.address,
         city: row.city,
+        area: row.delivery_area,
         payment: row.payment_method,
+        fulfillmentMethod: row.fulfillment_method,
+        courierPreference: row.preferred_courier,
       },
       items: itemRows
         .filter((item) => item.order_id === row.id)
@@ -111,6 +120,7 @@ export default function OrdersPage() {
       subtotal: Number(row.subtotal),
       delivery: row.delivery === null ? null : Number(row.delivery),
       total: row.total === null ? null : Number(row.total),
+      paymentStatus: row.payment_status,
       status: row.status,
       createdAt: row.created_at,
     })));
@@ -126,7 +136,7 @@ export default function OrdersPage() {
     const query = search.trim().toLowerCase();
     if (!query) return orders;
     return orders.filter((order) =>
-      `${order.orderNumber} ${order.customer.name} ${order.customer.phone}`
+      `${order.trackingCode} ${order.orderNumber} ${order.customer.name} ${order.customer.phone}`
         .toLowerCase()
         .includes(query)
     );
@@ -147,6 +157,28 @@ export default function OrdersPage() {
       .eq("id", order.id);
     if (updateError) {
       setError(`Could not update order ${order.orderNumber}: ${updateError.message}`);
+      setBusyId(null);
+      return;
+    }
+    await loadOrders();
+    setBusyId(null);
+  }
+
+  async function changePaymentStatus(order: AdminOrder, paymentStatus: PaymentStatus) {
+    setBusyId(order.id);
+    setError("");
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      setError("Supabase is not configured. Payment status was not changed.");
+      setBusyId(null);
+      return;
+    }
+    const { error: updateError } = await supabase
+      .from("customer_orders")
+      .update({ payment_status: paymentStatus, updated_at: new Date().toISOString() })
+      .eq("id", order.id);
+    if (updateError) {
+      setError(`Could not update payment status for order ${order.orderNumber}: ${updateError.message}`);
       setBusyId(null);
       return;
     }
@@ -191,11 +223,21 @@ export default function OrdersPage() {
                 <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
                   <div>
                     <p className="text-xs font-black uppercase tracking-[0.15em] text-slate-500">Order</p>
-                    <h2 className="mt-1 text-xl font-black">#{order.orderNumber}</h2>
+                    <h2 className="mt-1 text-xl font-black">Tracking code: {order.trackingCode}</h2>
+                    <p className="mt-1 text-xs text-slate-500">Internal reference: {order.orderNumber}</p>
                     <p className="mt-2 text-sm text-slate-600">{order.customer.name} · {order.customer.phone}</p>
-                    <p className="mt-1 text-sm text-slate-500">{order.customer.address}, {order.customer.city}</p>
+                    <p className="mt-1 text-sm text-slate-500">
+                      {order.customer.fulfillmentMethod === "store_pickup"
+                        ? "Store pickup — confirm pickup address and readiness with customer."
+                        : `${order.customer.address}, ${order.customer.area}, ${order.customer.city}`}
+                    </p>
+                    <p className="mt-1 text-sm text-slate-500">
+                      {order.customer.fulfillmentMethod === "store_pickup"
+                        ? "Fulfillment: Store pickup"
+                        : `Preferred courier: ${order.customer.courierPreference ? courierPreferenceLabel(order.customer.courierPreference) : "Not specified"}`}
+                    </p>
                     <p className="mt-1 text-xs text-slate-500">{new Date(order.createdAt).toLocaleString("en-PK")}</p>
-                    <Link href={`/track-order?order=${encodeURIComponent(order.orderNumber)}`} className="mt-2 inline-block text-sm font-bold text-orange-600">Tracking page →</Link>
+                    <Link href={`/track-order?order=${encodeURIComponent(order.trackingCode)}`} className="mt-2 inline-block text-sm font-bold text-orange-600">Tracking page →</Link>
                   </div>
                   <label className="text-sm font-bold text-slate-700">
                     Status
@@ -206,6 +248,17 @@ export default function OrdersPage() {
                       className="ui-field mt-2 min-w-44"
                     >
                       {statuses.map((status) => <option key={status}>{status}</option>)}
+                    </select>
+                  </label>
+                  <label className="text-sm font-bold text-slate-700">
+                    Payment status
+                    <select
+                      value={order.paymentStatus}
+                      disabled={busyId === order.id}
+                      onChange={(event) => void changePaymentStatus(order, event.target.value as PaymentStatus)}
+                      className="ui-field mt-2 min-w-44"
+                    >
+                      {(["Unpaid", "Paid", "Refunded"] as const).map((status) => <option key={status}>{status}</option>)}
                     </select>
                   </label>
                 </div>
@@ -219,7 +272,8 @@ export default function OrdersPage() {
                 </div>
                 <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
                   <div className="text-sm text-slate-600">
-                    <p>Payment: {order.customer.payment}</p>
+                    <p>Payment method: {order.customer.payment}</p>
+                    <p className="mt-1">Payment status: {order.paymentStatus}</p>
                     <p className="mt-1">Delivery: {order.delivery === null ? "To be confirmed" : `Rs. ${order.delivery.toLocaleString("en-PK")}`}</p>
                   </div>
                   <div className="text-right">

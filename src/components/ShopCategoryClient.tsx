@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useCatalog } from "@/components/CatalogProvider";
+import BannerCarousel from "@/components/BannerCarousel";
 import ProductCard from "@/components/ProductCard";
 import { categorySlug } from "@/data/store";
 
@@ -336,19 +337,10 @@ export default function ShopCategoryClient({ category }: Props) {
         </div>
       </section>
 
-      {banners.filter((banner) => banner.placement === "Category page").map((banner) => (
-        <section key={banner.id} className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
-          <Link
-            href={banner.link_url || `/shop/${category}`}
-            className="group relative flex min-h-40 items-end overflow-hidden rounded-2xl bg-slate-950 bg-cover bg-center p-6 sm:min-h-52 sm:p-8"
-            style={{ backgroundImage: `linear-gradient(90deg, rgba(15,23,42,.82), rgba(15,23,42,.12)), url("${banner.image_url}")` }}
-          >
-            <span className="text-xl font-black text-white transition group-hover:text-orange-200 sm:text-2xl">
-              {banner.title}
-            </span>
-          </Link>
-        </section>
-      ))}
+      <BannerCarousel
+        label="Category promotions"
+        banners={banners.filter((banner) => banner.placement === "Category page")}
+      />
 
       <section className="mx-auto max-w-7xl px-4 py-7 sm:px-6 sm:py-10 lg:px-8">
         <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">

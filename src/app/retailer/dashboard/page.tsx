@@ -4,23 +4,57 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
+import {
+  endRetailerDemoSession,
+  hasRetailerDemoSession,
+  isRetailerDemoEnabled,
+} from "@/lib/auth/retailer-demo";
 
 type DashboardState = "checking" | "ready" | "signed-out" | "not-retailer" | "unconfigured" | "error";
 
 export default function RetailerDashboard() {
   const router = useRouter();
-  const configured = Boolean(getSupabaseBrowserClient());
-  const [status, setStatus] = useState<DashboardState>(
-    configured ? "checking" : "unconfigured"
-  );
+  const [status, setStatus] = useState<DashboardState>("checking");
   const [businessName, setBusinessName] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const supabase = getSupabaseBrowserClient();
-    if (!supabase) return;
-
     let active = true;
+    if (isRetailerDemoEnabled()) {
+      try {
+        if (hasRetailerDemoSession()) {
+          void Promise.resolve().then(() => {
+            if (!active) return;
+            setBusinessName("Demo Retailer");
+            setStatus("ready");
+          });
+          return () => {
+            active = false;
+          };
+        }
+      } catch (demoError) {
+        const message = demoError instanceof Error ? demoError.message : "Could not verify retailer demo access.";
+        void Promise.resolve().then(() => {
+          if (!active) return;
+          setError(message);
+          setStatus("error");
+        });
+        return () => {
+          active = false;
+        };
+      }
+    }
+
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      void Promise.resolve().then(() => {
+        if (active) setStatus("unconfigured");
+      });
+      return () => {
+        active = false;
+      };
+    }
+
     const updateSession = (user: {
       app_metadata: Record<string, unknown>;
       user_metadata: Record<string, unknown>;
@@ -65,6 +99,19 @@ export default function RetailerDashboard() {
   }, [router]);
 
   async function signOut() {
+    if (isRetailerDemoEnabled()) {
+      try {
+        if (hasRetailerDemoSession()) {
+          endRetailerDemoSession();
+          router.replace("/retailer/login");
+          return;
+        }
+      } catch (demoError) {
+        setError(demoError instanceof Error ? demoError.message : "Could not end retailer demo access.");
+        return;
+      }
+    }
+
     const supabase = getSupabaseBrowserClient();
     if (!supabase) {
       setError("The account service is not configured, so sign-out could not be completed.");
@@ -105,6 +152,11 @@ export default function RetailerDashboard() {
       <div className="mx-auto max-w-5xl">
         <section className="rounded-3xl bg-slate-950 p-6 text-white sm:p-9">
           <p className="text-sm font-black uppercase tracking-[0.2em] text-orange-300">Retailer account</p>
+          {isRetailerDemoEnabled() && hasRetailerDemoSession() && (
+            <p className="mt-4 w-fit rounded-full border border-amber-300/40 bg-amber-300/10 px-3 py-1 text-xs font-black uppercase tracking-wide text-amber-200">
+              Demo mode · sample data only · no Supabase
+            </p>
+          )}
           <div className="mt-3 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
             <div>
               <h1 className="text-3xl font-black sm:text-4xl">Welcome, {businessName}</h1>
@@ -127,6 +179,11 @@ export default function RetailerDashboard() {
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <Link href="/search" className="ui-button-primary">Browse current catalog</Link>
+            {isRetailerDemoEnabled() && hasRetailerDemoSession() && (
+              <Link href="/retailer/orders" className="inline-flex min-h-11 items-center rounded-xl border border-orange-300/30 px-5 py-3 font-bold text-orange-100 transition hover:bg-white/10">
+                View sample retailer orders
+              </Link>
+            )}
             <Link href="/customer-care" className="inline-flex min-h-11 items-center rounded-xl border border-slate-200 px-5 py-3 font-bold text-slate-800 transition hover:border-orange-300 hover:text-orange-700">
               Ask about wholesale terms
             </Link>

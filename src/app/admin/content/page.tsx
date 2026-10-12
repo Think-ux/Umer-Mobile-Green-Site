@@ -31,9 +31,9 @@ type HomepageContent = {
 
 const initialContent: HomepageContent = {
   eyebrow: "UMER MOBILE PARTS",
-  headline: "Find Quality Mobile Spare Parts",
+  headline: "Your Repair Starts With the Right Part",
   description:
-    "Displays, batteries, charging parts and other mobile spare parts — explore our catalog to find the part that matches your device.",
+    "Explore displays, batteries, charging parts and more. Browse the catalog to find the mobile parts you need for the repair ahead.",
   button_label: "Shop Parts",
   button_href: "/search",
   hero_highlights: [
@@ -96,6 +96,13 @@ export default function AdminContentPage() {
         setContent({
           ...initialContent,
           ...data.content,
+          ...(data.content.headline === "Find Quality Mobile Spare Parts"
+            ? { headline: initialContent.headline }
+            : {}),
+          ...(data.content.description ===
+          "Displays, batteries, charging parts and other mobile spare parts — explore our catalog to find the part that matches your device."
+            ? { description: initialContent.description }
+            : {}),
           hero_highlights:
             "hero_highlights" in data.content &&
             Array.isArray(data.content.hero_highlights)
@@ -303,23 +310,50 @@ export default function AdminContentPage() {
           </div>
 
           <aside className="h-fit rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
-            <SectionHeading number="Preview" title="Content checklist" />
-            <ul className="mt-5 space-y-3">
+            <SectionHeading number="Live" title="Homepage preview" />
+            <p className="mt-3 text-xs leading-5 text-slate-500">
+              Preview updates as you edit. Banners and live catalog products are not included.
+            </p>
+            <div aria-label="Live homepage content preview" className="mt-5 overflow-hidden rounded-2xl bg-slate-950 p-5 text-white">
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-orange-300">
+                {content.eyebrow || "Store name"}
+              </p>
+              <h3 className="mt-3 text-2xl font-black leading-tight">
+                {content.headline || "Your homepage headline"}
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-slate-300">
+                {content.description || "Supporting text appears here."}
+              </p>
+              <span className="mt-5 inline-flex rounded-lg bg-orange-500 px-4 py-2 text-sm font-black">
+                {content.button_label || "Button label"} →
+              </span>
+              {content.hero_highlights.filter((highlight) => highlight.trim()).length > 0 && (
+                <ul className="mt-4 flex flex-wrap gap-2">
+                  {content.hero_highlights.filter((highlight) => highlight.trim()).map((highlight, index) => (
+                    <li key={`${index}-${highlight}`} className="rounded-full border border-white/15 px-2.5 py-1 text-[11px] text-slate-200">
+                      {highlight}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            <h3 className="mt-5 text-xs font-black uppercase tracking-wider text-slate-500">Storefront sections</h3>
+            <ul className="mt-3 space-y-2">
               {[
-                ["Hero headline", "Visible above the fold"],
-                ["Primary call to action", "Links to the product discovery page"],
-                ["Category section", content.show_categories ? "Visible on storefront" : "Hidden on storefront"],
-                ["Brand section", content.show_brands ? "Visible on storefront" : "Hidden on storefront"],
-                ["Featured products", content.show_featured ? "Visible on storefront" : "Hidden on storefront"],
-                ["All products", content.show_products ? "Visible on storefront" : "Hidden on storefront"],
-                ["Customer reviews", content.show_reviews ? "Visible when approved reviews exist" : "Hidden on storefront"],
-                ["Retailer enquiry card", content.show_retailer_cta ? "Visible on storefront" : "Hidden on storefront"],
-              ].map(([title, detail]) => (
-                <li key={title} className="flex gap-3 rounded-xl bg-slate-50 p-4">
-                  <span className="mt-0.5 text-emerald-600" aria-hidden="true">✓</span>
-                  <span>
-                    <span className="block text-sm font-black">{title}</span>
-                    <span className="mt-1 block text-xs leading-5 text-slate-500">{detail}</span>
+                ["Categories", content.category_heading, content.show_categories],
+                ["Brands", content.brand_heading, content.show_brands],
+                ["Featured products", content.featured_heading, content.show_featured],
+                ["All products", content.products_heading, content.show_products],
+                ["Customer reviews", content.reviews_heading, content.show_reviews],
+                ["Retailer card", content.retailer_heading, content.show_retailer_cta],
+              ].map(([title, detail, visible]) => (
+                <li key={String(title)} className="flex items-center justify-between gap-3 rounded-lg bg-slate-50 px-3 py-2">
+                  <span className="min-w-0">
+                    <span className="block text-xs font-bold text-slate-800">{title}</span>
+                    <span className="block truncate text-xs text-slate-500">{detail}</span>
+                  </span>
+                  <span className={`shrink-0 rounded-full px-2 py-1 text-[10px] font-black ${visible ? "bg-emerald-100 text-emerald-800" : "bg-slate-200 text-slate-600"}`}>
+                    {visible ? "Shown" : "Hidden"}
                   </span>
                 </li>
               ))}

@@ -32,6 +32,7 @@ export default function AdminBannersPage() {
   const [form, setForm] = useState<BannerForm>(emptyForm);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [formOpen, setFormOpen] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -72,10 +73,22 @@ export default function AdminBannersPage() {
       return;
     }
 
+    let imageUrl = form.image_url.trim();
     try {
-      const imageUrl = new URL(form.image_url);
-      if (imageUrl.protocol !== "https:") {
-        throw new Error("Banner image URL must use HTTPS.");
+      if (imageFile) {
+        const extensions: Record<string, string> = {
+          "image/jpeg": "jpg",
+          "image/png": "png",
+          "image/webp": "webp",
+        };
+        if (!extensions[imageFile.type] || imageFile.size > 5 * 1024 * 1024) {
+          throw new Error("Choose a JPG, PNG or WebP banner image smaller than 5 MB.");
+        }
+      } else {
+        const image = new URL(imageUrl);
+        if (image.protocol !== "https:") {
+          throw new Error("Banner image URL must use HTTPS.");
+        }
       }
       if (form.link_url.startsWith("//")) {
         throw new Error("Destination must be a local path or a full HTTPS URL.");
@@ -96,11 +109,44 @@ export default function AdminBannersPage() {
       return;
     }
 
+    let uploadedPath: string | null = null;
+    if (imageFile) {
+      const extensions: Record<string, string> = {
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/webp": "webp",
+      };
+      const extension = extensions[imageFile.type];
+      uploadedPath = `banners/${crypto.randomUUID()}.${extension}`;
+      const { error: uploadError } = await supabase.storage
+        .from("product-images")
+        .upload(uploadedPath, imageFile, {
+          cacheControl: "3600",
+          contentType: imageFile.type,
+        });
+      if (uploadError) {
+        setError(`Banner image was not uploaded: ${uploadError.message}`);
+        setBusy(false);
+        return;
+      }
+      imageUrl = supabase.storage.from("product-images").getPublicUrl(uploadedPath).data.publicUrl;
+    }
+
+    const bannerData = { ...form, image_url: imageUrl };
     const result = editingId === null
-      ? await supabase.from("banners").insert(form)
-      : await supabase.from("banners").update(form).eq("id", editingId);
+      ? await supabase.from("banners").insert(bannerData)
+      : await supabase.from("banners").update(bannerData).eq("id", editingId);
     if (result.error) {
-      setError(`Banner was not saved: ${result.error.message}`);
+      if (uploadedPath) {
+        const { error: cleanupError } = await supabase.storage
+          .from("product-images")
+          .remove([uploadedPath]);
+        setError(cleanupError
+          ? `Banner was not saved (${result.error.message}); uploaded image cleanup also failed (${cleanupError.message}).`
+          : `Banner was not saved: ${result.error.message}`);
+      } else {
+        setError(`Banner was not saved: ${result.error.message}`);
+      }
       setBusy(false);
       return;
     }
@@ -109,6 +155,7 @@ export default function AdminBannersPage() {
     await refresh();
     setNotice(editingId === null ? "Banner added." : "Banner updated.");
     setForm(emptyForm);
+    setImageFile(null);
     setEditingId(null);
     setFormOpen(false);
     setBusy(false);
@@ -123,6 +170,7 @@ export default function AdminBannersPage() {
       link_url: banner.link_url,
       status: banner.status,
     });
+    setImageFile(null);
     setFormOpen(true);
     setError("");
     setNotice("");
@@ -165,6 +213,7 @@ export default function AdminBannersPage() {
             type="button"
             onClick={() => {
               setForm(emptyForm);
+              setImageFile(null);
               setEditingId(null);
               setFormOpen(true);
               setError("");
@@ -196,8 +245,11 @@ export default function AdminBannersPage() {
                   <option>Retailer page</option>
                 </select>
               </Field>
-              <Field label="Image URL">
-                <input required type="url" className={inputClass} value={form.image_url} onChange={(event) => setForm({ ...form, image_url: event.target.value })} />
+              <Field label="Image URL (optional if uploading)">
+                <input type="url" className={inputClass} value={form.image_url} onChange={(event) => { setForm({ ...form, image_url: event.target.value }); setImageFile(null); }} />
+              </Field>
+              <Field label="Upload banner image (JPG, PNG, WebP · max 5 MB)">
+                <input type="file" accept="image/jpeg,image/png,image/webp" className={inputClass} onChange={(event) => { const file = event.target.files?.[0] ?? null; setImageFile(file); if (file) setForm((current) => ({ ...current, image_url: "" })); }} />
               </Field>
               <Field label="Destination URL">
                 <input className={inputClass} value={form.link_url} onChange={(event) => setForm({ ...form, link_url: event.target.value })} />

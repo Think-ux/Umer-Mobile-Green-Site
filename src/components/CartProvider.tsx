@@ -83,7 +83,7 @@ function persistCart(items: CartItem[]) {
 const subscribeCart = subscribeToStorage(CART_EVENT);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const { products, settings, status } = useCatalog();
+  const { products, status } = useCatalog();
   const raw = useSyncExternalStore(
     subscribeCart,
     getCartSnapshot,
@@ -178,14 +178,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     [items]
   );
 
-  const delivery =
-    subtotal > 0 &&
-    settings.deliveryCharge !== null &&
-    settings.freeDeliveryThreshold !== null &&
-    subtotal < settings.freeDeliveryThreshold
-      ? settings.deliveryCharge
-      : 0;
-  const total = subtotal + delivery;
+  const delivery = 0;
+  const total = subtotal;
 
   const value = useMemo(
     () => ({
@@ -210,7 +204,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeFromCart,
       updateQuantity,
       clearCart,
-      settings.freeDeliveryThreshold,
     ]
   );
 

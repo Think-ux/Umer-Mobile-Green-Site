@@ -14,7 +14,7 @@ export default function PendingPage() {
 
         <div className="mt-8 rounded-2xl border bg-white p-6 text-left">
           <div className="flex justify-between"><span>Status</span><strong className="text-amber-600">Pending Review</strong></div>
-          <p className="mt-4 text-sm leading-6 text-slate-500">We will contact you using the phone number you provided after your application has been reviewed.</p>
+          <p className="mt-4 text-sm leading-6 text-slate-500">The team will follow up using the email address or phone number you provided after reviewing your application.</p>
         </div>
 
         <Link href="/" className="mt-7 inline-block font-bold text-orange-600">

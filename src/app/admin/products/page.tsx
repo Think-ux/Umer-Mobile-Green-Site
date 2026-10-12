@@ -1,12 +1,13 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { useCatalog } from "@/components/CatalogProvider";
 import type { Product } from "@/data/store";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
-type ProductRow = Omit<Product, "oldPrice"> & {
+type ProductRow = Omit<Product, "oldPrice" | "retailerDiscountPercent"> & {
   old_price: number;
+  retailer_discount_percent: number;
   is_published: boolean;
 };
 
@@ -18,6 +19,7 @@ type ProductForm = {
   quality: string;
   price: string;
   oldPrice: string;
+  retailerDiscountPercent: string;
   stock: string;
   image: string;
   imageFile: File | null;
@@ -33,6 +35,7 @@ const emptyForm: ProductForm = {
   quality: "Premium",
   price: "",
   oldPrice: "",
+  retailerDiscountPercent: "0",
   stock: "0",
   image: "",
   imageFile: null,
@@ -44,8 +47,12 @@ const inputClass =
   "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-orange-500";
 
 function mapRow(row: ProductRow): Product & { is_published: boolean } {
-  const { old_price, ...product } = row;
-  return { ...product, oldPrice: Number(old_price) };
+  const { old_price, retailer_discount_percent, ...product } = row;
+  return {
+    ...product,
+    oldPrice: Number(old_price),
+    retailerDiscountPercent: Number(retailer_discount_percent),
+  };
 }
 
 function createSlug(value: string) {
@@ -57,7 +64,7 @@ function createSlug(value: string) {
 }
 
 export default function AdminProducts() {
-  const { categories, refresh } = useCatalog();
+  const { categories, brands, refresh } = useCatalog();
   const [rows, setRows] = useState<(Product & { is_published: boolean })[]>([]);
   const [form, setForm] = useState<ProductForm>(emptyForm);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -65,6 +72,12 @@ export default function AdminProducts() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [brandFilter, setBrandFilter] = useState("");
+  const [visibilityFilter, setVisibilityFilter] = useState<"all" | "published" | "draft">("all");
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
 
   const loadProducts = useCallback(async () => {
     const supabase = getSupabaseBrowserClient();
@@ -92,6 +105,27 @@ export default function AdminProducts() {
     void Promise.resolve().then(loadProducts);
   }, [loadProducts]);
 
+  const brandOptions = [...new Set([
+    ...brands.map((brand) => brand.name),
+    ...rows.map((product) => product.brand),
+  ])].sort((a, b) => a.localeCompare(b));
+  const categoryOptions = [...new Set([
+    ...categories.map((category) => category.name),
+    ...rows.map((product) => product.category),
+  ])].sort((a, b) => a.localeCompare(b));
+  const filteredProducts = useMemo(() => {
+    const query = search.trim().toLocaleLowerCase();
+    return rows.filter((product) =>
+      (!query || `${product.name} ${product.brand} ${product.model} ${product.category} ${product.slug}`.toLocaleLowerCase().includes(query)) &&
+      (!categoryFilter || product.category === categoryFilter) &&
+      (!brandFilter || product.brand === brandFilter) &&
+      (visibilityFilter === "all" || (visibilityFilter === "published" ? product.is_published : !product.is_published))
+    );
+  }, [brandFilter, categoryFilter, rows, search, visibilityFilter]);
+  const pageCount = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
+  const visiblePage = Math.min(page, pageCount);
+  const visibleProducts = filteredProducts.slice((visiblePage - 1) * pageSize, visiblePage * pageSize);
+
   function changeField<K extends keyof ProductForm>(
     field: K,
     value: ProductForm[K]
@@ -110,6 +144,7 @@ export default function AdminProducts() {
       quality: product.quality,
       price: String(product.price),
       oldPrice: String(product.oldPrice),
+      retailerDiscountPercent: String(product.retailerDiscountPercent),
       stock: String(product.stock),
       image: product.image,
       imageFile: null,
@@ -148,6 +183,7 @@ export default function AdminProducts() {
       quality: form.quality.trim(),
       price: Number(form.price),
       old_price: Number(form.oldPrice || 0),
+      retailer_discount_percent: Number(form.retailerDiscountPercent || 0),
       stock: Number(form.stock),
       image: "",
       is_published: form.published,
@@ -307,7 +343,12 @@ export default function AdminProducts() {
                 <input required className={inputClass} value={form.name} onChange={(event) => changeField("name", event.target.value)} />
               </Field>
               <Field label="Brand">
-                <input required className={inputClass} value={form.brand} onChange={(event) => changeField("brand", event.target.value)} />
+                <select required className={inputClass} value={form.brand} onChange={(event) => changeField("brand", event.target.value)}>
+                  <option value="">Choose brand</option>
+                  {[...new Set([...brands.map((brand) => brand.name), ...rows.map((product) => product.brand)])]
+                    .sort((a, b) => a.localeCompare(b))
+                    .map((brand) => <option key={brand}>{brand}</option>)}
+                </select>
               </Field>
               <Field label="Compatible model">
                 <input required className={inputClass} value={form.model} onChange={(event) => changeField("model", event.target.value)} />
@@ -326,6 +367,9 @@ export default function AdminProducts() {
               </Field>
               <Field label="Old price (optional)">
                 <input min="0" step="0.01" type="number" className={inputClass} value={form.oldPrice} onChange={(event) => changeField("oldPrice", event.target.value)} />
+              </Field>
+              <Field label="Retailer discount (%)">
+                <input required min="0" max="100" step="0.01" type="number" className={inputClass} value={form.retailerDiscountPercent} onChange={(event) => changeField("retailerDiscountPercent", event.target.value)} />
               </Field>
               <Field label="Stock quantity">
                 <input required min="0" step="1" type="number" className={inputClass} value={form.stock} onChange={(event) => changeField("stock", event.target.value)} />
@@ -358,30 +402,68 @@ export default function AdminProducts() {
           </form>
         )}
 
-        <section className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+        <section aria-label="Filter products" className="mt-6 grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 sm:grid-cols-2 lg:grid-cols-4">
+          <label className="text-xs font-bold text-slate-600">
+            Search products
+            <input
+              type="search"
+              value={search}
+              onChange={(event) => { setSearch(event.target.value); setPage(1); }}
+              placeholder="Name, brand, model or slug"
+              className={inputClass}
+            />
+          </label>
+          <label className="text-xs font-bold text-slate-600">
+            Category
+            <select value={categoryFilter} onChange={(event) => { setCategoryFilter(event.target.value); setPage(1); }} className={inputClass}>
+              <option value="">All categories</option>
+              {categoryOptions.map((category) => <option key={category}>{category}</option>)}
+            </select>
+          </label>
+          <label className="text-xs font-bold text-slate-600">
+            Brand
+            <select value={brandFilter} onChange={(event) => { setBrandFilter(event.target.value); setPage(1); }} className={inputClass}>
+              <option value="">All brands</option>
+              {brandOptions.map((brand) => <option key={brand}>{brand}</option>)}
+            </select>
+          </label>
+          <label className="text-xs font-bold text-slate-600">
+            Publication
+            <select value={visibilityFilter} onChange={(event) => { setVisibilityFilter(event.target.value as typeof visibilityFilter); setPage(1); }} className={inputClass}>
+              <option value="all">All products</option>
+              <option value="published">Published</option>
+              <option value="draft">Drafts</option>
+            </select>
+          </label>
+        </section>
+
+        <section className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white">
           <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
             <h2 className="font-black">Catalog products</h2>
-            <span className="text-sm text-slate-500">{rows.length} products</span>
+            <span className="text-sm text-slate-500">{filteredProducts.length} of {rows.length} products</span>
           </div>
           {rows.length === 0 ? (
             <p className="p-8 text-center text-sm text-slate-500">
               Products will appear here after the Supabase schema is installed and connected.
             </p>
+          ) : filteredProducts.length === 0 ? (
+            <p className="p-8 text-center text-sm text-slate-500">No products match these filters. Try changing or clearing your search.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[800px] text-left text-sm">
+              <table className="w-full min-w-[900px] text-left text-sm">
                 <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
                   <tr>
                     <th className="px-5 py-4">Product</th>
                     <th className="px-5 py-4">Category</th>
                     <th className="px-5 py-4">Price</th>
+                    <th className="px-5 py-4">Retailer discount</th>
                     <th className="px-5 py-4">Stock</th>
                     <th className="px-5 py-4">Visibility</th>
                     <th className="px-5 py-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {rows.map((product) => (
+                  {visibleProducts.map((product) => (
                     <tr key={product.id}>
                       <td className="px-5 py-4">
                         <p className="font-black">{product.name}{product.is_featured ? <span className="ml-2 text-xs font-bold text-orange-600">Featured</span> : null}</p>
@@ -389,6 +471,7 @@ export default function AdminProducts() {
                       </td>
                       <td className="px-5 py-4 text-slate-600">{product.category}</td>
                       <td className="px-5 py-4 font-bold">Rs. {product.price.toLocaleString("en-PK")}</td>
+                      <td className="px-5 py-4 text-slate-600">{product.retailerDiscountPercent}%</td>
                       <td className="px-5 py-4">{product.stock}</td>
                       <td className="px-5 py-4">
                         <span className={`rounded-full px-3 py-1 text-xs font-black ${product.is_published ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>
@@ -404,6 +487,15 @@ export default function AdminProducts() {
                 </tbody>
               </table>
             </div>
+          )}
+          {filteredProducts.length > 0 && (
+            <nav aria-label="Product pages" className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 px-5 py-4">
+              <p className="text-sm text-slate-500">Page {visiblePage} of {pageCount}</p>
+              <div className="flex gap-2">
+                <button type="button" disabled={visiblePage <= 1} onClick={() => setPage(visiblePage - 1)} className="min-h-10 rounded-lg border border-slate-200 px-4 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50">Previous</button>
+                <button type="button" disabled={visiblePage >= pageCount} onClick={() => setPage(visiblePage + 1)} className="min-h-10 rounded-lg border border-slate-200 px-4 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50">Next</button>
+              </div>
+            </nav>
           )}
         </section>
       </div>

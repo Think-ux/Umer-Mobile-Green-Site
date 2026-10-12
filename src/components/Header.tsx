@@ -1,18 +1,91 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useCart } from "@/components/CartProvider";
 import { useCatalog } from "@/components/CatalogProvider";
 import { categorySlug } from "@/data/store";
+import {
+  getDevelopmentMockAccount,
+  isDevelopmentAuthMockEnabled,
+  subscribeToDevelopmentMockAccount,
+} from "@/lib/auth/development-mock";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 export default function Header() {
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [activeCategoryName, setActiveCategoryName] = useState<string | null>(null);
   const [mobileCategoryName, setMobileCategoryName] = useState<string | null>(null);
+  const [accountLabel, setAccountLabel] = useState("Guest");
   const { itemCount } = useCart();
   const { categories, products, settings } = useCatalog();
+
+  useEffect(() => {
+    if (isDevelopmentAuthMockEnabled()) {
+      const updateMockAccountLabel = () => {
+        try {
+          setAccountLabel(getDevelopmentMockAccount()?.fullName || "Guest");
+        } catch {
+          setAccountLabel("Account error");
+        }
+      };
+
+      const unsubscribe = subscribeToDevelopmentMockAccount(updateMockAccountLabel);
+      window.addEventListener("focus", updateMockAccountLabel);
+      void Promise.resolve().then(updateMockAccountLabel);
+      return () => {
+        unsubscribe();
+        window.removeEventListener("focus", updateMockAccountLabel);
+      };
+    }
+
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) return;
+
+    const updateAccountLabel = (user: {
+      user_metadata: Record<string, unknown>;
+    } | null) => {
+      const metadataName = [
+        user?.user_metadata.full_name,
+        user?.user_metadata.name,
+        user?.user_metadata.display_name,
+      ].find((value): value is string => typeof value === "string" && value.trim().length > 0);
+      setAccountLabel(metadataName?.trim() || (user ? "My Account" : "Guest"));
+    };
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      updateAccountLabel(session?.user ?? null);
+    });
+
+    void supabase.auth.getSession().then(({ data, error }) => {
+      if (error) {
+        setAccountLabel("Account error");
+      } else {
+        updateAccountLabel(data.session?.user ?? null);
+      }
+    });
+
+    const refreshAccountLabel = () => {
+      void supabase.auth.getSession().then(({ data, error }) => {
+        if (error) {
+          setAccountLabel("Account error");
+        } else {
+          updateAccountLabel(data.session?.user ?? null);
+        }
+      });
+    };
+    window.addEventListener("focus", refreshAccountLabel);
+
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener("focus", refreshAccountLabel);
+    };
+  }, [pathname]);
 
   const categoryHref = (name: string) => `/shop/${categorySlug(name)}`;
   const activeCategory =
@@ -45,14 +118,14 @@ export default function Header() {
             href="/"
             onClick={closeMenus}
             aria-label="Umer Mobile Parts home"
-            className="flex shrink-0 items-center gap-2"
+            className="flex min-w-0 items-center gap-2"
           >
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500 text-2xl font-black text-white shadow-sm">
               U
             </span>
 
-            <span className="leading-tight">
-              <span className="block text-lg font-black tracking-tight text-slate-950 sm:text-xl">
+            <span className="min-w-0 leading-tight">
+              <span className="block truncate text-lg font-black tracking-tight text-slate-950 sm:text-xl">
                 {settings.storeName}
               </span>
               <span className="block text-[10px] font-extrabold tracking-[0.16em] text-orange-600 sm:text-xs">
@@ -110,6 +183,26 @@ export default function Header() {
             </span>
           </Link>
 
+          <Link
+            href="/account"
+            aria-label={accountLabel === "Guest" ? "Guest. Sign in or create an account" : `Customer account: ${accountLabel}`}
+            title={accountLabel === "Guest" ? "Guest · Sign in or create an account" : accountLabel}
+            className="flex shrink-0 items-center gap-1.5 rounded-xl border border-orange-200 bg-orange-50 px-2 py-2.5 text-xs font-bold text-orange-800 transition hover:border-orange-400 hover:bg-orange-100 sm:gap-2 sm:px-3 sm:text-sm"
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              className="h-5 w-5 shrink-0"
+            >
+              <circle cx="12" cy="8" r="3.5" />
+              <path strokeLinecap="round" d="M5 20c.7-3.3 3.2-5 7-5s6.3 1.7 7 5" />
+            </svg>
+            <span className="max-w-24 truncate">{accountLabel}</span>
+          </Link>
+
           {/* Mobile menu button */}
           <button
             type="button"
@@ -126,7 +219,7 @@ export default function Header() {
         {/* Desktop primary navigation */}
         <nav
           aria-label="Main navigation"
-          className="hidden min-h-12 items-center gap-7 md:flex"
+          className="hidden min-h-12 items-center gap-2 md:flex lg:gap-7"
         >
           {/* Category dropdown */}
           <div
@@ -267,26 +360,35 @@ export default function Header() {
             )}
           </div>
 
-          <Link
-            href="/"
-            className="text-sm font-semibold text-slate-700 transition hover:text-orange-600"
-          >
-            Home
-          </Link>
+          <div className="ml-1 flex items-center gap-3 border-l border-slate-200 pl-4 lg:ml-4 lg:gap-7 lg:pl-7">
+            <Link
+              href="/"
+              className="text-sm font-semibold text-slate-700 transition hover:text-orange-600"
+            >
+              Home
+            </Link>
 
-          <Link
-            href="/search"
-            className="text-sm font-semibold text-slate-700 transition hover:text-orange-600"
-          >
-            Shop
-          </Link>
+            <Link
+              href="/search"
+              className="text-sm font-semibold text-slate-700 transition hover:text-orange-600"
+            >
+              Product
+            </Link>
 
-          <Link
-            href="/track-order"
-            className="text-sm font-semibold text-slate-700 transition hover:text-orange-600"
-          >
-            Track Order
-          </Link>
+            <Link
+              href="/track-order"
+              className="text-sm font-semibold text-slate-700 transition hover:text-orange-600"
+            >
+              Track Order
+            </Link>
+
+            <Link
+              href="/customer-care"
+              className="text-sm font-semibold text-slate-700 transition hover:text-orange-600"
+            >
+              Contact
+            </Link>
+          </div>
 
           <Link
             href="/retailer"
@@ -330,22 +432,6 @@ export default function Header() {
             </form>
 
             <div className="flex flex-col gap-1">
-              <Link
-                href="/"
-                onClick={closeMenus}
-                className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-800 hover:bg-orange-50 hover:text-orange-700"
-              >
-                Home
-              </Link>
-
-              <Link
-                href="/search"
-                onClick={closeMenus}
-                className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-800 hover:bg-orange-50 hover:text-orange-700"
-              >
-                Shop Products
-              </Link>
-
               {/* Expandable mobile categories */}
               <button
                 type="button"
@@ -425,12 +511,22 @@ export default function Header() {
                 </div>
               )}
 
+              <div className="my-2 border-t border-slate-200" />
+
+              <Link
+                href="/"
+                onClick={closeMenus}
+                className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-800 hover:bg-orange-50 hover:text-orange-700"
+              >
+                Home
+              </Link>
+
               <Link
                 href="/search"
                 onClick={closeMenus}
                 className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-800 hover:bg-orange-50 hover:text-orange-700"
               >
-                Search Products
+                Product
               </Link>
 
               <Link
@@ -439,6 +535,22 @@ export default function Header() {
                 className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-800 hover:bg-orange-50 hover:text-orange-700"
               >
                 Track Order
+              </Link>
+
+              <Link
+                href="/customer-care"
+                onClick={closeMenus}
+                className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-800 hover:bg-orange-50 hover:text-orange-700"
+              >
+                Contact
+              </Link>
+
+              <Link
+                href="/account"
+                onClick={closeMenus}
+                className="rounded-lg px-3 py-3 text-sm font-bold text-orange-700 hover:bg-orange-50"
+              >
+                {accountLabel === "Guest" ? "Guest · Sign in or create account" : `My Account · ${accountLabel}`}
               </Link>
 
               <Link

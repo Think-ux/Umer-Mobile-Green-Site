@@ -2,20 +2,13 @@
 
 import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
-import { useCatalog } from "@/components/CatalogProvider";
 
 export default function CartPage() {
-  const { settings } = useCatalog();
-  const deliveryConfigured =
-    settings.deliveryCharge !== null &&
-    settings.freeDeliveryThreshold !== null;
   const {
     items,
     updateQuantity,
     removeFromCart,
     subtotal,
-    delivery,
-    total,
     itemCount,
   } = useCart();
 
@@ -145,29 +138,21 @@ export default function CartPage() {
 
               <div className="flex justify-between text-slate-600">
                 <span>Delivery</span>
-                <span className="font-bold text-slate-900">
-                  {!deliveryConfigured
-                    ? "To be confirmed"
-                    : delivery === 0
-                      ? "FREE"
-                      : `Rs. ${delivery.toLocaleString()}`}
-                </span>
+                <span className="text-right font-bold text-slate-900">Calculated by city and area at checkout</span>
               </div>
 
               <div className="border-t border-slate-200 pt-4">
                 <div className="flex justify-between">
                   <span className="font-black text-slate-900">
-                    {deliveryConfigured ? "Total" : "Subtotal before delivery"}
+                    Subtotal before delivery
                   </span>
                   <span className="text-2xl font-black text-slate-900">
-                    Rs. {total.toLocaleString()}
+                    Rs. {subtotal.toLocaleString()}
                   </span>
                 </div>
-                {!deliveryConfigured && (
-                  <p className="mt-3 text-xs leading-5 text-slate-500">
-                    Delivery charges have not been configured. The final amount must be confirmed with the store.
-                  </p>
-                )}
+                <p className="mt-3 text-xs leading-5 text-slate-500">
+                  Enter your delivery city and area at checkout to see the applicable rate. Store pickup has no delivery charge.
+                </p>
               </div>
             </div>
 

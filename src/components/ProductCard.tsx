@@ -4,7 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "@/components/CartProvider";
+import { useCatalog } from "@/components/CatalogProvider";
 import type { Product } from "@/data/store";
+import { formatStorePrice, retailerPrice } from "@/lib/pricing";
 
 type Props = {
   product: Product;
@@ -12,6 +14,7 @@ type Props = {
 
 export default function ProductCard({ product }: Props) {
   const { addToCart } = useCart();
+  const { isRetailer } = useCatalog();
   const [added, setAdded] = useState(false);
 
   const inStock = product.stock > 0;
@@ -24,6 +27,8 @@ export default function ProductCard({ product }: Props) {
         ((product.oldPrice - product.price) / product.oldPrice) * 100
       )
     : 0;
+  const hasRetailerDiscount = isRetailer && product.retailerDiscountPercent > 0;
+  const discountedRetailerPrice = hasRetailerDiscount ? retailerPrice(product) : null;
 
   function handleAdd() {
     if (!inStock) return;
@@ -109,6 +114,14 @@ export default function ProductCard({ product }: Props) {
             </span>
           )}
         </div>
+        {hasRetailerDiscount && discountedRetailerPrice !== null && (
+          <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2.5">
+            <p className="text-[11px] font-black uppercase tracking-wide text-emerald-800">
+              Retailer price · {product.retailerDiscountPercent}% off
+            </p>
+            <p className="mt-0.5 text-lg font-black text-emerald-900">{formatStorePrice(discountedRetailerPrice)}</p>
+          </div>
+        )}
 
         <div className="mt-3 flex items-center gap-2 text-xs">
           <span

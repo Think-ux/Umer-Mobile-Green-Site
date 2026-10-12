@@ -13,8 +13,7 @@ type Settings = {
     contact_verified: boolean;
   };
   delivery: {
-    charge: string;
-    free_threshold: string;
+    zones: DeliveryZoneForm[];
     estimated_time: string;
     details_verified: boolean;
   };
@@ -23,6 +22,22 @@ type Settings = {
     facebook: string;
     tiktok: string;
   };
+};
+
+type DeliveryZoneForm = {
+  zone: string;
+  city: string;
+  area: string;
+  charge: string;
+  free_threshold: string;
+};
+
+const emptyDeliveryZone: DeliveryZoneForm = {
+  zone: "",
+  city: "",
+  area: "",
+  charge: "",
+  free_threshold: "",
 };
 
 const initialSettings: Settings = {
@@ -34,8 +49,7 @@ const initialSettings: Settings = {
     contact_verified: false,
   },
   delivery: {
-    charge: "",
-    free_threshold: "",
+    zones: [],
     estimated_time: "",
     details_verified: false,
   },
@@ -85,10 +99,22 @@ export default function AdminSettingsPage() {
               contact_verified: row.setting_value.contact_verified === true,
             };
           } else if (row.setting_key === "delivery") {
+            const zones = Array.isArray(row.setting_value.zones)
+              ? row.setting_value.zones.flatMap((value) => {
+                  if (!value || typeof value !== "object") return [];
+                  const zone = value as Record<string, unknown>;
+                  return [{
+                    zone: settingText(zone.zone),
+                    city: settingText(zone.city),
+                    area: settingText(zone.area),
+                    charge: settingText(zone.charge),
+                    free_threshold: settingText(zone.free_threshold),
+                  }];
+                })
+              : [];
             next.delivery = {
               ...next.delivery,
-              charge: settingText(row.setting_value.charge),
-              free_threshold: settingText(row.setting_value.free_threshold),
+              zones,
               estimated_time: settingText(row.setting_value.estimated_time),
               details_verified: row.setting_value.details_verified === true,
             };
@@ -118,31 +144,58 @@ export default function AdminSettingsPage() {
     }));
   }
 
+  function updateDeliveryZone(
+    index: number,
+    field: keyof DeliveryZoneForm,
+    value: string,
+  ) {
+    setSettings((current) => ({
+      ...current,
+      delivery: {
+        ...current.delivery,
+        zones: current.delivery.zones.map((zone, zoneIndex) =>
+          zoneIndex === index ? { ...zone, [field]: value } : zone,
+        ),
+      },
+    }));
+  }
+
   async function saveSettings(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
     setError("");
     setNotice("");
 
-    const charge = settings.delivery.charge.trim();
-    const freeThreshold = settings.delivery.free_threshold.trim();
-    if (
-      (charge === "") !== (freeThreshold === "") ||
-      (charge !== "" &&
-        (!Number.isFinite(Number(charge)) ||
-          Number(charge) < 0 ||
-          !Number.isFinite(Number(freeThreshold)) ||
-          Number(freeThreshold) < 0))
-    ) {
-      setError("Enter both delivery amounts as valid non-negative numbers, or leave both blank.");
+    const incompleteZone = settings.delivery.zones.some((zone) =>
+      !zone.zone.trim() ||
+      !zone.city.trim() ||
+      !zone.area.trim() ||
+      zone.charge.trim() === "" ||
+      !Number.isFinite(Number(zone.charge)) ||
+      Number(zone.charge) < 0 ||
+      (zone.free_threshold.trim() !== "" &&
+        (!Number.isFinite(Number(zone.free_threshold)) ||
+          Number(zone.free_threshold) < 0)),
+    );
+    if (incompleteZone) {
+      setError("Complete each delivery zone and enter a valid non-negative charge. Free-delivery minimum is optional.");
+      setBusy(false);
+      return;
+    }
+    const configuredLocations = settings.delivery.zones.map(
+      ({ city, area }) => `${city.trim().toLocaleLowerCase()}|${area.trim().toLocaleLowerCase()}`,
+    );
+    if (new Set(configuredLocations).size !== configuredLocations.length) {
+      setError("A city and area can only be assigned to one delivery rate.");
       setBusy(false);
       return;
     }
     if (
       settings.delivery.details_verified &&
-      (charge === "" || settings.delivery.estimated_time.trim() === "")
+      (settings.delivery.zones.length === 0 ||
+        settings.delivery.estimated_time.trim() === "")
     ) {
-      setError("Enter the confirmed delivery charge, free-delivery threshold and estimate before marking delivery details verified.");
+      setError("Add at least one confirmed delivery zone and an estimate before marking delivery details verified.");
       setBusy(false);
       return;
     }
@@ -166,7 +219,20 @@ export default function AdminSettingsPage() {
 
     const rows = Object.entries(settings).map(([setting_key, setting_value]) => ({
       setting_key,
-      setting_value,
+      setting_value: setting_key === "delivery"
+        ? {
+            ...setting_value,
+            zones: settings.delivery.zones.map((zone) => ({
+              zone: zone.zone.trim(),
+              city: zone.city.trim(),
+              area: zone.area.trim(),
+              charge: Number(zone.charge),
+              free_threshold: zone.free_threshold.trim() === ""
+                ? null
+                : Number(zone.free_threshold),
+            })),
+          }
+        : setting_value,
       updated_at: new Date().toISOString(),
     }));
     const { error: saveError } = await supabase
@@ -224,13 +290,45 @@ export default function AdminSettingsPage() {
             </label>
           </SettingsGroup>
 
-          <SettingsGroup title="Delivery information" description="Delivery charges and estimates remain hidden until confirmed and verified below.">
-            <Field label="Delivery charge (PKR)">
-              <input min="0" type="number" className={inputClass} value={settings.delivery.charge} onChange={(event) => update("delivery", "charge", event.target.value)} />
-            </Field>
-            <Field label="Free delivery threshold (PKR)">
-              <input min="0" type="number" className={inputClass} value={settings.delivery.free_threshold} onChange={(event) => update("delivery", "free_threshold", event.target.value)} />
-            </Field>
+          <SettingsGroup title="Delivery charges by location" description="Add one rate for each city and area combination. Customers only see a rate when you verify the delivery terms.">
+            <div className="sm:col-span-2">
+              <div className="space-y-4">
+                {settings.delivery.zones.map((zone, index) => (
+                  <fieldset key={`delivery-zone-${index}`} className="grid gap-3 rounded-xl border border-slate-200 p-4 sm:grid-cols-2">
+                    <legend className="px-1 text-sm font-black text-slate-800">Location rate {index + 1}</legend>
+                    <Field label="Zone label (for example, Central)">
+                      <input required maxLength={80} className={inputClass} value={zone.zone} onChange={(event) => updateDeliveryZone(index, "zone", event.target.value)} />
+                    </Field>
+                    <Field label="City">
+                      <input required maxLength={120} className={inputClass} value={zone.city} onChange={(event) => updateDeliveryZone(index, "city", event.target.value)} />
+                    </Field>
+                    <Field label="Area / locality">
+                      <input required maxLength={120} className={inputClass} value={zone.area} onChange={(event) => updateDeliveryZone(index, "area", event.target.value)} />
+                    </Field>
+                    <Field label="Delivery charge (PKR)">
+                      <input required min="0" type="number" className={inputClass} value={zone.charge} onChange={(event) => updateDeliveryZone(index, "charge", event.target.value)} />
+                    </Field>
+                    <Field label="Free delivery from (PKR, optional)">
+                      <input min="0" type="number" className={inputClass} value={zone.free_threshold} onChange={(event) => updateDeliveryZone(index, "free_threshold", event.target.value)} />
+                    </Field>
+                    <div className="flex items-end justify-end">
+                      <button type="button" onClick={() => setSettings((current) => ({
+                        ...current,
+                        delivery: { ...current.delivery, zones: current.delivery.zones.filter((_, zoneIndex) => zoneIndex !== index) },
+                      }))} className="min-h-11 rounded-xl border border-red-200 px-4 py-2 text-sm font-bold text-red-700 hover:bg-red-50">
+                        Remove rate
+                      </button>
+                    </div>
+                  </fieldset>
+                ))}
+              </div>
+              <button type="button" onClick={() => setSettings((current) => ({
+                ...current,
+                delivery: { ...current.delivery, zones: [...current.delivery.zones, { ...emptyDeliveryZone }] },
+              }))} className="mt-3 min-h-11 rounded-xl border border-orange-200 px-4 py-2 text-sm font-bold text-orange-800 hover:bg-orange-50">
+                Add location rate
+              </button>
+            </div>
             <Field label="Estimated delivery">
               <input className={inputClass} value={settings.delivery.estimated_time} onChange={(event) => update("delivery", "estimated_time", event.target.value)} />
             </Field>
@@ -244,7 +342,7 @@ export default function AdminSettingsPage() {
                 }))}
                 className="h-4 w-4 accent-orange-500"
               />
-              I have confirmed these delivery terms with the business.
+              I have confirmed these area-based delivery rates and terms with the business.
             </label>
           </SettingsGroup>
 

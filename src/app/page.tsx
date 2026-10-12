@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { useCatalog } from "@/components/CatalogProvider";
+import StarRatingDisplay from "@/components/StarRatingDisplay";
+import BannerCarousel from "@/components/BannerCarousel";
 import ProductCard from "@/components/ProductCard";
 import { categorySlug } from "@/data/store";
 
@@ -55,28 +57,38 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
       {/* Hero */}
-      <section className="overflow-hidden bg-gradient-to-br from-orange-50 via-white to-orange-100">
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-2 lg:px-8 lg:py-24">
-          <div>
-            <span className="inline-flex rounded-full border border-orange-200 bg-white px-4 py-2 text-sm font-semibold text-orange-700">
+      <section className="relative isolate flex min-h-[560px] items-center overflow-hidden bg-slate-950 sm:min-h-[620px]">
+        <div className="absolute inset-0 -z-10">
+          <Image
+            src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=2400&q=85"
+            alt=""
+            fill
+            sizes="100vw"
+            fetchPriority="high"
+            className="hero-image-drift object-cover object-[68%_center]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-slate-950/35" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-transparent to-slate-950/20" />
+        </div>
+
+        <div className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+          <div className="max-w-3xl">
+            <span className="hero-enter inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold tracking-wide text-orange-200 shadow-lg shadow-black/10 backdrop-blur">
               {homepage.eyebrow}
             </span>
 
-            <h1 className="mt-6 max-w-2xl text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-              {homepage.headline.split(" ")[0]}
-              <span className="block text-orange-600">
-                {homepage.headline.split(" ").slice(1).join(" ")}
-              </span>
+            <h1 className="hero-enter hero-enter-delay-1 mt-6 max-w-3xl text-5xl font-black leading-[0.98] tracking-tight text-white sm:text-6xl lg:text-7xl xl:text-8xl">
+              {homepage.headline}
             </h1>
 
-            <p className="mt-5 max-w-xl text-base leading-8 text-slate-600 sm:text-lg">
+            <p className="hero-enter hero-enter-delay-2 mt-6 max-w-2xl text-base leading-8 text-white/80 sm:text-lg sm:leading-9">
               {homepage.description}
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="hero-enter hero-enter-delay-3 mt-8 flex flex-wrap gap-3">
               <Link
                 href={homepage.button_href}
-                className="inline-flex min-h-12 items-center justify-center rounded-xl bg-orange-500 px-6 py-3 font-bold text-white shadow-lg shadow-orange-500/20 transition hover:bg-orange-600"
+                className="inline-flex min-h-12 items-center justify-center rounded-xl bg-orange-500 px-6 py-3 font-bold text-white shadow-lg shadow-orange-950/30 transition hover:-translate-y-0.5 hover:bg-orange-600"
               >
                 {homepage.button_label}
                 <span className="ml-2" aria-hidden="true">→</span>
@@ -84,106 +96,30 @@ export default function HomePage() {
 
               <a
                 href="#categories"
-                className="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-3 font-bold text-slate-800 transition hover:border-orange-300 hover:text-orange-600"
+                className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/30 bg-white/10 px-6 py-3 font-bold text-white backdrop-blur transition hover:border-white/60 hover:bg-white/15"
               >
                 Explore Categories
               </a>
             </div>
 
             {homepage.hero_highlights.filter((highlight) => highlight.trim()).length > 0 && (
-              <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate-600">
+              <ul className="hero-enter hero-enter-delay-3 mt-8 flex flex-wrap gap-2.5 text-sm text-white/80">
                 {homepage.hero_highlights.filter((highlight) => highlight.trim()).map((highlight, index) => (
-                  <li key={`${index}-${highlight}`}>✓ {highlight}</li>
+                  <li key={`${index}-${highlight}`} className="rounded-full border border-white/15 bg-slate-950/25 px-3.5 py-2 backdrop-blur-sm">
+                    <span className="mr-1.5 text-orange-300" aria-hidden="true">✓</span>
+                    {highlight}
+                  </li>
                 ))}
               </ul>
             )}
           </div>
-
-          <div className="relative">
-            <div className="absolute -inset-5 rounded-full bg-orange-200/40 blur-3xl" />
-
-            <div className="relative rounded-3xl border border-white bg-white/80 p-5 shadow-2xl shadow-orange-900/10 backdrop-blur sm:p-8">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-sm font-medium text-slate-500">
-                    Explore the catalog
-                  </p>
-                  <h2 className="mt-1 text-2xl font-black">
-                    Parts for your device
-                  </h2>
-                </div>
-
-                <span className="rounded-2xl bg-orange-100 p-3 text-2xl text-orange-600" aria-hidden="true">
-                  ⚙
-                </span>
-              </div>
-
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                {categoryList.slice(0, 4).map((item) => (
-                  <Link
-                    key={item.name}
-                    href={`/shop/${categorySlug(item.name)}`}
-                    className="rounded-2xl border border-slate-100 bg-white p-4 transition hover:-translate-y-1 hover:border-orange-200 hover:shadow-lg"
-                  >
-                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-50 text-2xl text-orange-600">
-                      {item.icon || "▣"}
-                    </span>
-                    <p className="mt-3 text-sm font-bold">
-                      {item.name}
-                    </p>
-                    <p className="mt-1 text-xs text-slate-500">
-                      Explore parts →
-                    </p>
-                  </Link>
-                ))}
-              </div>
-
-              {products[0] && (
-                <div className="relative mt-5 h-40 overflow-hidden rounded-2xl bg-slate-100 sm:h-52">
-                  <Image
-                    src={products[0].image}
-                    alt={products[0].name}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 40vw"
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 to-transparent" />
-                  <p className="absolute bottom-4 left-4 right-4 font-bold text-white">
-                    {products[0].name}
-                  </p>
-                </div>
-              )}
-
-              {homepage.show_retailer_cta && (
-                <div className="mt-5 rounded-2xl bg-slate-950 p-5 text-white">
-                  <p className="text-sm text-slate-300">{homepage.retailer_description}</p>
-                  <p className="mt-1 text-xl font-bold">{homepage.retailer_heading}</p>
-                  <Link
-                    href="/retailer"
-                    className="mt-4 inline-flex items-center font-bold text-orange-400 hover:text-orange-300"
-                  >
-                    {homepage.retailer_button_label} →
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
         </div>
       </section>
 
-      {banners.filter((banner) => banner.placement === "Homepage").map((banner) => (
-        <section key={banner.id} className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
-          <Link
-            href={banner.link_url || "/search"}
-            className="group relative flex min-h-48 items-end overflow-hidden rounded-3xl bg-slate-950 bg-cover bg-center p-6 sm:min-h-64 sm:p-10"
-            style={{ backgroundImage: `linear-gradient(90deg, rgba(15,23,42,.88), rgba(15,23,42,.1)), url("${banner.image_url}")` }}
-          >
-            <span className="text-2xl font-black text-white transition group-hover:text-orange-200 sm:text-3xl">
-              {banner.title}
-            </span>
-          </Link>
-        </section>
-      ))}
+      <BannerCarousel
+        label="Homepage promotions"
+        banners={banners.filter((banner) => banner.placement === "Homepage")}
+      />
 
       {/* Categories */}
       {homepage.show_categories && <section
@@ -357,8 +293,17 @@ export default function HomePage() {
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {reviews.map((review) => (
             <article key={review.id} className="rounded-2xl border border-slate-200 bg-white p-5">
-              <p className="text-amber-500" aria-label={`${review.rating} out of 5 stars`}>{"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}</p>
-              <p className="mt-3 text-sm leading-6 text-slate-600">{review.review_text}</p>
+              <StarRatingDisplay rating={review.rating} className="text-amber-500" />
+              {review.is_demo && (
+                <p className="mt-2 inline-flex rounded-full border border-amber-300 bg-amber-50 px-2.5 py-1 text-[11px] font-black uppercase tracking-wide text-amber-900">
+                  Demo — not a customer review
+                </p>
+              )}
+              {review.review_text ? (
+                <p className="mt-3 text-sm leading-6 text-slate-600">{review.review_text}</p>
+              ) : (
+                <p className="mt-3 text-sm leading-6 text-slate-600">Rated this product</p>
+              )}
               <p className="mt-4 font-bold text-slate-900">{review.reviewer_name}</p>
               <p className="mt-1 text-xs text-slate-500">{review.product_name}</p>
             </article>

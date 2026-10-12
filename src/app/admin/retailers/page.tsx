@@ -6,7 +6,9 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 type RetailerApplication = {
   id: number;
   owner_name: string;
+  email: string;
   business_name: string;
+  business_type: string;
   phone: string;
   address: string;
   city: string;
@@ -24,6 +26,7 @@ export default function AdminRetailers() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [decisionReasons, setDecisionReasons] = useState<Record<number, string>>({});
+  const [accessBusyId, setAccessBusyId] = useState<number | null>(null);
 
   const loadApplications = useCallback(async () => {
     const supabase = getSupabaseBrowserClient();
@@ -35,7 +38,7 @@ export default function AdminRetailers() {
 
     const { data, error: queryError } = await supabase
       .from("retailer_applications")
-      .select("id,owner_name,business_name,phone,address,city,business_details,required_document_path,decision_reason,status,created_at")
+      .select("id,owner_name,email,business_name,business_type,phone,address,city,business_details,required_document_path,decision_reason,status,created_at")
       .order("created_at", { ascending: false })
       .returns<RetailerApplication[]>();
 
@@ -109,12 +112,53 @@ export default function AdminRetailers() {
     documentWindow.location.href = data.signedUrl;
   }
 
+  async function sendAccessEmail(application: RetailerApplication) {
+    setAccessBusyId(application.id);
+    setError("");
+    setNotice("");
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      setError("Supabase is not configured. No access email was sent.");
+      setAccessBusyId(null);
+      return;
+    }
+
+    const { data, error: accessError } = await supabase.functions.invoke("manage-retailer-access", {
+      body: { applicationId: application.id },
+    });
+    if (accessError) {
+      setError(`Could not set up retailer access: ${accessError.message}`);
+      setAccessBusyId(null);
+      return;
+    }
+
+    if (data?.status === "existing_account") {
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(application.email, {
+        redirectTo: `${window.location.origin}/retailer/setup-password`,
+      });
+      if (resetError) {
+        setError(`Retailer access is enabled, but the password email could not be sent: ${resetError.message}. Retry this action to resend it.`);
+        setAccessBusyId(null);
+        return;
+      }
+      setNotice(`Retailer access is enabled for ${application.email}; a password setup email has been sent.`);
+    } else if (data?.status === "invited") {
+      setNotice(`A retailer invitation with a secure password setup link has been sent to ${application.email}.`);
+    } else {
+      setError("Retailer access could not be confirmed. No success email was reported.");
+      setAccessBusyId(null);
+      return;
+    }
+
+    setAccessBusyId(null);
+  }
+
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
         <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-500">Store operations</p>
         <h1 className="mt-2 text-3xl font-black tracking-tight">Retailer applications</h1>
-        <p className="mt-2 text-sm text-slate-500">Review and respond to retailer account requests.</p>
+        <p className="mt-2 text-sm text-slate-500">Review applications and send secure account setup links. Retailers create their own passwords; admins never receive them.</p>
 
         {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
         {notice && <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{notice}</p>}
@@ -128,7 +172,8 @@ export default function AdminRetailers() {
               <div className="grid gap-4 md:grid-cols-[1.5fr_1fr_auto] md:items-start">
                 <div>
                   <h2 className="font-black">{application.business_name}</h2>
-                  <p className="text-sm text-slate-500">{application.owner_name} · {application.phone}</p>
+                  <p className="text-sm text-slate-500">{application.owner_name} · {application.business_type.replaceAll("_", " ")}</p>
+                  <p className="mt-1 text-sm text-slate-600">{application.email} · {application.phone}</p>
                   <p className="mt-2 text-sm text-slate-600">{application.address}, {application.city}</p>
                   {application.business_details && <p className="mt-2 text-sm leading-6 text-slate-600">{application.business_details}</p>}
                   <p className="mt-2 text-xs text-slate-400">Applied {new Date(application.created_at).toLocaleDateString()}</p>
@@ -165,6 +210,19 @@ export default function AdminRetailers() {
                     </button>
                   ))}
                 </div>
+                {application.status === "approved" && (
+                  <div className="md:col-span-3">
+                    <button
+                      type="button"
+                      disabled={busyId === application.id || accessBusyId === application.id}
+                      onClick={() => void sendAccessEmail(application)}
+                      className="rounded-xl bg-orange-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {accessBusyId === application.id ? "Sending secure link…" : "Send password setup / reset email"}
+                    </button>
+                    <p className="mt-2 text-xs text-slate-500">New accounts receive an invitation. Existing customer accounts are enabled for retailer access and receive a password reset link.</p>
+                  </div>
+                )}
               </div>
             </article>
           ))}

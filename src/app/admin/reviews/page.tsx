@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
+import StarRatingDisplay from "@/components/StarRatingDisplay";
 
 type Review = {
   id: number;
@@ -9,6 +10,7 @@ type Review = {
   reviewer_name: string;
   rating: number;
   review_text: string;
+  is_demo: boolean;
   status: "pending" | "approved" | "rejected";
   created_at: string;
   products: { name: string } | null;
@@ -31,7 +33,7 @@ export default function AdminReviews() {
 
     const { data, error: queryError } = await supabase
       .from("reviews")
-      .select("id,product_id,reviewer_name,rating,review_text,status,created_at,products(name)")
+      .select("id,product_id,reviewer_name,rating,review_text,status,is_demo,created_at,products(name)")
       .order("created_at", { ascending: false })
       .returns<Review[]>();
 
@@ -116,10 +118,17 @@ export default function AdminReviews() {
             <article key={review.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
               <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
                 <div>
-                  <div className="text-amber-500" aria-label={`${review.rating} out of 5 stars`}>
-                    {"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}
-                  </div>
-                  <p className="mt-3 text-sm leading-6 text-slate-600">“{review.review_text}”</p>
+                  <StarRatingDisplay rating={review.rating} className="text-amber-500" />
+                  {review.is_demo && (
+                    <p className="mt-2 inline-flex rounded-full border border-amber-300 bg-amber-50 px-2.5 py-1 text-[11px] font-black uppercase tracking-wide text-amber-900">
+                      Demo — not customer feedback
+                    </p>
+                  )}
+                  {review.review_text ? (
+                    <p className="mt-3 text-sm leading-6 text-slate-600">“{review.review_text}”</p>
+                  ) : (
+                    <p className="mt-3 text-sm italic text-slate-500">Star rating only</p>
+                  )}
                   <div className="mt-4 font-black text-slate-900">{review.reviewer_name}</div>
                   <div className="mt-1 text-xs text-slate-500">
                     {review.products?.name ?? `Product #${review.product_id}`} · {new Date(review.created_at).toLocaleDateString()}

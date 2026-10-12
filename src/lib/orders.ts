@@ -8,15 +8,53 @@ export type OrderStatus =
   | "Delivered"
   | "Cancelled";
 
+export type CourierPreference =
+  | "store_choice"
+  | "postex"
+  | "tcs"
+  | "leopards"
+  | "mnp"
+  | "pakistan_post";
+
+export type FulfillmentMethod = "delivery" | "store_pickup";
+
+export const paymentMethods = ["JazzCash", "EasyPaisa", "Bank transfer"] as const;
+export type PaymentMethod = (typeof paymentMethods)[number];
+export type PaymentStatus = "Unpaid" | "Paid" | "Refunded";
+
+const courierPreferenceLabels: Record<CourierPreference, string> = {
+  store_choice: "Store chooses available service",
+  postex: "PostEx",
+  tcs: "TCS",
+  leopards: "Leopards Courier",
+  mnp: "M&P",
+  pakistan_post: "Pakistan Post",
+};
+
+export function courierPreferenceLabel(preference: CourierPreference) {
+  return courierPreferenceLabels[preference];
+}
+
+function isCourierPreference(value: unknown): value is CourierPreference {
+  return (
+    typeof value === "string" &&
+    Object.hasOwn(courierPreferenceLabels, value)
+  );
+}
+
 export type SavedOrder = {
   orderNumber: string;
+  trackingCode?: string;
   orderType: OrderType;
   customer: {
     name: string;
     phone: string;
     address: string;
     city: string;
+    area: string;
     payment: string;
+    fulfillmentMethod?: FulfillmentMethod;
+    courierPreference?: CourierPreference;
   };
   items: {
     product: {
@@ -32,6 +70,7 @@ export type SavedOrder = {
   subtotal: number;
   delivery: number | null;
   total: number | null;
+  paymentStatus?: PaymentStatus;
   status: OrderStatus;
   createdAt: string;
 };
@@ -42,6 +81,17 @@ export function normalizeSavedOrder(value: unknown): SavedOrder | null {
   const customerValue = order.customer;
   if (!customerValue || typeof customerValue !== "object") return null;
   const customer = customerValue as Record<string, unknown>;
+  const courierPreference = customer.courierPreference;
+  const fulfillmentMethod = customer.fulfillmentMethod;
+  const paymentStatus = order.paymentStatus;
+  const allowedCourierPreferences: CourierPreference[] = [
+    "store_choice",
+    "postex",
+    "tcs",
+    "leopards",
+    "mnp",
+    "pakistan_post",
+  ];
   if (
     typeof order.orderNumber !== "string" ||
     (order.orderType !== "Customer" &&
@@ -91,6 +141,9 @@ export function normalizeSavedOrder(value: unknown): SavedOrder | null {
 
   return {
     orderNumber: order.orderNumber,
+    ...(typeof order.trackingCode === "string"
+      ? { trackingCode: order.trackingCode }
+      : {}),
     orderType: order.orderType === "retailer" || order.orderType === "Retailer"
       ? "Retailer"
       : "Customer",
@@ -99,12 +152,18 @@ export function normalizeSavedOrder(value: unknown): SavedOrder | null {
       phone: customer.phone,
       address: customer.address,
       city: customer.city,
+      area: typeof customer.area === "string" ? customer.area : "",
       payment: customer.payment,
+      fulfillmentMethod: fulfillmentMethod === "store_pickup" ? "store_pickup" : "delivery",
+      ...(isCourierPreference(courierPreference) ? { courierPreference } : {}),
     },
     items,
     subtotal: order.subtotal,
     delivery: order.delivery,
     total: order.total,
+    paymentStatus: paymentStatus === "Paid" || paymentStatus === "Refunded"
+      ? paymentStatus
+      : "Unpaid",
     status: order.status as OrderStatus,
     createdAt: order.createdAt,
   };

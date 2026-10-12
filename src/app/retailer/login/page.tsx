@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { isRetailerDemoEnabled, startRetailerDemoSession } from "@/lib/auth/retailer-demo";
 
 export default function RetailerLogin() {
   const router = useRouter();
@@ -11,16 +12,43 @@ export default function RetailerLogin() {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+  const [resetMode, setResetMode] = useState(false);
   const configured = Boolean(getSupabaseBrowserClient());
+  const demoEnabled = isRetailerDemoEnabled();
+
+  function enterDemoAccount() {
+    setError("");
+    try {
+      startRetailerDemoSession();
+      router.replace("/retailer/dashboard");
+    } catch (demoError) {
+      setError(demoError instanceof Error ? demoError.message : "Could not start retailer demo access.");
+    }
+  }
 
   async function signIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
     setError("");
+    setNotice("");
 
     const supabase = getSupabaseBrowserClient();
     if (!supabase) {
       setError("Retailer sign-in is unavailable because the backend is not configured.");
+      setBusy(false);
+      return;
+    }
+
+    if (resetMode) {
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/retailer/setup-password`,
+      });
+      if (resetError) {
+        setError(`Could not send a password setup email: ${resetError.message}`);
+      } else {
+        setNotice("If an account exists for this email, a password setup link will arrive shortly.");
+      }
       setBusy(false);
       return;
     }
@@ -64,11 +92,18 @@ export default function RetailerLogin() {
           </p>
 
           {!configured && (
-            <p role="status" className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
-              The retailer account service is not configured. Contact the store for assistance.
-            </p>
+            demoEnabled ? (
+              <p role="status" className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
+                Supabase is not configured. Use the clearly marked demo account to preview the retailer area; demo access is unavailable in production.
+              </p>
+            ) : (
+              <p role="status" className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
+                The retailer account service is not configured. Contact the store for assistance.
+              </p>
+            )
           )}
           {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</p>}
+          {notice && <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">{notice}</p>}
 
           <form onSubmit={signIn} className="mt-6 space-y-4">
             <label className="block text-sm font-bold text-slate-700">
@@ -82,21 +117,48 @@ export default function RetailerLogin() {
                 className="ui-field mt-2"
               />
             </label>
-            <label className="block text-sm font-bold text-slate-700">
-              Password
-              <input
-                required
-                type="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                className="ui-field mt-2"
-              />
-            </label>
+            {!resetMode && (
+              <label className="block text-sm font-bold text-slate-700">
+                Password
+                <input
+                  required
+                  type="password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  className="ui-field mt-2"
+                />
+              </label>
+            )}
             <button disabled={!configured || busy} className="ui-button-primary w-full disabled:cursor-not-allowed disabled:bg-slate-300">
-              {busy ? "Signing in…" : "Sign in"}
+              {busy ? (resetMode ? "Sending link…" : "Signing in…") : (resetMode ? "Send password setup link" : "Sign in")}
             </button>
           </form>
+          {demoEnabled && !resetMode && (
+            <div className="mt-6 rounded-2xl border border-dashed border-orange-300 bg-orange-50 p-4">
+              <p className="text-sm font-black text-orange-900">Testing only — demo retailer</p>
+              <p className="mt-1 text-sm leading-6 text-orange-800">No Supabase account or password is used. Demo access stays in this browser and is disabled in production.</p>
+              <button
+                type="button"
+                onClick={enterDemoAccount}
+                className="mt-4 w-full rounded-xl border border-orange-300 bg-white px-4 py-3 text-sm font-black text-orange-800 transition hover:bg-orange-100"
+              >
+                Enter retailer demo
+              </button>
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={() => {
+              setResetMode((current) => !current);
+              setPassword("");
+              setError("");
+              setNotice("");
+            }}
+            className="mt-4 w-full text-center text-sm font-bold text-orange-700 hover:text-orange-800"
+          >
+            {resetMode ? "Back to sign in" : "Forgot your password?"}
+          </button>
 
           <p className="mt-6 text-center text-sm text-slate-600">
             Need retailer access?{" "}

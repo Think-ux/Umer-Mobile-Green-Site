@@ -26,6 +26,7 @@ const navigation = [
       { label: "Categories", href: "/admin/categories" },
       { label: "Brands", href: "/admin/brands" },
       { label: "Orders", href: "/admin/orders" },
+      { label: "Customer accounts", href: "/admin/accounts" },
       { label: "Retailers", href: "/admin/retailers" },
       { label: "Reviews", href: "/admin/reviews" },
     ],
@@ -88,6 +89,25 @@ export default function AdminShell({
   const [authState, setAuthState] = useState<
     "checking" | "ready" | "signed-out" | "not-admin" | "unconfigured"
   >("checking");
+  const [signingOut, setSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState("");
+
+  async function signOut() {
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      setSignOutError("Supabase is not configured. Could not sign out.");
+      return;
+    }
+    setSigningOut(true);
+    setSignOutError("");
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      setSignOutError(`Could not sign out: ${error.message}`);
+      setSigningOut(false);
+      return;
+    }
+    router.replace("/admin/login");
+  }
 
   useEffect(() => {
     if (isLoginPage) return;
@@ -205,10 +225,18 @@ export default function AdminShell({
 
       <div className="md:pl-64">
         <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur md:hidden">
-          <div className="px-4 pt-3">
+          <div className="flex items-center justify-between gap-3 px-4 pt-3">
             <Link href="/admin" className="text-lg font-black">
               UMER <span className="text-orange-500">CMS</span>
             </Link>
+            <button
+              type="button"
+              onClick={() => void signOut()}
+              disabled={signingOut}
+              className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 disabled:opacity-60"
+            >
+              {signingOut ? "Signing out…" : "Sign out"}
+            </button>
           </div>
           <div className="mt-3 overflow-x-auto">
             <NavigationLinks mobile />
@@ -218,13 +246,24 @@ export default function AdminShell({
           <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
             Umer Mobile Parts <span className="mx-2 text-orange-500">/</span> CMS
           </p>
-          <Link
-            href="/"
-            className="text-sm font-bold text-orange-600 transition hover:text-orange-700"
-          >
-            View storefront →
-          </Link>
+          <div className="flex items-center gap-5">
+            <Link
+              href="/"
+              className="text-sm font-bold text-orange-600 transition hover:text-orange-700"
+            >
+              View storefront →
+            </Link>
+            <button
+              type="button"
+              onClick={() => void signOut()}
+              disabled={signingOut}
+              className="text-sm font-bold text-slate-600 transition hover:text-red-700 disabled:opacity-60"
+            >
+              {signingOut ? "Signing out…" : "Sign out"}
+            </button>
+          </div>
         </div>
+        {signOutError && <p role="alert" className="border-b border-red-200 bg-red-50 px-4 py-2 text-sm text-red-700 md:px-8">{signOutError}</p>}
         <main className="admin-workspace min-h-screen">{children}</main>
       </div>
     </div>
