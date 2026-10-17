@@ -98,9 +98,9 @@ export default function RetailerSetupPasswordPage() {
   }
 
   return (
-    <main className="grid min-h-[65vh] place-items-center bg-slate-50 px-4 py-12">
+    <main className="grid min-h-page-content place-items-center bg-slate-50 px-4 py-12">
       <section className="ui-card w-full max-w-md p-7 sm:p-9">
-        <Link href="/retailer/login" className="text-sm font-bold text-orange-700 hover:text-orange-800">
+        <Link href="/retailer/login" className="text-sm font-bold text-lime-800 hover:text-lime-900">
           ← Retailer sign in
         </Link>
         <h1 className="mt-6 text-3xl font-black">Set your password</h1>

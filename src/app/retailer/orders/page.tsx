@@ -32,7 +32,7 @@ export default function RetailerOrdersPage() {
 
   if (!checked) {
     return (
-      <main className="grid min-h-[65vh] place-items-center bg-slate-50 px-4 py-12">
+      <main className="grid min-h-page-content place-items-center bg-slate-50 px-4 py-12">
         <p role="status" className="text-sm text-slate-600">Checking retailer demo access…</p>
       </main>
     );
@@ -40,7 +40,7 @@ export default function RetailerOrdersPage() {
 
   if (accessError) {
     return (
-      <main className="grid min-h-[65vh] place-items-center bg-slate-50 px-4 py-12">
+      <main className="grid min-h-page-content place-items-center bg-slate-50 px-4 py-12">
         <section className="ui-card max-w-lg p-7 text-center">
           <h1 className="text-2xl font-black">Could not check demo access</h1>
           <p role="alert" className="mt-3 text-sm leading-6 text-red-700">{accessError}</p>
@@ -52,9 +52,9 @@ export default function RetailerOrdersPage() {
 
   if (demoSession) {
     return (
-      <main className="min-h-[65vh] bg-slate-50 px-4 py-12">
+      <main className="min-h-page-content bg-slate-50 px-4 py-12">
         <section className="mx-auto max-w-4xl">
-          <Link href="/retailer/dashboard" className="text-sm font-bold text-orange-700 hover:text-orange-800">
+          <Link href="/retailer/dashboard" className="text-sm font-bold text-lime-800 hover:text-lime-900">
             ← Retailer dashboard
           </Link>
           <div className="mt-5 rounded-3xl border border-amber-300 bg-amber-50 p-5 text-amber-950">
@@ -104,16 +104,16 @@ export default function RetailerOrdersPage() {
   }
 
   return (
-    <main className="min-h-[65vh] bg-slate-50 px-4 py-12">
+    <main className="min-h-page-content bg-slate-50 px-4 py-12">
       <section className="mx-auto max-w-2xl rounded-3xl border border-slate-200 bg-white p-7 text-center shadow-sm sm:p-10">
-        <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-600">Retailer orders</p>
+        <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">Retailer orders</p>
         <h1 className="mt-3 text-3xl font-black">Wholesale ordering is not enabled yet</h1>
         <p className="mt-4 leading-7 text-slate-600">
           The store has not confirmed retailer prices and ordering terms. Retailer orders are not being accepted or stored yet. Apply for retailer access or contact the store before placing a wholesale order.
         </p>
         <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
           <Link href="/retailer" className="ui-button-primary">Retailer information</Link>
-          <Link href="/customer-care" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 font-bold hover:border-orange-300 hover:text-orange-700">
+          <Link href="/customer-care" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 font-bold hover:border-lime-300 hover:text-lime-800">
             Contact the store
           </Link>
         </div>

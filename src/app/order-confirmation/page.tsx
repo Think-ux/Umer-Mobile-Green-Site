@@ -19,16 +19,16 @@ function ConfirmationContent() {
 
   if (!orderNumber || (!isTrackingCode && !/^UMP-[A-F0-9]{12}$/i.test(orderNumber))) {
     return (
-      <main className="min-h-[65vh] bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
+      <main className="min-h-page-content bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
         <section className="ui-card mx-auto max-w-2xl p-7 text-center sm:p-10">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-600">Order information</p>
+          <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">Order information</p>
           <h1 className="mt-3 text-3xl font-black">We couldn&apos;t verify an order</h1>
           <p role="status" className="mt-4 leading-7 text-slate-600">
             We could not find an order tracking code in this link. You can still look up an order using its six-digit tracking code and checkout phone.
           </p>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
             <Link href="/my-orders" className="ui-button-primary">Find my orders</Link>
-            <Link href="/search" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 font-bold hover:border-orange-300 hover:text-orange-700">
+            <Link href="/search" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 font-bold hover:border-lime-300 hover:text-lime-800">
               Continue shopping
             </Link>
           </div>
@@ -40,11 +40,11 @@ function ConfirmationContent() {
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
-        <section className="rounded-[32px] border border-green-100 bg-white p-7 text-center shadow-[0_20px_60px_rgba(15,23,42,0.08)] md:p-12">
+        <section className="rounded-card border border-green-100 bg-white p-7 text-center shadow-confirmation md:p-12">
           <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100 text-3xl font-black text-green-700">
             ✓
           </div>
-          <p className="mt-6 text-sm font-black uppercase tracking-[0.22em] text-green-700">Order received</p>
+          <p className="mt-6 text-sm font-black uppercase tracking-eyebrow-prominent text-green-700">Order received</p>
           <h1 className="mt-3 text-4xl font-black tracking-tight text-slate-950 md:text-5xl">
             Thank you for your order
           </h1>

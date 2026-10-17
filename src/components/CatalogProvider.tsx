@@ -101,10 +101,6 @@ export type HomepageContent = {
   show_brands: boolean;
   featured_heading: string;
   show_featured: boolean;
-  products_heading: string;
-  show_products: boolean;
-  show_reviews: boolean;
-  reviews_heading: string;
   show_retailer_cta: boolean;
   retailer_heading: string;
   retailer_description: string;
@@ -133,10 +129,6 @@ const initialHomepage: HomepageContent = {
   show_brands: true,
   featured_heading: "Featured Products",
   show_featured: true,
-  products_heading: "More Products",
-  show_products: true,
-  show_reviews: true,
-  reviews_heading: "What Customers Say",
   show_retailer_cta: true,
   retailer_heading: "Looking for wholesale?",
   retailer_description: "For retailers and repair shops",

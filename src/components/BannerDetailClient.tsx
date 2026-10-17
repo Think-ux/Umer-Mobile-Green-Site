@@ -18,7 +18,7 @@ export default function BannerDetailClient() {
         <div className="mx-auto max-w-7xl">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm font-bold text-slate-600 transition hover:text-orange-600"
+            className="inline-flex items-center gap-2 text-sm font-bold text-slate-600 transition hover:text-lime-700"
           >
             <span aria-hidden="true">←</span>
             Back to home
@@ -27,13 +27,13 @@ export default function BannerDetailClient() {
           <div
             role="img"
             aria-label={banner.title}
-            className="mt-6 aspect-[16/9] min-h-64 rounded-2xl bg-slate-950 bg-contain bg-center bg-no-repeat shadow-xl sm:aspect-[16/7] lg:aspect-[16/6]"
+            className="mt-6 aspect-banner-card-mobile min-h-64 rounded-2xl bg-slate-950 bg-contain bg-center bg-no-repeat shadow-xl sm:aspect-banner-card-tablet lg:aspect-banner-card-desktop"
             style={{ backgroundImage: `url("${banner.image_url}")` }}
           />
 
           <div className="mt-6 flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-600">
+              <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">
                 Campaign
               </p>
               <h1 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">
@@ -45,7 +45,7 @@ export default function BannerDetailClient() {
               {banner.link_url && (
                 <Link
                   href={banner.link_url}
-                  className="inline-flex min-h-12 items-center justify-center rounded-xl bg-orange-500 px-5 py-3 font-bold text-white transition hover:bg-orange-600"
+                  className="inline-flex min-h-12 items-center justify-center rounded-xl bg-brand-primary px-5 py-3 font-bold text-brand-primary-foreground transition hover:bg-brand-primary-hover"
                 >
                   View campaign offer
                   <span className="ml-2" aria-hidden="true">→</span>
@@ -53,7 +53,7 @@ export default function BannerDetailClient() {
               )}
               <Link
                 href="/search"
-                className="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-3 font-bold text-slate-800 transition hover:border-orange-300 hover:text-orange-600"
+                className="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-3 font-bold text-slate-800 transition hover:border-lime-300 hover:text-lime-700"
               >
                 Browse products
               </Link>
@@ -82,7 +82,7 @@ export default function BannerDetailClient() {
       </p>
       <Link
         href="/"
-        className="mt-6 inline-flex rounded-xl bg-orange-500 px-5 py-3 font-black text-white"
+        className="mt-6 inline-flex rounded-xl bg-brand-primary px-5 py-3 font-black text-brand-primary-foreground"
       >
         Return home
       </Link>

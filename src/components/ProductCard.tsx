@@ -5,17 +5,20 @@ import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "@/components/CartProvider";
 import { useCatalog } from "@/components/CatalogProvider";
+import { Badge, Button, Card } from "@/components/ui";
 import type { Product } from "@/data/store";
 import { formatStorePrice, retailerPrice } from "@/lib/pricing";
 
 type Props = {
   product: Product;
+  variant?: "default" | "compact";
 };
 
-export default function ProductCard({ product }: Props) {
+export default function ProductCard({ product, variant = "default" }: Props) {
   const { addToCart } = useCart();
   const { isRetailer } = useCatalog();
   const [added, setAdded] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
 
   const inStock = product.stock > 0;
 
@@ -42,48 +45,58 @@ export default function ProductCard({ product }: Props) {
   }
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl hover:shadow-slate-900/5">
+    <Card
+      as="article"
+      className="group flex h-full flex-col overflow-hidden transition duration-300 hover:-translate-y-1 hover:border-lime-200 hover:shadow-xl hover:shadow-slate-900/5"
+    >
       <Link
         href={`/product/${product.slug}`}
         className="relative block overflow-hidden bg-slate-100"
         aria-label={`View ${product.name}`}
       >
-        <div className="relative aspect-square">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-cover transition duration-500 group-hover:scale-105"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          />
+        <div className={`relative ${variant === "compact" ? "aspect-[4/3]" : "aspect-square"}`}>
+          {imageFailed ? (
+            <span className="absolute inset-0 grid place-items-center bg-slate-100 text-sm font-semibold text-slate-500">
+              Image unavailable
+            </span>
+          ) : (
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              onError={() => setImageFailed(true)}
+              className="object-cover transition duration-500 group-hover:scale-105"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            />
+          )}
         </div>
 
         {discounted && (
-          <span className="absolute left-3 top-3 rounded-lg bg-orange-500 px-2.5 py-1.5 text-xs font-black text-white shadow-sm">
+          <Badge variant="solid" className="absolute left-3 top-3 rounded-lg px-2.5 py-1.5 shadow-sm">
             -{discount}%
-          </span>
+          </Badge>
         )}
 
         {!inStock ? (
-          <span className="absolute right-3 top-3 rounded-lg bg-slate-900/90 px-2.5 py-1.5 text-xs font-bold text-white">
+          <Badge variant="neutral" className="absolute right-3 top-3 rounded-lg bg-slate-900/90 px-2.5 py-1.5 text-white">
             Sold Out
-          </span>
+          </Badge>
         ) : product.stock <= 5 ? (
-          <span className="absolute right-3 top-3 rounded-lg bg-red-50 px-2.5 py-1.5 text-xs font-bold text-red-700">
+          <Badge variant="danger" className="absolute right-3 top-3 rounded-lg px-2.5 py-1.5">
             Low Stock
-          </span>
+          </Badge>
         ) : null}
 
-        <span className="absolute bottom-3 left-3 rounded-lg border border-white/70 bg-white/90 px-2.5 py-1.5 text-xs font-bold text-slate-700 backdrop-blur">
+        <Badge variant="neutral" className="absolute bottom-3 left-3 rounded-lg border border-white/70 bg-white/90 px-2.5 py-1.5 text-slate-700 backdrop-blur">
           {product.quality}
-        </span>
+        </Badge>
       </Link>
 
-      <div className="flex flex-1 flex-col p-4 sm:p-5">
+      <div className={`flex flex-1 flex-col ${variant === "compact" ? "p-4" : "p-4 sm:p-5"}`}>
         <div className="flex items-center justify-between gap-2">
-          <span className="text-xs font-black uppercase tracking-wider text-orange-600">
+          <Badge variant="brand" className="rounded-none bg-transparent p-0 text-xs font-black uppercase tracking-wider text-lime-900">
             {product.brand}
-          </span>
+          </Badge>
 
           <span className="shrink-0 text-xs font-bold text-amber-500">
             ★ {product.rating}
@@ -94,7 +107,7 @@ export default function ProductCard({ product }: Props) {
           href={`/product/${product.slug}`}
           className="mt-2"
         >
-          <h3 className="min-h-12 text-base font-extrabold leading-6 text-slate-900 transition group-hover:text-orange-600">
+          <h3 className="min-h-12 text-base font-extrabold leading-6 text-slate-900 transition group-hover:text-lime-800">
             {product.name}
           </h3>
         </Link>
@@ -116,7 +129,7 @@ export default function ProductCard({ product }: Props) {
         </div>
         {hasRetailerDiscount && discountedRetailerPrice !== null && (
           <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2.5">
-            <p className="text-[11px] font-black uppercase tracking-wide text-emerald-800">
+            <p className="text-2xs font-black uppercase tracking-wide text-emerald-800">
               Retailer price · {product.retailerDiscountPercent}% off
             </p>
             <p className="mt-0.5 text-lg font-black text-emerald-900">{formatStorePrice(discountedRetailerPrice)}</p>
@@ -138,11 +151,12 @@ export default function ProductCard({ product }: Props) {
         </div>
 
         <div className="mt-auto pt-4">
-          <button
+          <Button
             type="button"
+            variant="primary"
             onClick={handleAdd}
             disabled={!inStock}
-            className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 py-3 text-sm font-black text-white transition hover:bg-orange-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300"
+            className="min-h-11 w-full disabled:bg-slate-300"
           >
             {added ? (
               <>
@@ -157,9 +171,9 @@ export default function ProductCard({ product }: Props) {
             ) : (
               "Sold Out"
             )}
-          </button>
+          </Button>
         </div>
       </div>
-    </article>
+    </Card>
   );
 }

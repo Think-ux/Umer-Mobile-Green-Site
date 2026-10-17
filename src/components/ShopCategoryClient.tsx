@@ -130,7 +130,7 @@ export default function ShopCategoryClient({ category }: Props) {
               setBrand(e.target.value);
               setModel("all");
             }}
-            className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
+            className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm outline-none focus:border-brand-primary focus:ring-2 focus:ring-lime-100"
           >
             <option value="all">All brands</option>
             {brands.map((value) => (
@@ -146,7 +146,7 @@ export default function ShopCategoryClient({ category }: Props) {
           <select
             value={model}
             onChange={(e) => setModel(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
+            className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm outline-none focus:border-brand-primary focus:ring-2 focus:ring-lime-100"
           >
             <option value="all">All models</option>
             {models.map((value) => (
@@ -160,7 +160,7 @@ export default function ShopCategoryClient({ category }: Props) {
           <select
             value={quality}
             onChange={(e) => setQuality(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
+            className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm outline-none focus:border-brand-primary focus:ring-2 focus:ring-lime-100"
           >
             <option value="all">All quality grades</option>
             {qualities.map((value) => (
@@ -179,7 +179,7 @@ export default function ShopCategoryClient({ category }: Props) {
               aria-label="Minimum price"
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
-              className="min-w-0 rounded-xl border border-slate-200 p-3 text-sm outline-none focus:border-orange-500"
+              className="min-w-0 rounded-xl border border-slate-200 p-3 text-sm outline-none focus:border-brand-primary"
             />
             <input
               type="number"
@@ -188,7 +188,7 @@ export default function ShopCategoryClient({ category }: Props) {
               aria-label="Maximum price"
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
-              className="min-w-0 rounded-xl border border-slate-200 p-3 text-sm outline-none focus:border-orange-500"
+              className="min-w-0 rounded-xl border border-slate-200 p-3 text-sm outline-none focus:border-brand-primary"
             />
           </div>
           {minPrice !== "" && maxPrice !== "" &&
@@ -204,7 +204,7 @@ export default function ShopCategoryClient({ category }: Props) {
           <select
             value={availability}
             onChange={(e) => setAvailability(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
+            className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm outline-none focus:border-brand-primary focus:ring-2 focus:ring-lime-100"
           >
             <option value="all">All products</option>
             <option value="in-stock">In stock</option>
@@ -215,7 +215,7 @@ export default function ShopCategoryClient({ category }: Props) {
         <button
           type="button"
           onClick={resetFilters}
-          className="w-full rounded-xl border border-orange-200 px-4 py-3 text-sm font-bold text-orange-700 transition hover:bg-orange-50"
+          className="w-full rounded-xl border border-lime-200 px-4 py-3 text-sm font-bold text-lime-800 transition hover:bg-lime-50"
         >
           Reset all filters
         </button>
@@ -225,7 +225,7 @@ export default function ShopCategoryClient({ category }: Props) {
 
   if (!matchedCategory) {
     return (
-      <main className="grid min-h-[60vh] place-items-center bg-slate-50 px-4">
+      <main className="grid min-h-shop-content place-items-center bg-slate-50 px-4">
         <div className="text-center">
           <h1 className="text-3xl font-black text-slate-900">
             Category not found
@@ -235,7 +235,7 @@ export default function ShopCategoryClient({ category }: Props) {
           </p>
           <Link
             href="/search"
-            className="mt-6 inline-flex rounded-xl bg-orange-500 px-6 py-3 font-bold text-white hover:bg-orange-600"
+            className="mt-6 inline-flex rounded-xl bg-brand-primary px-6 py-3 font-bold text-brand-primary-foreground hover:bg-brand-primary-hover"
           >
             Browse products
           </Link>
@@ -263,7 +263,7 @@ export default function ShopCategoryClient({ category }: Props) {
         </p>
         <Link
           href="/search"
-          className="mt-6 inline-flex rounded-xl bg-orange-500 px-5 py-3 font-black text-white"
+          className="mt-6 inline-flex rounded-xl bg-brand-primary px-5 py-3 font-black text-brand-primary-foreground"
         >
           Browse products
         </Link>
@@ -272,13 +272,13 @@ export default function ShopCategoryClient({ category }: Props) {
   }
 
   return (
-    <main className="min-h-screen bg-[#f8fafc] text-slate-900">
-      <section className="border-b border-orange-100 bg-gradient-to-br from-orange-50 via-white to-white">
+    <main className="min-h-screen bg-canvas text-slate-900">
+      <section className="border-b border-lime-100 bg-gradient-to-br from-lime-50 via-white to-white">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
           <nav aria-label="Breadcrumb" className="text-sm text-slate-500">
-            <Link href="/" className="transition hover:text-orange-600">Home</Link>
+            <Link href="/" className="transition hover:text-lime-700">Home</Link>
             <span className="mx-2">/</span>
-            <Link href="/search" className="transition hover:text-orange-600">Shop</Link>
+            <Link href="/search" className="transition hover:text-lime-700">Shop</Link>
             <span className="mx-2">/</span>
             <span className="font-semibold text-slate-900">
               {matchedCategory.name}
@@ -287,12 +287,12 @@ export default function ShopCategoryClient({ category }: Props) {
 
           <div className="mt-7 flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div className="max-w-3xl">
-              <span className="inline-flex rounded-full border border-orange-200 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-orange-700">
+              <span className="inline-flex rounded-full border border-lime-200 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-lime-800">
                 Umer Mobile Parts
               </span>
               <h1 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">
                 {matchedCategory.name}
-                <span className="block text-orange-500">
+                <span className="block text-lime-700">
                   Find the right part, faster.
                 </span>
               </h1>
@@ -303,7 +303,7 @@ export default function ShopCategoryClient({ category }: Props) {
             </div>
 
             <div className="flex shrink-0 items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-              <span className="grid h-11 w-11 place-items-center overflow-hidden rounded-xl bg-orange-50 text-xl text-orange-600">
+              <span className="grid h-11 w-11 place-items-center overflow-hidden rounded-xl bg-lime-50 text-xl text-lime-700">
                 {matchedCategory.icon_image_url ? (
                   <img src={matchedCategory.icon_image_url} alt="" className="h-full w-full object-cover" />
                 ) : matchedCategory.icon || "▦"}
@@ -315,7 +315,7 @@ export default function ShopCategoryClient({ category }: Props) {
             </div>
           </div>
 
-          <div className="mt-7 flex max-w-2xl items-center gap-3 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition focus-within:border-orange-400 focus-within:ring-4 focus-within:ring-orange-100">
+          <div className="mt-7 flex max-w-2xl items-center gap-3 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition focus-within:border-lime-300 focus-within:ring-4 focus-within:ring-lime-100">
             <span className="pl-3 text-xl text-slate-400" aria-hidden="true">⌕</span>
             <input
               value={search}
@@ -345,7 +345,7 @@ export default function ShopCategoryClient({ category }: Props) {
       <section className="mx-auto max-w-7xl px-4 py-7 sm:px-6 sm:py-10 lg:px-8">
         <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <p className="text-sm font-bold text-orange-600">
+            <p className="text-sm font-bold text-lime-700">
               Shop / {matchedCategory.name}
             </p>
             <h2 className="mt-1 text-2xl font-black tracking-tight sm:text-3xl">
@@ -360,13 +360,13 @@ export default function ShopCategoryClient({ category }: Props) {
             <button
               type="button"
               onClick={() => setFiltersOpen(true)}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold shadow-sm transition hover:border-orange-300 lg:hidden"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold shadow-sm transition hover:border-lime-300 lg:hidden"
               aria-haspopup="dialog"
             >
               <span aria-hidden="true">☷</span>
               Filters
               {activeFilters > 0 && (
-                <span className="grid h-5 min-w-5 place-items-center rounded-full bg-orange-500 px-1 text-xs text-white">
+                <span className="grid h-5 min-w-5 place-items-center rounded-full bg-brand-primary px-1 text-xs text-brand-primary-foreground">
                   {activeFilters}
                 </span>
               )}
@@ -377,7 +377,7 @@ export default function ShopCategoryClient({ category }: Props) {
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
-                className="max-w-[190px] rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-semibold outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
+                className="max-w-filter-select rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-semibold outline-none focus:border-brand-primary focus:ring-2 focus:ring-lime-100"
               >
                 <option value="featured">Featured</option>
                 <option value="price-low">Price: low to high</option>
@@ -394,40 +394,40 @@ export default function ShopCategoryClient({ category }: Props) {
               Active filters:
             </span>
             {brand !== "all" && (
-              <span className="rounded-full bg-orange-50 px-3 py-1.5 text-xs font-bold text-orange-700">{brand}</span>
+              <span className="rounded-full bg-lime-50 px-3 py-1.5 text-xs font-bold text-lime-800">{brand}</span>
             )}
             {model !== "all" && (
-              <span className="rounded-full bg-orange-50 px-3 py-1.5 text-xs font-bold text-orange-700">{model}</span>
+              <span className="rounded-full bg-lime-50 px-3 py-1.5 text-xs font-bold text-lime-800">{model}</span>
             )}
             {quality !== "all" && (
-              <span className="rounded-full bg-orange-50 px-3 py-1.5 text-xs font-bold text-orange-700">{quality}</span>
+              <span className="rounded-full bg-lime-50 px-3 py-1.5 text-xs font-bold text-lime-800">{quality}</span>
             )}
             {availability !== "all" && (
-              <span className="rounded-full bg-orange-50 px-3 py-1.5 text-xs font-bold text-orange-700">
+              <span className="rounded-full bg-lime-50 px-3 py-1.5 text-xs font-bold text-lime-800">
                 {availability === "in-stock" ? "In stock" : "Out of stock"}
               </span>
             )}
             {(minPrice !== "" || maxPrice !== "") && (
-              <span className="rounded-full bg-orange-50 px-3 py-1.5 text-xs font-bold text-orange-700">
+              <span className="rounded-full bg-lime-50 px-3 py-1.5 text-xs font-bold text-lime-800">
                 Rs. {minPrice || "0"} – {maxPrice || "Any"}
               </span>
             )}
             {search.trim() && (
-              <span className="rounded-full bg-orange-50 px-3 py-1.5 text-xs font-bold text-orange-700">
+              <span className="rounded-full bg-lime-50 px-3 py-1.5 text-xs font-bold text-lime-800">
                 Search: {search}
               </span>
             )}
             <button
               type="button"
               onClick={resetFilters}
-              className="px-2 py-1 text-xs font-bold text-slate-500 underline hover:text-orange-600"
+              className="px-2 py-1 text-xs font-bold text-slate-500 underline hover:text-lime-700"
             >
               Clear all
             </button>
           </div>
         )}
 
-        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-8">
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-category-browser lg:gap-8">
           <aside className="hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:block">
             <div className="mb-6 border-b border-slate-100 pb-4">
               <h2 className="text-lg font-black">Filter products</h2>
@@ -447,7 +447,7 @@ export default function ShopCategoryClient({ category }: Props) {
               </div>
             ) : (
               <div className="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
-                <div className="text-4xl text-orange-500" aria-hidden="true">⌕</div>
+                <div className="text-4xl text-lime-700" aria-hidden="true">⌕</div>
                 <h2 className="mt-4 text-2xl font-black">
                   No matching products
                 </h2>
@@ -457,7 +457,7 @@ export default function ShopCategoryClient({ category }: Props) {
                 <button
                   type="button"
                   onClick={resetFilters}
-                  className="mt-6 rounded-xl bg-orange-500 px-6 py-3 font-bold text-white transition hover:bg-orange-600"
+                  className="mt-6 rounded-xl bg-brand-primary px-6 py-3 font-bold text-brand-primary-foreground transition hover:bg-brand-primary-hover"
                 >
                   Reset filters
                 </button>
@@ -514,7 +514,7 @@ export default function ShopCategoryClient({ category }: Props) {
               <button
                 type="button"
                 onClick={() => setFiltersOpen(false)}
-                className="rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white hover:bg-orange-600"
+                className="rounded-xl bg-brand-primary px-4 py-3 text-sm font-bold text-brand-primary-foreground hover:bg-brand-primary-hover"
               >
                 Show {filteredProducts.length}
               </button>

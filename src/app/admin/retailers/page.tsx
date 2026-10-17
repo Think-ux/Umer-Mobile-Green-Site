@@ -156,7 +156,7 @@ export default function AdminRetailers() {
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
-        <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-500">Store operations</p>
+        <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">Store operations</p>
         <h1 className="mt-2 text-3xl font-black tracking-tight">Retailer applications</h1>
         <p className="mt-2 text-sm text-slate-500">Review applications and send secure account setup links. Retailers create their own passwords; admins never receive them.</p>
 
@@ -169,7 +169,7 @@ export default function AdminRetailers() {
             <p className="rounded-xl bg-slate-50 p-5 text-sm text-slate-500">No retailer applications have been submitted yet.</p>
           ) : applications.map((application) => (
             <article key={application.id} className="rounded-2xl bg-slate-50 p-5">
-              <div className="grid gap-4 md:grid-cols-[1.5fr_1fr_auto] md:items-start">
+              <div className="grid gap-4 md:grid-cols-admin-retailer-form md:items-start">
                 <div>
                   <h2 className="font-black">{application.business_name}</h2>
                   <p className="text-sm text-slate-500">{application.owner_name} · {application.business_type.replaceAll("_", " ")}</p>
@@ -184,7 +184,7 @@ export default function AdminRetailers() {
                       application.status === "not_applicable" ? "bg-slate-200 text-slate-700" : "bg-amber-100 text-amber-700"
                 }`}>{application.status}</span>
                 <div className="flex flex-col gap-3">
-                  <button type="button" onClick={() => void openDocument(application)} className="w-fit rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-orange-700">
+                  <button type="button" onClick={() => void openDocument(application)} className="w-fit rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-lime-800">
                     {application.required_document_path ? "View shop/business proof" : "No document"}
                   </button>
                   <label className="text-xs font-bold text-slate-600">
@@ -204,7 +204,7 @@ export default function AdminRetailers() {
                       type="button"
                       disabled={busyId === application.id || application.status === status}
                       onClick={() => void updateStatus(application, status)}
-                      className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold capitalize text-slate-700 hover:border-orange-300 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold capitalize text-slate-700 hover:border-lime-300 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {busyId === application.id ? "Saving…" : status}
                     </button>
@@ -216,7 +216,7 @@ export default function AdminRetailers() {
                       type="button"
                       disabled={busyId === application.id || accessBusyId === application.id}
                       onClick={() => void sendAccessEmail(application)}
-                      className="rounded-xl bg-orange-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="rounded-xl bg-brand-primary px-4 py-2.5 text-sm font-bold text-brand-primary-foreground hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {accessBusyId === application.id ? "Sending secure link…" : "Send password setup / reset email"}
                     </button>

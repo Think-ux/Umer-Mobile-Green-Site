@@ -57,7 +57,7 @@ const initialSettings: Settings = {
 };
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-orange-500";
+  "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-primary";
 
 export default function AdminSettingsPage() {
   const { refresh } = useCatalog();
@@ -251,7 +251,7 @@ export default function AdminSettingsPage() {
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-5xl">
-        <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-500">
+        <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">
           Website management
         </p>
         <h1 className="mt-2 text-3xl font-black tracking-tight">Site settings</h1>
@@ -284,7 +284,7 @@ export default function AdminSettingsPage() {
                   ...current,
                   store: { ...current.store, contact_verified: event.target.checked },
                 }))}
-                className="h-4 w-4 accent-orange-500"
+                className="h-4 w-4 accent-lime-500"
               />
               I have verified these customer-facing contact details.
             </label>
@@ -325,7 +325,7 @@ export default function AdminSettingsPage() {
               <button type="button" onClick={() => setSettings((current) => ({
                 ...current,
                 delivery: { ...current.delivery, zones: [...current.delivery.zones, { ...emptyDeliveryZone }] },
-              }))} className="mt-3 min-h-11 rounded-xl border border-orange-200 px-4 py-2 text-sm font-bold text-orange-800 hover:bg-orange-50">
+              }))} className="mt-3 min-h-11 rounded-xl border border-lime-200 px-4 py-2 text-sm font-bold text-lime-900 hover:bg-lime-50">
                 Add location rate
               </button>
             </div>
@@ -340,7 +340,7 @@ export default function AdminSettingsPage() {
                   ...current,
                   delivery: { ...current.delivery, details_verified: event.target.checked },
                 }))}
-                className="h-4 w-4 accent-orange-500"
+                className="h-4 w-4 accent-lime-500"
               />
               I have confirmed these area-based delivery rates and terms with the business.
             </label>
@@ -360,7 +360,7 @@ export default function AdminSettingsPage() {
 
           <div className="flex flex-col justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-5 sm:flex-row sm:items-center">
             <p className="text-sm text-slate-500">Updates are stored in the shared Supabase project.</p>
-            <button disabled={loading || busy} className="rounded-xl bg-orange-500 px-5 py-3 text-sm font-black text-white hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-slate-300">
+            <button disabled={loading || busy} className="rounded-xl bg-brand-primary px-5 py-3 text-sm font-black text-brand-primary-foreground hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:bg-slate-300">
               {loading ? "Loading…" : busy ? "Saving…" : "Save settings"}
             </button>
           </div>

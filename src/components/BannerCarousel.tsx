@@ -67,12 +67,12 @@ export default function BannerCarousel({ banners, label }: Props) {
                 href={`/banner/${banner.id}`}
                 tabIndex={index === visibleIndex ? 0 : -1}
                 aria-label={`View banner: ${banner.title}`}
-                className="group relative flex aspect-[16/8] min-h-52 items-end overflow-hidden bg-cover bg-center p-5 sm:aspect-[16/6] sm:min-h-64 sm:p-8 lg:aspect-[16/5]"
+                className="group relative flex aspect-banner-carousel-mobile min-h-52 items-end overflow-hidden bg-cover bg-center p-5 sm:aspect-banner-carousel-tablet sm:min-h-64 sm:p-8 lg:aspect-banner-desktop"
                 style={{
-                  backgroundImage: `linear-gradient(90deg, rgba(15,23,42,.78), rgba(15,23,42,.08)), url("${banner.image_url}")`,
+                  backgroundImage: `linear-gradient(90deg, var(--banner-overlay-strong), var(--banner-overlay-soft)), url("${banner.image_url}")`,
                 }}
               >
-                <span className="text-xl font-black text-white transition group-hover:text-orange-200 sm:text-2xl lg:text-3xl">
+                <span className="text-xl font-black text-white transition group-hover:text-lime-300 sm:text-2xl lg:text-3xl">
                   {banner.title}
                 </span>
               </Link>
@@ -124,7 +124,7 @@ export default function BannerCarousel({ banners, label }: Props) {
               aria-label={`Show banner ${index + 1}: ${banner.title}`}
               aria-current={index === visibleIndex ? "true" : undefined}
               className={`h-2.5 rounded-full transition-all ${
-                index === visibleIndex ? "w-7 bg-orange-500" : "w-2.5 bg-slate-300 hover:bg-orange-300"
+                index === visibleIndex ? "w-7 bg-brand-primary" : "w-2.5 bg-slate-300 hover:bg-lime-300"
               }`}
             />
           ))}

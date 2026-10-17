@@ -191,7 +191,7 @@ export default function OrdersPage() {
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-600">Store operations</p>
+            <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">Store operations</p>
             <h1 className="mt-2 text-3xl font-black tracking-tight">Orders</h1>
             <p className="mt-2 text-sm text-slate-600">Shared orders placed by customers from any device.</p>
           </div>
@@ -222,7 +222,7 @@ export default function OrdersPage() {
               <article key={order.id} className="ui-card p-5 sm:p-6">
                 <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
                   <div>
-                    <p className="text-xs font-black uppercase tracking-[0.15em] text-slate-500">Order</p>
+                    <p className="text-xs font-black uppercase tracking-label text-slate-500">Order</p>
                     <h2 className="mt-1 text-xl font-black">Tracking code: {order.trackingCode}</h2>
                     <p className="mt-1 text-xs text-slate-500">Internal reference: {order.orderNumber}</p>
                     <p className="mt-2 text-sm text-slate-600">{order.customer.name} · {order.customer.phone}</p>
@@ -237,7 +237,7 @@ export default function OrdersPage() {
                         : `Preferred courier: ${order.customer.courierPreference ? courierPreferenceLabel(order.customer.courierPreference) : "Not specified"}`}
                     </p>
                     <p className="mt-1 text-xs text-slate-500">{new Date(order.createdAt).toLocaleString("en-PK")}</p>
-                    <Link href={`/track-order?order=${encodeURIComponent(order.trackingCode)}`} className="mt-2 inline-block text-sm font-bold text-orange-600">Tracking page →</Link>
+                    <Link href={`/track-order?order=${encodeURIComponent(order.trackingCode)}`} className="mt-2 inline-block text-sm font-bold text-lime-700">Tracking page →</Link>
                   </div>
                   <label className="text-sm font-bold text-slate-700">
                     Status

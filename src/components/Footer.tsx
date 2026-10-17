@@ -4,12 +4,13 @@ import Link from "next/link";
 import { useCatalog } from "@/components/CatalogProvider";
 import { categorySlug } from "@/data/store";
 
-const linkClass = "text-sm text-slate-400 transition hover:text-orange-400";
+const linkClass = "text-sm text-slate-400 transition hover:text-brand-primary";
 
 export default function Footer() {
-  const { categories, settings } = useCatalog();
+  const { categories, brands, settings } = useCatalog();
   const whatsapp = settings.whatsapp.replace(/\D/g, "");
   const featuredCategories = categories.slice(0, 4);
+  const featuredBrands = brands.slice(0, 4);
   const socialLinks = [
     ["Instagram", settings.social.instagram],
     ["Facebook", settings.social.facebook],
@@ -17,16 +18,16 @@ export default function Footer() {
   ].filter(([, value]) => isHttpsUrl(value));
 
   return (
-    <footer className="border-t border-slate-800 bg-slate-950 text-white">
-      <div className="mx-auto grid max-w-7xl gap-9 px-4 py-10 sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_1.1fr] lg:px-8">
+    <footer className="border-t border-market-800 bg-market-950 text-white">
+      <div className="mx-auto grid max-w-7xl gap-9 px-4 py-10 sm:grid-cols-2 lg:grid-cols-footer lg:px-8">
         <div>
           <Link href="/" className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500 text-xl font-black">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-primary text-xl font-black text-brand-primary-foreground">
               U
             </span>
             <span>
               <span className="block text-lg font-black">{settings.storeName}</span>
-              <span className="block text-xs font-bold tracking-wider text-orange-400">
+              <span className="block text-xs font-bold tracking-wider text-brand-primary">
                 MOBILE PARTS
               </span>
             </span>
@@ -49,8 +50,29 @@ export default function Footer() {
                 {category.name}
               </Link>
             ))}
-            <Link className="text-sm font-bold text-orange-400 hover:text-orange-300" href="/#categories">
+            <Link className="text-sm font-bold text-brand-primary hover:text-lime-300" href="/#categories">
               All categories →
+            </Link>
+          </nav>
+        </div>
+
+        <div>
+          <h2 className="text-sm font-black uppercase tracking-wider">Brands</h2>
+          <nav aria-label="Brand links" className="mt-4 flex flex-col items-start gap-3">
+            {featuredBrands.map((brand) => (
+              <Link
+                className={linkClass}
+                href={`/search?q=${encodeURIComponent(brand.name)}`}
+                key={brand.id}
+              >
+                {brand.name}
+              </Link>
+            ))}
+            {featuredBrands.length === 0 && (
+              <p className="text-sm text-slate-400">Brands will appear here as they are added.</p>
+            )}
+            <Link className="text-sm font-bold text-brand-primary hover:text-lime-300" href="/#brands">
+              All brands →
             </Link>
           </nav>
         </div>
@@ -113,7 +135,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-slate-800">
+      <div className="border-t border-market-800">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between lg:px-8">
           <p>{"\u00A9"} 2026 {settings.storeName}. All rights reserved.</p>
           <Link className="hover:text-slate-300" href="/retailer">

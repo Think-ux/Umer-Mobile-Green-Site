@@ -7,7 +7,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 type BrandRow = StoreBrand & { is_enabled: boolean };
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-orange-500";
+  "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-brand-primary";
 
 export default function AdminBrandsPage() {
   const { refresh } = useCatalog();
@@ -117,7 +117,7 @@ export default function AdminBrandsPage() {
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-5xl">
-        <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-500">Catalog</p>
+        <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">Catalog</p>
         <h1 className="mt-2 text-3xl font-black tracking-tight">Brands</h1>
         <p className="mt-2 text-sm text-slate-500">Manage brands displayed in the storefront’s Shop by Brand section.</p>
         {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
@@ -127,7 +127,7 @@ export default function AdminBrandsPage() {
             Brand name
             <input required maxLength={100} placeholder="e.g. Apple" className={inputClass} value={name} onChange={(event) => setName(event.target.value)} />
           </label>
-          <button disabled={busy} className="rounded-xl bg-orange-500 px-5 py-3 text-sm font-black text-white disabled:opacity-60">
+          <button disabled={busy} className="rounded-xl bg-brand-primary px-5 py-3 text-sm font-black text-brand-primary-foreground disabled:opacity-60">
             {busy ? "Saving…" : "Add brand"}
           </button>
         </form>
@@ -141,7 +141,7 @@ export default function AdminBrandsPage() {
                 </p>
               </div>
               <div className="flex gap-3 text-sm font-bold">
-                <button type="button" onClick={() => void toggleBrand(brand)} className="text-orange-600">
+                <button type="button" onClick={() => void toggleBrand(brand)} className="text-lime-700">
                   {brand.is_enabled ? "Hide" : "Show"}
                 </button>
                 <button type="button" onClick={() => void deleteBrand(brand)} className="text-red-600">Delete</button>

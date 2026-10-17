@@ -24,7 +24,7 @@ const emptyForm: BannerForm = {
 };
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-orange-500";
+  "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-primary";
 
 export default function AdminBannersPage() {
   const { refresh } = useCatalog();
@@ -199,7 +199,7 @@ export default function AdminBannersPage() {
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
-        <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-500">
+        <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">
           Website management
         </p>
         <div className="mt-2 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
@@ -219,7 +219,7 @@ export default function AdminBannersPage() {
               setError("");
               setNotice("");
             }}
-            className="rounded-xl bg-orange-500 px-5 py-3 text-sm font-black text-white hover:bg-orange-600"
+            className="rounded-xl bg-brand-primary px-5 py-3 text-sm font-black text-brand-primary-foreground hover:bg-brand-primary-hover"
           >
             + Create banner
           </button>
@@ -261,7 +261,7 @@ export default function AdminBannersPage() {
                 </select>
               </Field>
             </div>
-            <button disabled={busy} className="mt-5 rounded-xl bg-orange-500 px-5 py-3 text-sm font-black text-white disabled:opacity-60">
+            <button disabled={busy} className="mt-5 rounded-xl bg-brand-primary px-5 py-3 text-sm font-black text-brand-primary-foreground disabled:opacity-60">
               {busy ? "Saving…" : "Save banner"}
             </button>
           </form>
@@ -275,7 +275,7 @@ export default function AdminBannersPage() {
           <section className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white">
             <div className="divide-y divide-slate-200">
               {banners.map((banner) => (
-                <article key={banner.id} className="grid gap-4 p-5 sm:grid-cols-[112px_1fr_auto] sm:items-center">
+                <article key={banner.id} className="grid gap-4 p-5 sm:grid-cols-admin-banner-row sm:items-center">
                   <img src={banner.image_url} alt="" className="h-20 w-full rounded-xl bg-slate-100 object-cover sm:w-28" />
                   <div>
                     <h2 className="font-black">{banner.title}</h2>
@@ -284,7 +284,7 @@ export default function AdminBannersPage() {
                   </div>
                   <div className="flex items-center gap-3">
                     <span className={`rounded-full px-3 py-1 text-xs font-black ${banner.status === "published" ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>{banner.status}</span>
-                    <button type="button" onClick={() => editBanner(banner)} className="text-sm font-bold text-orange-600">Edit</button>
+                    <button type="button" onClick={() => editBanner(banner)} className="text-sm font-bold text-lime-700">Edit</button>
                     <button type="button" onClick={() => void deleteBanner(banner)} className="text-sm font-bold text-red-600">Delete</button>
                   </div>
                 </article>

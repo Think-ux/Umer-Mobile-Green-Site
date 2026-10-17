@@ -17,14 +17,14 @@ export default function CartPage() {
       <main className="min-h-screen bg-slate-50 px-4 py-12">
         <div className="mx-auto max-w-4xl">
           <div className="mb-8">
-            <p className="text-sm font-black uppercase tracking-[0.2em] text-orange-500">
+            <p className="text-sm font-black uppercase tracking-eyebrow-wide text-lime-700">
               Shopping Cart
             </p>
             <h1 className="mt-2 text-4xl font-black tracking-tight">Your Cart</h1>
           </div>
 
           <div className="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-20 text-center shadow-sm">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-orange-50 text-3xl text-orange-600">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-lime-50 text-3xl text-lime-700">
               🛒
             </div>
 
@@ -35,7 +35,7 @@ export default function CartPage() {
 
             <Link
               href="/"
-              className="mt-7 inline-flex rounded-xl bg-orange-500 px-7 py-3 font-black text-white transition hover:bg-orange-600"
+              className="mt-7 inline-flex rounded-xl bg-brand-primary px-7 py-3 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover"
             >
               Start Shopping
             </Link>
@@ -49,7 +49,7 @@ export default function CartPage() {
     <main className="min-h-screen bg-slate-50 px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8">
-          <p className="text-sm font-black uppercase tracking-[0.2em] text-orange-500">
+          <p className="text-sm font-black uppercase tracking-eyebrow-wide text-lime-700">
             Shopping Cart
           </p>
           <h1 className="mt-2 text-4xl font-black tracking-tight">Your Cart</h1>
@@ -58,7 +58,7 @@ export default function CartPage() {
           </p>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
+        <div className="grid gap-8 lg:grid-cols-cart">
           <div className="space-y-4">
             {items.map((item) => (
               <div key={item.product.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
@@ -72,7 +72,7 @@ export default function CartPage() {
                   <div className="flex-1">
                     <div className="flex flex-col justify-between gap-3 sm:flex-row">
                       <div>
-                        <div className="text-[10px] font-black uppercase tracking-[0.18em] text-orange-500">
+                        <div className="text-3xs font-black uppercase tracking-eyebrow text-lime-700">
                           {item.product.category}
                         </div>
                         <h2 className="mt-1 text-lg font-black text-slate-900">
@@ -158,14 +158,14 @@ export default function CartPage() {
 
             <Link
               href="/checkout"
-              className="mt-7 block rounded-xl bg-orange-500 px-6 py-4 text-center font-black text-white transition hover:bg-orange-600"
+              className="mt-7 block rounded-xl bg-brand-primary px-6 py-4 text-center font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover"
             >
               Proceed to Checkout
             </Link>
 
             <Link
               href="/"
-              className="mt-3 block text-center text-sm font-bold text-slate-500 transition hover:text-orange-600"
+              className="mt-3 block text-center text-sm font-bold text-slate-500 transition hover:text-lime-700"
             >
               Continue Shopping
             </Link>

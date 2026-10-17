@@ -43,12 +43,14 @@ function NavigationLinks({ mobile = false }: { mobile?: boolean }) {
     >
       {navigation.map((group) => (
         <div key={group.label} className={mobile ? "shrink-0" : undefined}>
-          <p className={`mb-2 px-3 text-[10px] font-black uppercase tracking-[0.2em] ${
-            mobile ? "text-orange-300" : "text-slate-500"
-          }`}>
-              {group.label}
-            </p>
-          <div className={mobile ? "flex gap-2" : "space-y-1"}>
+          <p
+            className={`mb-2 px-3 text-[10px] font-black uppercase tracking-[0.2em] ${
+              mobile ? "text-lime-300" : "text-slate-500"
+            }`}
+          >
+            {group.label}
+          </p>
+          <div className={mobile ? "flex gap-2" : "space-y-1.5"}>
             {group.items.map((item) => {
               const active =
                 item.href === "/admin"
@@ -62,8 +64,8 @@ function NavigationLinks({ mobile = false }: { mobile?: boolean }) {
                   aria-current={active ? "page" : undefined}
                   className={`block rounded-xl px-3 py-2.5 text-sm font-bold transition ${
                     active
-                      ? "bg-orange-500 text-white shadow-sm shadow-orange-950/10"
-                      : "text-slate-300 hover:bg-white/10 hover:text-white"
+                      ? "bg-lime-300 text-slate-950 shadow-sm shadow-lime-900/10"
+                      : "text-slate-300 hover:bg-white/8 hover:text-white"
                   } ${mobile ? "whitespace-nowrap border border-white/10" : ""}`}
                 >
                   {item.label}
@@ -173,7 +175,7 @@ export default function AdminShell({
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
         <section className="max-w-lg rounded-2xl border border-slate-200 bg-white p-7 text-center shadow-sm">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-500">
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-lime-700">
             Umer CMS
           </p>
           <h1 className="mt-3 text-xl font-black">
@@ -189,7 +191,7 @@ export default function AdminShell({
           {authState === "unconfigured" && (
             <Link
               href="/admin/login"
-              className="mt-5 inline-flex rounded-xl bg-orange-500 px-5 py-3 text-sm font-black text-white"
+              className="mt-5 inline-flex rounded-xl bg-brand-primary px-5 py-3 text-sm font-black text-brand-primary-foreground"
             >
               Go to setup instructions
             </Link>
@@ -203,7 +205,7 @@ export default function AdminShell({
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col bg-slate-950 p-5 text-white md:flex">
         <Link href="/admin" className="border-b border-white/10 px-3 pb-5">
-          <p className="text-[10px] font-black uppercase tracking-[0.25em] text-orange-300">
+          <p className="text-[10px] font-black uppercase tracking-[0.24em] text-lime-300">
             Store management
           </p>
           <span className="mt-1 block text-xl font-black">UMER CMS</span>
@@ -211,13 +213,13 @@ export default function AdminShell({
         <div className="mt-7 flex-1 overflow-y-auto">
           <NavigationLinks />
         </div>
-        <div className="mt-5 rounded-xl border border-amber-300/20 bg-amber-300/10 p-3 text-xs leading-5 text-amber-100">
+        <div className="mt-5 rounded-2xl border border-amber-300/20 bg-amber-300/10 p-3 text-xs leading-5 text-amber-100 shadow-inner shadow-amber-900/20">
           {status === "ready"
             ? "Shared CMS database connected"
             : status === "error"
               ? "CMS data sync needs attention"
               : "Supabase setup required"}
-          <span className="mt-1 block text-amber-100/70">
+          <span className="mt-1 block text-amber-100/75">
             Products and website content are managed from the shared database.
           </span>
         </div>
@@ -227,7 +229,7 @@ export default function AdminShell({
         <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur md:hidden">
           <div className="flex items-center justify-between gap-3 px-4 pt-3">
             <Link href="/admin" className="text-lg font-black">
-              UMER <span className="text-orange-500">CMS</span>
+              UMER <span className="text-lime-700">CMS</span>
             </Link>
             <button
               type="button"
@@ -243,13 +245,13 @@ export default function AdminShell({
           </div>
         </header>
         <div className="hidden h-12 items-center justify-between border-b border-slate-200 bg-white px-8 md:flex">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
-            Umer Mobile Parts <span className="mx-2 text-orange-500">/</span> CMS
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
+            Umer Mobile Parts <span className="mx-2 text-lime-700">/</span> CMS
           </p>
           <div className="flex items-center gap-5">
             <Link
               href="/"
-              className="text-sm font-bold text-orange-600 transition hover:text-orange-700"
+              className="text-sm font-bold text-lime-700 transition hover:text-lime-800"
             >
               View storefront →
             </Link>
@@ -263,7 +265,14 @@ export default function AdminShell({
             </button>
           </div>
         </div>
-        {signOutError && <p role="alert" className="border-b border-red-200 bg-red-50 px-4 py-2 text-sm text-red-700 md:px-8">{signOutError}</p>}
+        {signOutError && (
+          <p
+            role="alert"
+            className="border-b border-red-200 bg-red-50 px-4 py-2 text-sm text-red-700 md:px-8"
+          >
+            {signOutError}
+          </p>
+        )}
         <main className="admin-workspace min-h-screen">{children}</main>
       </div>
     </div>

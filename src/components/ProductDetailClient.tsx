@@ -258,21 +258,21 @@ export default function ProductDetailClient({ product }: Props) {
   }
 
   return (
-    <main className="min-h-screen bg-[#f7f8fa] text-slate-900">
+    <main className="min-h-screen bg-canvas-muted text-slate-900">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-sm text-slate-500">
-          <Link href="/" className="transition hover:text-orange-600">Home</Link>
+          <Link href="/" className="transition hover:text-lime-700">Home</Link>
           <span>/</span>
-          <Link href="/search" className="transition hover:text-orange-600">Shop</Link>
+          <Link href="/search" className="transition hover:text-lime-700">Shop</Link>
           <span>/</span>
-          <Link href={`/shop/${categorySlug(product.category)}`} className="transition hover:text-orange-600">
+          <Link href={`/shop/${categorySlug(product.category)}`} className="transition hover:text-lime-700">
             {product.category}
           </Link>
           <span>/</span>
           <span className="font-semibold text-slate-900">{product.name}</span>
         </nav>
 
-        <div className="mt-6 grid items-start gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
+        <div className="mt-6 grid items-start gap-6 lg:grid-cols-product-detail lg:gap-10">
           <section>
             <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-5 shadow-sm sm:p-8">
               <div className="absolute left-5 top-5 z-10 flex flex-wrap gap-2">
@@ -280,7 +280,7 @@ export default function ProductDetailClient({ product }: Props) {
                   {product.quality} Quality
                 </span>
                 {discounted && (
-                  <span className="rounded-full bg-orange-500 px-3 py-1.5 text-xs font-bold text-white">
+                  <span className="rounded-full bg-brand-primary px-3 py-1.5 text-xs font-bold text-brand-primary-foreground">
                     Save {discount}%
                   </span>
                 )}
@@ -309,16 +309,16 @@ export default function ProductDetailClient({ product }: Props) {
                 { icon: "↗", title: "Ordering", text: "Easy checkout" },
               ].map((item) => (
                 <div key={item.title} className="rounded-2xl border border-slate-200/80 bg-white p-3 text-center sm:p-4">
-                  <span className="text-xl font-black text-orange-500">{item.icon}</span>
+                  <span className="text-xl font-black text-lime-700">{item.icon}</span>
                   <p className="mt-1 text-xs font-extrabold sm:text-sm">{item.title}</p>
-                  <p className="mt-1 truncate text-[11px] text-slate-500 sm:text-xs">{item.text}</p>
+                  <p className="mt-1 truncate text-2xs text-slate-500 sm:text-xs">{item.text}</p>
                 </div>
               ))}
             </div>
           </section>
 
           <section className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-sm sm:p-8 lg:p-9">
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-600">
+            <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">
               Umer Mobile Parts · {product.brand}
             </p>
 
@@ -367,7 +367,7 @@ export default function ProductDetailClient({ product }: Props) {
                             aria-pressed={reviewRating === halfRating}
                             disabled={!canChooseRating}
                             onClick={() => setReviewRating(halfRating)}
-                            className="absolute inset-y-0 left-0 w-1/2 rounded-l focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 disabled:cursor-not-allowed"
+                            className="absolute inset-y-0 left-0 w-1/2 rounded-l focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-500 disabled:cursor-not-allowed"
                           />
                           <button
                             type="button"
@@ -375,7 +375,7 @@ export default function ProductDetailClient({ product }: Props) {
                             aria-pressed={reviewRating === fullRating}
                             disabled={!canChooseRating}
                             onClick={() => setReviewRating(fullRating)}
-                            className="absolute inset-y-0 right-0 w-1/2 rounded-r focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 disabled:cursor-not-allowed"
+                            className="absolute inset-y-0 right-0 w-1/2 rounded-r focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-500 disabled:cursor-not-allowed"
                           />
                         </span>
                       );
@@ -393,7 +393,7 @@ export default function ProductDetailClient({ product }: Props) {
                     reviewRating === 0 ||
                     !canChooseRating
                   }
-                  className="rounded-xl bg-orange-500 px-4 py-2.5 text-sm font-black text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-slate-300"
+                  className="rounded-xl bg-brand-primary px-4 py-2.5 text-sm font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:bg-slate-300"
                 >
                   {reviewBusy
                     ? "Submitting…"
@@ -406,7 +406,7 @@ export default function ProductDetailClient({ product }: Props) {
                         : "Sign in to rate"}
                 </button>
                 {!canChooseRating && (
-                  <Link href="/account" className="text-sm font-bold text-orange-700 hover:text-orange-800">
+                  <Link href="/account" className="text-sm font-bold text-lime-800 hover:text-lime-900">
                     Sign in or create an account
                   </Link>
                 )}
@@ -558,7 +558,7 @@ export default function ProductDetailClient({ product }: Props) {
                   type="button"
                   onClick={handleAdd}
                   disabled={!inStock}
-                  className="min-h-12 flex-1 rounded-xl bg-orange-500 px-5 py-3 font-extrabold text-white shadow-lg shadow-orange-500/20 transition hover:bg-orange-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
+                  className="min-h-12 flex-1 rounded-xl bg-brand-primary px-5 py-3 font-extrabold text-brand-primary-foreground shadow-lg shadow-lime-500/20 transition hover:bg-brand-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
                 >
                   {!inStock ? "Currently Unavailable" : added ? "✓ Added to Cart" : "Add to Cart →"}
                 </button>
@@ -570,19 +570,19 @@ export default function ProductDetailClient({ product }: Props) {
                 </p>
               )}
 
-              <Link href="/cart" className="mt-3 flex min-h-12 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 text-sm font-extrabold transition hover:border-orange-300 hover:bg-orange-50 hover:text-orange-700">
+              <Link href="/cart" className="mt-3 flex min-h-12 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 text-sm font-extrabold transition hover:border-lime-300 hover:bg-lime-50 hover:text-lime-800">
                 View Shopping Cart
               </Link>
             </div>
 
-            <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-slate-100 pt-4 text-sm font-bold text-orange-700">
-              <Link href="/customer-care" className="hover:text-orange-800">
+            <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-slate-100 pt-4 text-sm font-bold text-lime-800">
+              <Link href="/customer-care" className="hover:text-lime-900">
                 Contact Customer Support →
               </Link>
-              <Link href="/shipping-policy" className="hover:text-orange-800">
+              <Link href="/shipping-policy" className="hover:text-lime-900">
                 Shipping details
               </Link>
-              <Link href="/returns-policy" className="hover:text-orange-800">
+              <Link href="/returns-policy" className="hover:text-lime-900">
                 Returns &amp; warranty
               </Link>
             </div>
@@ -590,7 +590,7 @@ export default function ProductDetailClient({ product }: Props) {
         </div>
 
         <section className="mt-8 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-600">Shop with confidence</p>
+          <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">Shop with confidence</p>
           <h2 className="mt-2 text-2xl font-black">Before you place your order</h2>
           <div className="mt-5 grid gap-5 sm:grid-cols-3">
             <div className="rounded-2xl bg-slate-50 p-4">

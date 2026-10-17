@@ -102,7 +102,7 @@ export default function AdminReviews() {
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-6">
-          <p className="text-sm font-black uppercase tracking-[0.2em] text-orange-500">Feedback</p>
+          <p className="text-sm font-black uppercase tracking-eyebrow-wide text-lime-700">Feedback</p>
           <h1 className="mt-2 text-3xl font-black tracking-tight">Reviews</h1>
           <p className="mt-2 text-sm text-slate-500">Customer feedback submitted from product pages</p>
         </div>
@@ -120,7 +120,7 @@ export default function AdminReviews() {
                 <div>
                   <StarRatingDisplay rating={review.rating} className="text-amber-500" />
                   {review.is_demo && (
-                    <p className="mt-2 inline-flex rounded-full border border-amber-300 bg-amber-50 px-2.5 py-1 text-[11px] font-black uppercase tracking-wide text-amber-900">
+                    <p className="mt-2 inline-flex rounded-full border border-amber-300 bg-amber-50 px-2.5 py-1 text-2xs font-black uppercase tracking-wide text-amber-900">
                       Demo — not customer feedback
                     </p>
                   )}
@@ -145,7 +145,7 @@ export default function AdminReviews() {
                       type="button"
                       disabled={busyId === review.id || review.status === status}
                       onClick={() => void updateStatus(review, status)}
-                      className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold capitalize text-slate-700 hover:border-orange-300 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold capitalize text-slate-700 hover:border-lime-300 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {busyId === review.id ? "Saving…" : status}
                     </button>

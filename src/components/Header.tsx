@@ -102,17 +102,21 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white shadow-sm">
+    <header className="sticky top-0 z-50 border-b border-market-800 bg-market-950 text-white shadow-sm">
       {/* Announcement bar */}
-      <div className="bg-slate-950 px-3 py-2 text-center text-xs font-medium text-white sm:text-sm">
-        Umer Mobile Parts
-        <span className="mx-2 text-orange-400">|</span>
-        Wholesale &amp; Retail
+      <div className="border-b border-market-800 bg-market-900 px-4 py-2 text-xs text-slate-300">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
+            <span><span className="mr-1.5 text-lime-300" aria-hidden="true">●</span>Wholesale &amp; Retail</span>
+            <span className="hidden sm:inline"><span className="mr-1.5 text-lime-300" aria-hidden="true">●</span>Search by brand, model or part</span>
+          </div>
+          <span className="hidden text-right sm:inline">Find the right part for your repair</span>
+        </div>
       </div>
 
       {/* Main header */}
       <div className="mx-auto max-w-7xl px-4">
-        <div className="flex min-h-[82px] items-center gap-3 py-3 lg:gap-7">
+        <div className="flex min-h-header items-center gap-3 py-3 lg:gap-7">
           {/* Brand */}
           <Link
             href="/"
@@ -120,15 +124,15 @@ export default function Header() {
             aria-label="Umer Mobile Parts home"
             className="flex min-w-0 items-center gap-2"
           >
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500 text-2xl font-black text-white shadow-sm">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-primary text-2xl font-black text-brand-primary-foreground shadow-sm">
               U
             </span>
 
             <span className="min-w-0 leading-tight">
-              <span className="block truncate text-lg font-black tracking-tight text-slate-950 sm:text-xl">
+              <span className="block truncate text-lg font-black tracking-tight text-white sm:text-xl">
                 {settings.storeName}
               </span>
-              <span className="block text-[10px] font-extrabold tracking-[0.16em] text-orange-600 sm:text-xs">
+              <span className="block text-3xs font-extrabold tracking-eyebrow-compact text-lime-300 sm:text-xs">
                 WHOLESALE &amp; RETAIL
               </span>
             </span>
@@ -145,19 +149,19 @@ export default function Header() {
               Search mobile spare parts
             </label>
 
-            <div className="flex h-12 overflow-hidden rounded-xl border-2 border-slate-200 bg-slate-50 transition focus-within:border-orange-500 focus-within:bg-white">
+            <div className="flex h-12 overflow-hidden rounded-xl border border-market-800 bg-market-900 transition focus-within:border-brand-primary focus-within:bg-market-800">
               <input
                 id="desktop-product-search"
                 type="search"
                 name="q"
                 placeholder="Search parts, brands or mobile models..."
-                className="min-w-0 flex-1 bg-transparent px-4 text-sm text-slate-900 outline-none placeholder:text-slate-400"
+                className="min-w-0 flex-1 bg-transparent px-4 text-sm text-white outline-none placeholder:text-slate-400"
               />
 
               <button
                 type="submit"
                 aria-label="Search products"
-                className="bg-orange-500 px-5 font-bold text-white transition hover:bg-orange-600"
+                className="bg-brand-primary px-5 font-bold text-brand-primary-foreground transition hover:bg-brand-primary-hover"
               >
                 Search
               </button>
@@ -168,17 +172,17 @@ export default function Header() {
           <Link
             href="/cart"
             aria-label={`Shopping cart, ${itemCount} items`}
-            className="ml-auto flex shrink-0 items-center gap-2 rounded-xl border border-slate-200 px-3 py-2.5 transition hover:border-orange-300 hover:bg-orange-50 md:ml-0"
+            className="ml-auto flex shrink-0 items-center gap-2 rounded-xl border border-market-800 px-3 py-2.5 transition hover:border-brand-primary hover:bg-market-900 md:ml-0"
           >
             <span aria-hidden="true" className="text-xl">
               🛒
             </span>
 
-            <span className="hidden text-sm font-bold text-slate-800 sm:block">
+            <span className="hidden text-sm font-bold text-slate-100 sm:block">
               Cart
             </span>
 
-            <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-orange-500 px-1.5 text-xs font-black text-white">
+            <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-brand-primary px-1.5 text-xs font-black text-brand-primary-foreground">
               {itemCount}
             </span>
           </Link>
@@ -187,7 +191,7 @@ export default function Header() {
             href="/account"
             aria-label={accountLabel === "Guest" ? "Guest. Sign in or create an account" : `Customer account: ${accountLabel}`}
             title={accountLabel === "Guest" ? "Guest · Sign in or create an account" : accountLabel}
-            className="flex shrink-0 items-center gap-1.5 rounded-xl border border-orange-200 bg-orange-50 px-2 py-2.5 text-xs font-bold text-orange-800 transition hover:border-orange-400 hover:bg-orange-100 sm:gap-2 sm:px-3 sm:text-sm"
+            className="flex shrink-0 items-center gap-1.5 rounded-xl border border-lime-400/40 bg-lime-400/10 px-2 py-2.5 text-xs font-bold text-lime-200 transition hover:border-lime-300 hover:bg-lime-400/20 sm:gap-2 sm:px-3 sm:text-sm"
           >
             <svg
               aria-hidden="true"
@@ -210,7 +214,7 @@ export default function Header() {
             aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={mobileOpen}
             aria-controls="mobile-navigation"
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-200 text-2xl text-slate-800 transition hover:border-orange-400 hover:text-orange-600 md:hidden"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-market-800 text-2xl text-white transition hover:border-brand-primary hover:text-brand-primary md:hidden"
           >
             {mobileOpen ? "×" : "☰"}
           </button>
@@ -238,10 +242,10 @@ export default function Header() {
                 setCategoriesOpen((value) => !value);
                 setActiveCategoryName((current) => current ?? categories[0]?.name ?? null);
               }}
-              className={`flex h-full items-center gap-2 border-b-[3px] px-4 text-sm font-bold transition ${
+              className={`flex h-full items-center gap-2 border-b-active-nav px-4 text-sm font-bold transition ${
                 categoriesOpen
-                  ? "border-orange-500 bg-transparent text-orange-600"
-                  : "border-transparent bg-transparent text-slate-700 hover:border-orange-400 hover:text-orange-600"
+                  ? "border-brand-primary bg-transparent text-brand-primary"
+                  : "border-transparent bg-transparent text-slate-200 hover:border-brand-primary hover:text-brand-primary"
               }`}
             >
               <span aria-hidden="true">☰</span>
@@ -252,9 +256,9 @@ export default function Header() {
             {categoriesOpen && (
               <div
                 id="desktop-category-menu"
-                className="absolute left-0 top-full z-50 grid max-h-[70vh] w-[min(56rem,calc(100vw-2rem))] grid-cols-[minmax(13rem,0.8fr)_minmax(0,1.2fr)] overflow-hidden rounded-b-2xl border border-slate-200 bg-white shadow-xl"
+                className="absolute left-0 top-full z-50 grid max-h-dropdown-height w-dropdown-width grid-cols-category-menu overflow-hidden rounded-b-2xl border border-slate-200 bg-white shadow-xl"
               >
-                <div className="max-h-[70vh] overflow-y-auto border-r border-slate-100 p-3">
+                <div className="max-h-dropdown-height overflow-y-auto border-r border-slate-100 p-3">
                   <p className="px-3 py-2 text-xs font-black uppercase tracking-wider text-slate-400">
                     Browse categories
                   </p>
@@ -268,7 +272,7 @@ export default function Header() {
                         key={category.name}
                         onMouseEnter={() => setActiveCategoryName(category.name)}
                         className={`flex items-center rounded-xl ${
-                          active ? "bg-orange-50" : "hover:bg-slate-50"
+                          active ? "bg-lime-50" : "hover:bg-slate-50"
                         }`}
                       >
                         <Link
@@ -280,7 +284,7 @@ export default function Header() {
                             {category.icon_image_url ? (
                               <img src={category.icon_image_url} alt="" className="h-8 w-8 rounded-md object-cover" />
                             ) : (
-                              <span aria-hidden="true" className="grid h-8 w-8 place-items-center rounded-md bg-orange-100 text-orange-600">
+                              <span aria-hidden="true" className="grid h-8 w-8 place-items-center rounded-md bg-lime-100 text-lime-700">
                                 {category.icon || "▣"}
                               </span>
                             )}
@@ -296,7 +300,7 @@ export default function Header() {
                           aria-pressed={active}
                           onFocus={() => setActiveCategoryName(category.name)}
                           onClick={() => setActiveCategoryName(category.name)}
-                          className="self-stretch px-4 text-lg text-orange-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-orange-500"
+                          className="self-stretch px-4 text-lg text-lime-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-primary"
                         >
                           →
                         </button>
@@ -306,7 +310,7 @@ export default function Header() {
                   <Link
                     href="/search"
                     onClick={closeMenus}
-                    className="mt-2 block border-t border-slate-100 px-3 py-4 text-sm font-black text-orange-600 hover:text-orange-700"
+                    className="mt-2 block border-t border-slate-100 px-3 py-4 text-sm font-black text-lime-700 hover:text-lime-900"
                   >
                     Browse all products →
                   </Link>
@@ -326,7 +330,7 @@ export default function Header() {
                         <Link
                           href={categoryHref(activeCategory.name)}
                           onClick={closeMenus}
-                          className="shrink-0 text-sm font-bold text-orange-600 hover:text-orange-700"
+                          className="shrink-0 text-sm font-bold text-lime-700 hover:text-lime-900"
                         >
                           View category →
                         </Link>
@@ -338,7 +342,7 @@ export default function Header() {
                               key={product.id}
                               href={`/product/${product.slug}`}
                               onClick={closeMenus}
-                              className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-700"
+                              className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-700 hover:bg-lime-50 hover:text-lime-900"
                             >
                               {product.name}
                             </Link>
@@ -360,31 +364,31 @@ export default function Header() {
             )}
           </div>
 
-          <div className="ml-1 flex items-center gap-3 border-l border-slate-200 pl-4 lg:ml-4 lg:gap-7 lg:pl-7">
+          <div className="ml-1 flex items-center gap-3 border-l border-slate-700 pl-4 lg:ml-4 lg:gap-7 lg:pl-7">
             <Link
               href="/"
-              className="text-sm font-semibold text-slate-700 transition hover:text-orange-600"
+              className="text-sm font-semibold text-slate-200 transition hover:text-brand-primary"
             >
               Home
             </Link>
 
             <Link
-              href="/search"
-              className="text-sm font-semibold text-slate-700 transition hover:text-orange-600"
+              href="/#brands"
+              className="text-sm font-semibold text-slate-200 transition hover:text-brand-primary"
             >
-              Product
+              Brands
             </Link>
 
             <Link
               href="/track-order"
-              className="text-sm font-semibold text-slate-700 transition hover:text-orange-600"
+              className="text-sm font-semibold text-slate-200 transition hover:text-brand-primary"
             >
               Track Order
             </Link>
 
             <Link
               href="/customer-care"
-              className="text-sm font-semibold text-slate-700 transition hover:text-orange-600"
+              className="text-sm font-semibold text-slate-200 transition hover:text-brand-primary"
             >
               Contact
             </Link>
@@ -392,7 +396,7 @@ export default function Header() {
 
           <Link
             href="/retailer"
-            className="ml-auto rounded-lg px-3 py-2 text-sm font-bold text-orange-700 transition hover:bg-orange-50"
+            className="ml-auto rounded-lg px-3 py-2 text-sm font-bold text-brand-primary transition hover:bg-slate-900"
           >
             For Retailers →
           </Link>
@@ -402,14 +406,14 @@ export default function Header() {
         {mobileOpen && (
           <div
             id="mobile-navigation"
-            className="border-t border-slate-200 py-4 md:hidden"
+            className="border-t border-slate-800 py-4 md:hidden"
           >
             {/* Mobile search */}
             <form
               action="/search"
               method="GET"
               role="search"
-              className="mb-4 flex overflow-hidden rounded-xl border border-slate-300 focus-within:border-orange-500"
+              className="mb-4 flex overflow-hidden rounded-xl border border-slate-700 bg-slate-900 focus-within:border-brand-primary"
             >
               <label htmlFor="mobile-product-search" className="sr-only">
                 Search mobile spare parts
@@ -420,12 +424,12 @@ export default function Header() {
                 type="search"
                 name="q"
                 placeholder="Search parts or models..."
-                className="min-w-0 flex-1 px-3 py-3 text-sm outline-none"
+                className="min-w-0 flex-1 bg-transparent px-3 py-3 text-sm text-white outline-none placeholder:text-slate-400"
               />
 
               <button
                 type="submit"
-                className="bg-orange-500 px-4 text-sm font-bold text-white hover:bg-orange-600"
+                className="bg-brand-primary px-4 text-sm font-bold text-brand-primary-foreground hover:bg-brand-primary-hover"
               >
                 Search
               </button>
@@ -438,7 +442,7 @@ export default function Header() {
                 aria-expanded={categoriesOpen}
                 aria-controls="mobile-category-menu"
                 onClick={() => setCategoriesOpen((value) => !value)}
-                className="flex items-center justify-between rounded-lg px-3 py-3 text-left text-sm font-bold text-slate-800 hover:bg-orange-50 hover:text-orange-700"
+                className="flex items-center justify-between rounded-lg px-3 py-3 text-left text-sm font-bold text-slate-100 hover:bg-slate-900 hover:text-brand-primary"
               >
                 <span>All Categories</span>
                 <span aria-hidden="true">
@@ -449,7 +453,7 @@ export default function Header() {
               {categoriesOpen && (
                 <div
                   id="mobile-category-menu"
-                  className="ml-3 border-l-2 border-orange-200 pl-3"
+                  className="ml-3 border-l-2 border-lime-400/60 pl-3"
                 >
                   {categories.map((category) => {
                     const categoryProducts = products.filter(
@@ -463,12 +467,12 @@ export default function Header() {
                           <Link
                             href={categoryHref(category.name)}
                             onClick={closeMenus}
-                            className="flex min-w-0 flex-1 items-center gap-2 rounded-lg px-3 py-3 text-sm font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-700"
+                            className="flex min-w-0 flex-1 items-center gap-2 rounded-lg px-3 py-3 text-sm font-semibold text-slate-200 hover:bg-slate-900 hover:text-brand-primary"
                           >
                             {category.icon_image_url ? (
                               <img src={category.icon_image_url} alt="" className="h-8 w-8 shrink-0 rounded-md object-cover" />
                             ) : (
-                              <span aria-hidden="true" className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-orange-100 text-orange-600">
+                              <span aria-hidden="true" className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-lime-400/10 text-lime-300">
                                 {category.icon || "▣"}
                               </span>
                             )}
@@ -482,19 +486,19 @@ export default function Header() {
                             aria-label={`${expanded ? "Hide" : "Show"} products in ${category.name}`}
                             aria-expanded={expanded}
                             onClick={() => setMobileCategoryName(expanded ? null : category.name)}
-                            className="rounded-lg px-4 py-3 text-orange-600"
+                            className="rounded-lg px-4 py-3 text-brand-primary"
                           >
                             {expanded ? "−" : "+"}
                           </button>
                         </div>
                         {expanded && (
-                          <div className="mb-2 ml-3 border-l border-orange-200 pl-3">
+                          <div className="mb-2 ml-3 border-l border-lime-400/60 pl-3">
                             {categoryProducts.length > 0 ? categoryProducts.map((product) => (
                               <Link
                                 key={product.id}
                                 href={`/product/${product.slug}`}
                                 onClick={closeMenus}
-                                className="block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-orange-50 hover:text-orange-700"
+                                className="block rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-slate-900 hover:text-brand-primary"
                               >
                                 {product.name}
                               </Link>
@@ -511,28 +515,28 @@ export default function Header() {
                 </div>
               )}
 
-              <div className="my-2 border-t border-slate-200" />
+              <div className="my-2 border-t border-slate-800" />
 
               <Link
                 href="/"
                 onClick={closeMenus}
-                className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-800 hover:bg-orange-50 hover:text-orange-700"
+                className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-100 hover:bg-slate-900 hover:text-brand-primary"
               >
                 Home
               </Link>
 
               <Link
-                href="/search"
+                href="/#brands"
                 onClick={closeMenus}
-                className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-800 hover:bg-orange-50 hover:text-orange-700"
+                className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-100 hover:bg-slate-900 hover:text-brand-primary"
               >
-                Product
+                Brands
               </Link>
 
               <Link
                 href="/track-order"
                 onClick={closeMenus}
-                className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-800 hover:bg-orange-50 hover:text-orange-700"
+                className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-100 hover:bg-slate-900 hover:text-brand-primary"
               >
                 Track Order
               </Link>
@@ -540,7 +544,7 @@ export default function Header() {
               <Link
                 href="/customer-care"
                 onClick={closeMenus}
-                className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-800 hover:bg-orange-50 hover:text-orange-700"
+                className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-100 hover:bg-slate-900 hover:text-brand-primary"
               >
                 Contact
               </Link>
@@ -548,7 +552,7 @@ export default function Header() {
               <Link
                 href="/account"
                 onClick={closeMenus}
-                className="rounded-lg px-3 py-3 text-sm font-bold text-orange-700 hover:bg-orange-50"
+                className="rounded-lg px-3 py-3 text-sm font-bold text-brand-primary hover:bg-slate-900"
               >
                 {accountLabel === "Guest" ? "Guest · Sign in or create account" : `My Account · ${accountLabel}`}
               </Link>
@@ -556,7 +560,7 @@ export default function Header() {
               <Link
                 href="/retailer"
                 onClick={closeMenus}
-                className="rounded-lg px-3 py-3 text-sm font-bold text-orange-700 hover:bg-orange-50"
+                className="rounded-lg px-3 py-3 text-sm font-bold text-brand-primary hover:bg-slate-900"
               >
                 For Retailers / Wholesale Inquiry →
               </Link>
@@ -564,10 +568,10 @@ export default function Header() {
               <Link
                 href="/cart"
                 onClick={closeMenus}
-                className="mt-2 flex items-center justify-between rounded-xl bg-slate-950 px-4 py-3 text-sm font-bold text-white hover:bg-slate-800"
+                className="mt-2 flex items-center justify-between rounded-xl bg-brand-primary px-4 py-3 text-sm font-bold text-brand-primary-foreground hover:bg-brand-primary-hover"
               >
                 <span>View Shopping Cart</span>
-                <span className="rounded-full bg-orange-500 px-2 py-1 text-xs">
+                <span className="rounded-full bg-slate-950 px-2 py-1 text-xs text-brand-primary">
                   {itemCount}
                 </span>
               </Link>

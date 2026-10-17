@@ -239,13 +239,13 @@ export default function AccountPage() {
   const role = user ? accountRole(user) : null;
 
   return (
-    <main className="min-h-[65vh] bg-slate-50 px-4 py-12 sm:px-6">
+    <main className="min-h-page-content bg-slate-50 px-4 py-12 sm:px-6">
       <section className="mx-auto max-w-md">
-        <Link href="/" className="text-sm font-bold text-orange-700 hover:text-orange-800">
+        <Link href="/" className="text-sm font-bold text-lime-800 hover:text-lime-900">
           ← Storefront
         </Link>
         <div className="mt-5 rounded-3xl border border-slate-200 bg-white p-7 shadow-sm sm:p-9">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-600">
+          <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">
             Customer account
           </p>
           <h1 className="mt-2 text-3xl font-black tracking-tight">
@@ -296,7 +296,7 @@ export default function AccountPage() {
               {role?.dashboard && (
                 <Link
                   href={role.dashboard}
-                  className="mt-5 flex w-full items-center justify-center rounded-xl bg-orange-500 px-5 py-3 font-black text-white transition hover:bg-orange-600"
+                  className="mt-5 flex w-full items-center justify-center rounded-xl bg-brand-primary px-5 py-3 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover"
                 >
                   {role.dashboardLabel}
                 </Link>
@@ -305,7 +305,7 @@ export default function AccountPage() {
                 type="button"
                 onClick={() => void signOut()}
                 disabled={busy}
-                className="mt-3 w-full rounded-xl border border-slate-300 bg-white px-5 py-3 font-bold text-slate-700 transition hover:border-orange-300 hover:text-orange-700 disabled:opacity-60"
+                className="mt-3 w-full rounded-xl border border-slate-300 bg-white px-5 py-3 font-bold text-slate-700 transition hover:border-lime-300 hover:text-lime-800 disabled:opacity-60"
               >
                 {busy ? "Signing out…" : "Sign out"}
               </button>
@@ -368,7 +368,7 @@ export default function AccountPage() {
               )}
               <Link
                 href="/"
-                className="mt-4 flex w-full items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 font-bold text-slate-700 transition hover:border-orange-300 hover:text-orange-700"
+                className="mt-4 flex w-full items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 font-bold text-slate-700 transition hover:border-lime-300 hover:text-lime-800"
               >
                 Continue as guest
               </Link>
@@ -381,7 +381,7 @@ export default function AccountPage() {
                     setError("");
                     setNotice("");
                   }}
-                  className="font-bold text-orange-700 hover:text-orange-800"
+                  className="font-bold text-lime-800 hover:text-lime-900"
                 >
                   {mode === "sign-in" ? "Create an account" : "Sign in"}
                 </button>

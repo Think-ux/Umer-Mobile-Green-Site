@@ -88,7 +88,7 @@ export default function AdminAccountsPage() {
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
-        <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-500">Store accounts</p>
+        <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">Store accounts</p>
         <h1 className="mt-2 text-3xl font-black tracking-tight">Registered accounts</h1>
         <p className="mt-2 text-sm leading-6 text-slate-500">
           View registered Supabase accounts, retailer applications, and guest checkout contacts. Guest checkout does not create a login, and browsing without signing in or ordering creates no account record.
@@ -112,8 +112,8 @@ export default function AdminAccountsPage() {
               }}
               className={`rounded-xl border px-4 py-2.5 text-sm font-bold transition ${
                 source === option.id
-                  ? "border-orange-500 bg-orange-500 text-white"
-                  : "border-slate-200 bg-white text-slate-700 hover:border-orange-300"
+                  ? "border-brand-primary bg-brand-primary text-brand-primary-foreground"
+                  : "border-slate-200 bg-white text-slate-700 hover:border-lime-300"
               }`}
             >
               {option.label}
@@ -149,7 +149,7 @@ export default function AdminAccountsPage() {
           ) : visibleAccounts.length === 0 ? (
             <p className="p-6 text-sm text-slate-500">{accounts.length ? "No records match your search." : source === "registered" ? "No registered Auth accounts were found on this page." : source === "retailer-applications" ? "No retailer applications were found on this page." : "No guest checkout orders were found on this page."}</p>
           ) : (
-            <table className="w-full min-w-[900px] border-collapse text-left text-sm">
+            <table className="w-full min-w-order-table border-collapse text-left text-sm">
               <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
                 <tr>
                   <th className="px-5 py-4 font-black">Name</th>
@@ -170,7 +170,7 @@ export default function AdminAccountsPage() {
                     <td className="px-5 py-4">
                       <span className={`rounded-full px-2.5 py-1 text-xs font-bold capitalize ${
                         account.role === "admin" ? "bg-violet-100 text-violet-800" :
-                        account.role === "retailer" ? "bg-orange-100 text-orange-800" :
+                        account.role === "retailer" ? "bg-lime-100 text-lime-900" :
                         "bg-slate-100 text-slate-700"
                       }`}>{account.role}</span>
                     </td>

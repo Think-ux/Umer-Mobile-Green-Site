@@ -326,16 +326,16 @@ function CheckoutForm() {
 
   if (retailerCheckout) {
     return (
-      <main className="min-h-[65vh] bg-slate-50 px-4 py-16">
+      <main className="min-h-page-content bg-slate-50 px-4 py-16">
         <section className="ui-card mx-auto max-w-2xl p-7 text-center sm:p-10">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-600">Retailer ordering</p>
+          <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">Retailer ordering</p>
           <h1 className="mt-3 text-3xl font-black">Wholesale checkout is not available yet</h1>
           <p className="mt-4 leading-7 text-slate-600">
             Retailer pricing and ordering terms have not been confirmed. No wholesale discount has been applied. Contact the store to discuss approved terms, or browse the catalog at its listed prices.
           </p>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
             <Link href="/retailer" className="ui-button-primary">Retailer information</Link>
-            <Link href="/search" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 font-bold hover:border-orange-300 hover:text-orange-700">
+            <Link href="/search" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 font-bold hover:border-lime-300 hover:text-lime-800">
               Browse listed prices
             </Link>
           </div>
@@ -349,7 +349,7 @@ function CheckoutForm() {
       <main className="min-h-screen bg-slate-50 px-4 py-20">
         <div className="mx-auto max-w-xl rounded-3xl bg-white p-10 text-center shadow-sm">
 
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-orange-50 text-2xl">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-lime-50 text-2xl">
             Cart
           </div>
 
@@ -363,7 +363,7 @@ function CheckoutForm() {
 
           <Link
             href="/"
-            className="mt-7 inline-flex rounded-xl bg-orange-500 px-6 py-3 font-black text-white hover:bg-orange-600"
+            className="mt-7 inline-flex rounded-xl bg-brand-primary px-6 py-3 font-black text-brand-primary-foreground hover:bg-brand-primary-hover"
           >
             Start Shopping
           </Link>
@@ -377,7 +377,7 @@ function CheckoutForm() {
     `mt-2 w-full rounded-xl border bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:bg-white ${
       fieldErrors[field]
         ? "border-red-400 focus:border-red-500"
-        : "border-slate-200 focus:border-orange-500"
+        : "border-slate-200 focus:border-brand-primary"
     }`;
 
   const courierOptions: { value: CourierPreference; label: string }[] = [
@@ -393,7 +393,7 @@ function CheckoutForm() {
     <main className="min-h-screen bg-slate-50 px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <header className="mb-8">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-600">
+          <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">
             Mobile Studio · Checkout
           </p>
           <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
@@ -403,17 +403,17 @@ function CheckoutForm() {
             Choose delivery or store pickup, then add the relevant contact details. The store will confirm availability and payment before processing.
           </p>
           <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-xs font-bold text-slate-500">
-            <span className="inline-flex items-center gap-2 text-orange-700"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-100">1</span>Choose fulfillment</span>
+            <span className="inline-flex items-center gap-2 text-lime-800"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-lime-100">1</span>Choose fulfillment</span>
             <span className="inline-flex items-center gap-2"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200">2</span>Store confirmation</span>
             <span className="inline-flex items-center gap-2"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200">3</span>Payment</span>
           </div>
         </header>
 
-        <form noValidate onSubmit={submitOrder} className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
+        <form noValidate onSubmit={submitOrder} className="grid items-start gap-6 lg:grid-cols-checkout">
           <div className="space-y-5">
             <section aria-labelledby="fulfillment-heading" className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
               <div className="flex items-start gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-700"><CheckoutIcon name="truck" /></span>
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-lime-50 text-lime-800"><CheckoutIcon name="truck" /></span>
                 <div>
                   <h2 id="fulfillment-heading" className="text-lg font-black text-slate-950">Choose how to receive it</h2>
                   <p className="mt-1 text-sm text-slate-500">You can have it delivered or collect it from the store.</p>
@@ -425,12 +425,12 @@ function CheckoutForm() {
                   { value: "delivery", title: "Home delivery", description: "Enter your delivery address and courier preference.", icon: "truck" as const },
                   { value: "store_pickup", title: "Pick up at store", description: "Collect your order yourself; no delivery fee.", icon: "bag" as const },
                 ] satisfies { value: FulfillmentMethod; title: string; description: string; icon: "truck" | "bag" }[]).map((option) => (
-                  <label key={option.value} className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition ${fulfillmentMethod === option.value ? "border-orange-500 bg-orange-50" : "border-slate-200 hover:border-orange-200"}`}>
+                  <label key={option.value} className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition ${fulfillmentMethod === option.value ? "border-brand-primary bg-lime-50" : "border-slate-200 hover:border-lime-200"}`}>
                     <input type="radio" name="fulfillment-method" value={option.value}
                       checked={fulfillmentMethod === option.value}
                       onChange={() => { setFulfillmentMethod(option.value); setFieldErrors({}); setError(""); setDetailsConfirmed(false); }}
-                      className="mt-1 h-4 w-4 accent-orange-600" />
-                    <CheckoutIcon name={option.icon} className="mt-0.5 h-5 w-5 shrink-0 text-orange-700" />
+                      className="mt-1 h-4 w-4 accent-lime-600" />
+                    <CheckoutIcon name={option.icon} className="mt-0.5 h-5 w-5 shrink-0 text-lime-800" />
                     <span>
                       <span className="block text-sm font-black text-slate-900">{option.title}</span>
                       <span className="mt-1 block text-xs leading-5 text-slate-600">{option.description}</span>
@@ -442,7 +442,7 @@ function CheckoutForm() {
 
             <section aria-labelledby="contact-heading" className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
               <div className="flex items-start gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-700"><CheckoutIcon name="user" /></span>
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-lime-50 text-lime-800"><CheckoutIcon name="user" /></span>
                 <div>
                   <h2 id="contact-heading" className="text-lg font-black text-slate-950">
                     {fulfillmentMethod === "delivery" ? "Contact and delivery address" : "Contact for pickup"}
@@ -496,7 +496,7 @@ function CheckoutForm() {
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <label htmlFor="checkout-city" className="text-sm font-bold text-slate-800">City anywhere in Pakistan <span className="text-red-600">*</span></label>
                     <button type="button" onClick={detectCity} disabled={locationStatus === "requesting" || locationStatus === "looking-up"}
-                      className="inline-flex min-h-9 items-center gap-2 rounded-lg border border-orange-200 px-3 py-1.5 text-xs font-bold text-orange-800 transition hover:bg-orange-50 disabled:cursor-wait disabled:opacity-60">
+                      className="inline-flex min-h-9 items-center gap-2 rounded-lg border border-lime-200 px-3 py-1.5 text-xs font-bold text-lime-900 transition hover:bg-lime-50 disabled:cursor-wait disabled:opacity-60">
                       <CheckoutIcon name="locate" className="h-4 w-4" />
                       {locationStatus === "requesting" ? "Waiting for permission…" : locationStatus === "looking-up" ? "Finding city…" : "Detect my city"}
                     </button>
@@ -595,9 +595,9 @@ function CheckoutForm() {
               )}
             </section>}
 
-            {fulfillmentMethod === "store_pickup" && <section aria-labelledby="pickup-heading" className="rounded-2xl border border-orange-200 bg-orange-50 p-5 sm:p-7">
+            {fulfillmentMethod === "store_pickup" && <section aria-labelledby="pickup-heading" className="rounded-2xl border border-lime-200 bg-lime-50 p-5 sm:p-7">
               <div className="flex items-start gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-orange-700"><CheckoutIcon name="pin" /></span>
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-lime-800"><CheckoutIcon name="pin" /></span>
                 <div>
                   <h2 id="pickup-heading" className="text-lg font-black text-slate-950">Pickup details are confirmed by the store</h2>
                   <p className="mt-2 text-sm leading-6 text-slate-700">There is no delivery charge for store pickup. The store will contact you to confirm the pickup address and when your items are ready. Please wait for that confirmation before travelling.</p>
@@ -616,7 +616,7 @@ function CheckoutForm() {
               <label className="mt-5 flex cursor-pointer items-start gap-3 rounded-xl bg-slate-50 p-4 text-sm leading-5 text-slate-700">
                 <input id="checkout-details-confirmed" type="checkbox" checked={detailsConfirmed}
                   onChange={(event) => { setDetailsConfirmed(event.target.checked); setError(""); }}
-                  className="mt-0.5 h-4 w-4 shrink-0 accent-orange-600" />
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-lime-600" />
                 <span>
                   I confirm that my name and mobile number are correct
                   {fulfillmentMethod === "delivery" ? " and my delivery address is complete." : "."}
@@ -628,10 +628,10 @@ function CheckoutForm() {
           <aside className="h-fit rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-6 sm:p-7">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
-                <CheckoutIcon name="bag" className="h-5 w-5 text-orange-700" />
+                <CheckoutIcon name="bag" className="h-5 w-5 text-lime-800" />
                 <h2 className="text-lg font-black text-slate-950">Order summary</h2>
               </div>
-              <span className="rounded-full bg-orange-50 px-2.5 py-1 text-xs font-black text-orange-800">
+              <span className="rounded-full bg-lime-50 px-2.5 py-1 text-xs font-black text-lime-900">
                 {items.length} item{items.length !== 1 ? "s" : ""}
               </span>
             </div>
@@ -642,7 +642,7 @@ function CheckoutForm() {
                   <div className="min-w-0">
                     <p className="text-sm font-bold leading-5 text-slate-900">{product.name}</p>
                     <p className="mt-1 text-xs text-slate-500">{product.model} · Qty {quantity}</p>
-                    <p className="mt-1 inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
+                    <p className="mt-1 inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-2xs font-semibold text-slate-600">
                       Listed quality: {product.quality}
                     </p>
                   </div>
@@ -689,7 +689,7 @@ function CheckoutForm() {
             )}
 
             <button type="submit" disabled={placing}
-              className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-orange-600 px-5 py-3 font-black text-white transition hover:bg-orange-700 focus:outline-none focus:ring-4 focus:ring-orange-200 disabled:cursor-not-allowed disabled:opacity-60">
+              className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand-primary px-5 py-3 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover focus:outline-none focus:ring-4 focus:ring-lime-200 disabled:cursor-not-allowed disabled:opacity-60">
               {placing ? "Submitting order…" : <>Submit order request <CheckoutIcon name="check" className="h-5 w-5" /></>}
             </button>
             <p className="mt-3 text-center text-xs leading-5 text-slate-500">

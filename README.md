@@ -20,6 +20,19 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Design system
+
+Global design tokens live in [`src/app/globals.css`](./src/app/globals.css). They provide shared color palettes and semantic colors, typography and line-height scales, spacing, responsive layout dimensions, grid recipes, aspect ratios, border radii, and elevation shadows. Existing Tailwind utilities are backed by these tokens across the storefront, account, retailer, and CMS pages; use named token utilities instead of arbitrary values such as `text-[11px]` or `grid-cols-[...]`.
+
+Reusable primitives are exported from [`src/components/ui/index.tsx`](./src/components/ui/index.tsx):
+
+- `Button` supports `primary`, `secondary`, `outline`, `ghost`, and `danger` variants plus `sm`, `md`, and `lg` sizes.
+- `Card` provides a shared surface and accepts `article`, `div`, or `section` semantics.
+- `Input` provides the standard form-field treatment.
+- `Badge` supports brand, neutral, success, warning, and danger states.
+
+Use semantic color utilities (`bg-canvas`, `text-content-primary`, `text-content-secondary`, `border-border-default`, and `bg-brand-primary`) and spacing utilities (`p-xs`, `gap-md`, and similar) when adding UI. Named layout utilities such as `grid-cols-checkout`, `min-h-page-content`, and `aspect-banner-card-mobile` are available for shared compositions. Prefer shared primitives and token-backed utilities over introducing one-off color, type, spacing, radius, or shadow values. Inline styles are reserved for runtime data such as banner images, carousel positions, and rating widths.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

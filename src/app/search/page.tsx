@@ -103,7 +103,7 @@ function SearchContent({ initialQuery }: { initialQuery: string }) {
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <section className="bg-slate-950 px-4 py-14 text-white sm:py-16">
         <div className="mx-auto max-w-6xl text-center">
-          <p className="text-sm font-black uppercase tracking-[0.22em] text-orange-400">
+          <p className="text-sm font-black uppercase tracking-eyebrow-prominent text-lime-300">
             Product Discovery
           </p>
 
@@ -116,7 +116,7 @@ function SearchContent({ initialQuery }: { initialQuery: string }) {
           </p>
 
           <form action="/search" method="GET" role="search" className="mx-auto mt-8 max-w-4xl">
-            <div className="flex overflow-hidden rounded-2xl border border-white/10 bg-white p-2 shadow-xl shadow-orange-950/20">
+            <div className="flex overflow-hidden rounded-2xl border border-white/10 bg-white p-2 shadow-xl shadow-lime-950/20">
               <input
                 name="q"
                 aria-label="Search by product, brand or model"
@@ -128,7 +128,7 @@ function SearchContent({ initialQuery }: { initialQuery: string }) {
 
               <button
                 type="submit"
-                className="rounded-xl bg-orange-500 px-6 py-3 font-black text-white transition hover:bg-orange-600"
+                className="rounded-xl bg-brand-primary px-6 py-3 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover"
               >
                 Search
               </button>
@@ -142,7 +142,7 @@ function SearchContent({ initialQuery }: { initialQuery: string }) {
                   key={item}
                   type="button"
                   onClick={() => setQuery(item)}
-                  className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:border-orange-400 hover:text-orange-300"
+                  className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:border-lime-300 hover:text-lime-300"
                 >
                   {item}
                 </button>
@@ -155,7 +155,7 @@ function SearchContent({ initialQuery }: { initialQuery: string }) {
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-orange-500">
+            <p className="text-sm font-black uppercase tracking-eyebrow text-lime-700">
               Results
             </p>
 
@@ -165,7 +165,7 @@ function SearchContent({ initialQuery }: { initialQuery: string }) {
           </div>
 
           <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-600 shadow-sm">
-            <span className="text-orange-500">{results.length}</span>
+            <span className="text-lime-700">{results.length}</span>
             products found
           </div>
         </div>
@@ -213,7 +213,7 @@ function SearchContent({ initialQuery }: { initialQuery: string }) {
 
         {results.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-20 text-center shadow-sm">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-orange-50 text-4xl text-orange-600">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-lime-50 text-4xl text-lime-700">
               ⌕
             </div>
 
@@ -226,7 +226,7 @@ function SearchContent({ initialQuery }: { initialQuery: string }) {
             <button
               type="button"
               onClick={resetFilters}
-              className="mt-6 rounded-xl bg-orange-500 px-6 py-3 font-black text-white transition hover:bg-orange-600"
+              className="mt-6 rounded-xl bg-brand-primary px-6 py-3 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover"
             >
               Clear Search
             </button>
@@ -241,7 +241,7 @@ function SearchContent({ initialQuery }: { initialQuery: string }) {
       </section>
 
       <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
-        <Link href="/" className="inline-flex items-center gap-2 font-bold text-orange-600 transition hover:text-orange-700">
+        <Link href="/" className="inline-flex items-center gap-2 font-bold text-lime-700 transition hover:text-lime-800">
           ← Back to Home
         </Link>
       </div>

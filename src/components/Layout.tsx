@@ -14,7 +14,13 @@ export default function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <Suspense fallback={<main>{children}</main>}>
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-canvas p-6 text-content-secondary" role="status">
+          Loading page…
+        </main>
+      }
+    >
       <RouteLayout>{children}</RouteLayout>
     </Suspense>
   );
@@ -26,7 +32,7 @@ function RouteLayout({ children }: { children: React.ReactNode }) {
   const { status, error } = useCatalog();
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
       {isAdmin ? (
         children
       ) : (
@@ -40,7 +46,7 @@ function RouteLayout({ children }: { children: React.ReactNode }) {
               Could not sync the live catalog. Showing demo products instead. {error}
             </p>
           )}
-          <main>{children}</main>
+          {children}
           <Footer />
         </>
       )}

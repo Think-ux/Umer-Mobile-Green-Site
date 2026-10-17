@@ -13,10 +13,10 @@ export default function CustomerCarePage() {
   const hasContactMethod = Boolean(phone || settings.whatsapp || settings.supportEmail);
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900">
-      <section className="bg-slate-950 px-4 py-16 text-white sm:px-6 lg:px-8 md:py-20">
+    <main className="min-h-screen bg-canvas text-content-primary">
+      <section className="bg-market-950 px-4 py-16 text-white sm:px-6 lg:px-8 md:py-20">
         <div className="mx-auto max-w-7xl">
-          <p className="text-sm font-black uppercase tracking-[0.25em] text-orange-400">
+          <p className="text-sm font-black uppercase tracking-eyebrow-strong text-lime-300">
             Customer Care
           </p>
 
@@ -33,7 +33,7 @@ export default function CustomerCarePage() {
               href={`https://wa.me/${whatsapp}`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-xl bg-green-500 px-6 py-4 font-black text-white transition hover:bg-green-600"
+              className="ui-button ui-button--primary ui-button--lg"
             >
               WhatsApp Support
             </a>}
@@ -45,11 +45,6 @@ export default function CustomerCarePage() {
               Call Customer Care
             </a>}
 
-            {!hasContactMethod && (
-              <p role="status" className="max-w-xl rounded-xl border border-white/20 bg-white/10 p-4 text-sm leading-6 text-slate-200">
-                Store contact details are being confirmed. Use the FAQs for current information.
-              </p>
-            )}
           </div>
         </div>
       </section>
@@ -60,9 +55,9 @@ export default function CustomerCarePage() {
             href={`https://wa.me/${whatsapp}`}
             target="_blank"
             rel="noreferrer"
-            className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-green-300 hover:shadow-md"
+            className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-lime-300 hover:shadow-md"
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-2xl">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-lime-100 text-2xl">
               💬
             </div>
 
@@ -70,16 +65,16 @@ export default function CustomerCarePage() {
             <p className="mt-2 text-sm leading-6 text-slate-500">
               Chat with us about your order or product.
             </p>
-            <span className="mt-5 inline-block font-black text-green-600 group-hover:underline">
+            <span className="mt-5 inline-block font-black text-lime-700 group-hover:underline">
               Start Chat →
             </span>
           </a>}
 
           {phone && <a
             href={`tel:${phone}`}
-            className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-orange-300 hover:shadow-md"
+            className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-lime-300 hover:shadow-md"
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100 text-2xl">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-lime-100 text-2xl">
               📞
             </div>
 
@@ -87,16 +82,16 @@ export default function CustomerCarePage() {
             <p className="mt-2 text-sm leading-6 text-slate-500">
               Speak directly with our Customer Care team.
             </p>
-            <span className="mt-5 inline-block font-black text-orange-600 group-hover:underline">
+            <span className="mt-5 inline-block font-black text-lime-700 group-hover:underline">
               {phone} →
             </span>
           </a>}
 
           {settings.supportEmail && <a
             href={`mailto:${settings.supportEmail}`}
-            className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-blue-300 hover:shadow-md"
+            className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-lime-300 hover:shadow-md"
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-2xl">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-lime-100 text-2xl">
               ✉️
             </div>
 
@@ -104,7 +99,7 @@ export default function CustomerCarePage() {
             <p className="mt-2 text-sm leading-6 text-slate-500">
               Send us your question or order details.
             </p>
-            <span className="mt-5 inline-block break-all font-black text-blue-600 group-hover:underline">
+            <span className="mt-5 inline-block break-all font-black text-lime-700 group-hover:underline">
               {settings.supportEmail}
             </span>
           </a>}
@@ -120,7 +115,7 @@ export default function CustomerCarePage() {
       <section className="px-4 pb-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="mb-7">
-            <p className="text-sm font-black uppercase tracking-[0.2em] text-orange-500">
+            <p className="text-sm font-black uppercase tracking-eyebrow-wide text-lime-700">
               Support Topics
             </p>
             <h2 className="mt-2 text-3xl font-black tracking-tight">What do you need help with?</h2>
@@ -146,7 +141,7 @@ export default function CustomerCarePage() {
       <section className="px-4 pb-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl">
           <div className="mb-7 text-center">
-            <p className="text-sm font-black uppercase tracking-[0.2em] text-orange-500">FAQ</p>
+            <p className="text-sm font-black uppercase tracking-eyebrow-wide text-lime-700">FAQ</p>
             <h2 className="mt-2 text-3xl font-black tracking-tight">Frequently Asked Questions</h2>
           </div>
 

@@ -13,7 +13,7 @@ type CategoryRow = StoreCategory & {
 };
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-orange-500";
+  "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-brand-primary";
 
 export default function AdminCategories() {
   const { refresh } = useCatalog();
@@ -294,7 +294,7 @@ export default function AdminCategories() {
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <p className="text-sm font-black uppercase tracking-[0.2em] text-orange-500">Catalog</p>
+            <p className="text-sm font-black uppercase tracking-eyebrow-wide text-lime-700">Catalog</p>
             <h1 className="mt-2 text-3xl font-black tracking-tight">Categories</h1>
             <p className="mt-2 text-sm text-slate-500">Visible categories appear on the homepage and navigation. Published products are linked beneath their category.</p>
           </div>
@@ -306,7 +306,7 @@ export default function AdminCategories() {
               setError("");
               setNotice("");
             }}
-            className="rounded-xl bg-orange-500 px-5 py-3 font-black text-white hover:bg-orange-600"
+            className="rounded-xl bg-brand-primary px-5 py-3 font-black text-brand-primary-foreground hover:bg-brand-primary-hover"
           >
             + Add Category
           </button>
@@ -316,7 +316,7 @@ export default function AdminCategories() {
         {notice && <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{notice}</p>}
 
         {formOpen && (
-          <form onSubmit={saveCategory} className="mt-6 grid gap-4 rounded-2xl border border-slate-200 bg-white p-5 sm:grid-cols-2 lg:grid-cols-[1fr_120px_auto_auto] lg:items-end">
+          <form onSubmit={saveCategory} className="mt-6 grid gap-4 rounded-2xl border border-slate-200 bg-white p-5 sm:grid-cols-2 lg:grid-cols-admin-category-form lg:items-end">
             <label className="text-sm font-bold">
               Category name
               <input required className={`${inputClass} min-h-14 text-lg font-semibold placeholder:text-slate-400`} placeholder="e.g. Charging Parts" value={name} onChange={(event) => setName(event.target.value)} />
@@ -359,7 +359,7 @@ export default function AdminCategories() {
                 <p className="text-xs text-slate-500">This image appears on the storefront category card.</p>
               </div>
             )}
-            <button disabled={busy} className="rounded-xl bg-orange-500 px-5 py-3 text-sm font-black text-white disabled:opacity-60">
+            <button disabled={busy} className="rounded-xl bg-brand-primary px-5 py-3 text-sm font-black text-brand-primary-foreground disabled:opacity-60">
               {busy ? "Saving…" : editingId === null ? "Save" : "Update"}
             </button>
             <button type="button" onClick={resetForm} className="rounded-xl border border-slate-200 px-5 py-3 text-sm font-bold">
@@ -377,7 +377,7 @@ export default function AdminCategories() {
             {rows.map((category, index) => (
               <article key={category.id} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div className="flex items-start justify-between gap-3">
-                  <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-orange-50 text-2xl text-orange-600">
+                  <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-lime-50 text-2xl text-lime-700">
                     {category.icon_image_url ? (
                       <img src={category.icon_image_url} alt="" className="h-full w-full object-cover" />
                     ) : category.icon}
@@ -398,7 +398,7 @@ export default function AdminCategories() {
                   <span className="mr-auto text-xs font-semibold text-slate-500">Sort order {category.sort_order}</span>
                   <button type="button" aria-label={`Move ${category.name} up`} disabled={index === 0 || reorderingId !== null} onClick={() => void moveCategory(category, -1)} className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-slate-700 disabled:cursor-not-allowed disabled:opacity-40">↑</button>
                   <button type="button" aria-label={`Move ${category.name} down`} disabled={index === rows.length - 1 || reorderingId !== null} onClick={() => void moveCategory(category, 1)} className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-slate-700 disabled:cursor-not-allowed disabled:opacity-40">↓</button>
-                  <button type="button" onClick={() => editCategory(category)} className="text-orange-600">Edit</button>
+                  <button type="button" onClick={() => editCategory(category)} className="text-lime-700">Edit</button>
                   <button type="button" onClick={() => void toggleVisibility(category)} className="text-slate-600">
                     {category.is_enabled ? "Hide" : "Show"}
                   </button>

@@ -10,6 +10,7 @@ export default function RetailerLogin() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -79,13 +80,15 @@ export default function RetailerLogin() {
   }
 
   return (
-    <main className="min-h-[65vh] bg-slate-50 px-4 py-14">
+    <main className="min-h-page-content bg-slate-50 px-4 py-14">
       <section className="mx-auto max-w-md">
-        <Link href="/retailer" className="text-sm font-bold text-orange-700 hover:text-orange-800">
+        <Link href="/retailer" className="inline-flex items-center text-sm font-bold text-lime-800 hover:text-lime-900">
           ← Retailer information
         </Link>
-        <div className="mt-5 rounded-3xl border border-slate-200 bg-white p-7 shadow-sm sm:p-9">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500 text-xl font-black text-white">U</div>
+        <div className="mt-5 rounded-[28px] border border-slate-200 bg-white p-7 shadow-lg shadow-slate-200/60 sm:p-9">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-primary text-xl font-black text-brand-primary-foreground">
+            U
+          </div>
           <h1 className="mt-5 text-center text-3xl font-black">Retailer sign in</h1>
           <p className="mt-2 text-center text-sm leading-6 text-slate-600">
             Access is available only to accounts approved and assigned the retailer role.
@@ -114,34 +117,44 @@ export default function RetailerLogin() {
                 autoComplete="username"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                className="ui-field mt-2"
+                className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-lime-500 focus:bg-white"
               />
             </label>
             {!resetMode && (
               <label className="block text-sm font-bold text-slate-700">
                 Password
-                <input
-                  required
-                  type="password"
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  className="ui-field mt-2"
-                />
+                <div className="relative mt-2">
+                  <input
+                    required
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-12 text-slate-900 outline-none transition focus:border-lime-500 focus:bg-white"
+                  />
+                  <button
+                    type="button"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    onClick={() => setShowPassword((current) => !current)}
+                    className="absolute inset-y-0 right-3 flex items-center text-xs font-bold text-lime-800 hover:text-lime-900"
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
               </label>
             )}
-            <button disabled={!configured || busy} className="ui-button-primary w-full disabled:cursor-not-allowed disabled:bg-slate-300">
+            <button disabled={!configured || busy} className="w-full rounded-xl bg-brand-primary px-5 py-3.5 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:bg-slate-300">
               {busy ? (resetMode ? "Sending link…" : "Signing in…") : (resetMode ? "Send password setup link" : "Sign in")}
             </button>
           </form>
           {demoEnabled && !resetMode && (
-            <div className="mt-6 rounded-2xl border border-dashed border-orange-300 bg-orange-50 p-4">
-              <p className="text-sm font-black text-orange-900">Testing only — demo retailer</p>
-              <p className="mt-1 text-sm leading-6 text-orange-800">No Supabase account or password is used. Demo access stays in this browser and is disabled in production.</p>
+            <div className="mt-6 rounded-2xl border border-dashed border-lime-300 bg-lime-50 p-4">
+              <p className="text-sm font-black text-lime-900">Testing only — demo retailer</p>
+              <p className="mt-1 text-sm leading-6 text-lime-900">No Supabase account or password is used. Demo access stays in this browser and is disabled in production.</p>
               <button
                 type="button"
                 onClick={enterDemoAccount}
-                className="mt-4 w-full rounded-xl border border-orange-300 bg-white px-4 py-3 text-sm font-black text-orange-800 transition hover:bg-orange-100"
+                className="mt-4 w-full rounded-xl border border-lime-300 bg-white px-4 py-3 text-sm font-black text-lime-900 transition hover:bg-lime-100"
               >
                 Enter retailer demo
               </button>
@@ -154,15 +167,16 @@ export default function RetailerLogin() {
               setPassword("");
               setError("");
               setNotice("");
+              setShowPassword(false);
             }}
-            className="mt-4 w-full text-center text-sm font-bold text-orange-700 hover:text-orange-800"
+            className="mt-4 w-full text-center text-sm font-bold text-lime-800 hover:text-lime-900"
           >
             {resetMode ? "Back to sign in" : "Forgot your password?"}
           </button>
 
           <p className="mt-6 text-center text-sm text-slate-600">
             Need retailer access?{" "}
-            <Link href="/retailer/register" className="font-bold text-orange-700 hover:text-orange-800">
+            <Link href="/retailer/register" className="font-bold text-lime-800 hover:text-lime-900">
               Submit an application
             </Link>
           </p>

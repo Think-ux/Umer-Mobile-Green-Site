@@ -41,7 +41,7 @@ function ProductPageContent() {
       </p>
       <Link
         href="/search"
-        className="mt-6 inline-flex rounded-xl bg-orange-500 px-5 py-3 font-black text-white"
+        className="mt-6 inline-flex rounded-xl bg-brand-primary px-5 py-3 font-black text-brand-primary-foreground"
       >
         Browse products
       </Link>

@@ -81,32 +81,32 @@ export default function TrackOrderPage() {
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
-        <Link href="/" className="inline-flex items-center gap-2 font-bold text-orange-600 transition hover:text-orange-700">
+        <Link href="/" className="inline-flex items-center gap-2 font-bold text-lime-700 transition hover:text-lime-800">
           ← Home
         </Link>
         <div className="mt-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <p className="text-sm font-black uppercase tracking-[0.2em] text-orange-500">Live order status</p>
+          <p className="text-sm font-black uppercase tracking-eyebrow-wide text-lime-700">Live order status</p>
           <h1 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">Track Your Order</h1>
           <p className="mt-3 text-slate-500">Enter the order number and checkout phone number to check its latest status from the store.</p>
           <form onSubmit={track} className="mt-6 space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-5">
             <label className="block text-sm font-bold text-slate-700">
               6-digit tracking code
-              <input required value={number} onChange={(event) => setNumber(event.target.value)} placeholder="123456" inputMode="numeric" maxLength={16} className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-orange-500" />
+              <input required value={number} onChange={(event) => setNumber(event.target.value)} placeholder="123456" inputMode="numeric" maxLength={16} className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-brand-primary" />
             </label>
             <label className="block text-sm font-bold text-slate-700">
               Phone Number
-              <input required value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="03XXXXXXXXX" inputMode="tel" className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-orange-500" />
+              <input required value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="03XXXXXXXXX" inputMode="tel" className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-brand-primary" />
             </label>
-            <button disabled={loading} className="w-full rounded-xl bg-orange-500 px-6 py-4 font-black text-white transition hover:bg-orange-600 disabled:opacity-60">
+            <button disabled={loading} className="w-full rounded-xl bg-brand-primary px-6 py-4 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:opacity-60">
               {loading ? "Checking…" : "Check Order Status"}
             </button>
           </form>
           {error && <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-red-600">{error}</p>}
           {order && (
             <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400">Order Status</p>
+              <p className="text-xs font-black uppercase tracking-eyebrow text-slate-400">Order Status</p>
               <h2 className="mt-2 break-all text-xl font-black text-slate-900">#{order.trackingCode ?? order.orderNumber}</h2>
-              <p className={`mt-3 text-2xl font-black ${isCancelled ? "text-red-600" : "text-orange-600"}`}>{status}</p>
+              <p className={`mt-3 text-2xl font-black ${isCancelled ? "text-red-600" : "text-lime-700"}`}>{status}</p>
               {isCancelled ? (
                 <p className="mt-4 rounded-xl bg-red-50 p-4 font-bold text-red-700">This order has been cancelled. Contact the store for details.</p>
               ) : (

@@ -48,10 +48,10 @@ export default function AdminLoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12">
       <section className="w-full max-w-md rounded-3xl border border-white/10 bg-white p-7 shadow-2xl sm:p-9">
-        <Link href="/" className="text-sm font-bold text-orange-600 hover:text-orange-700">
+        <Link href="/" className="text-sm font-bold text-lime-700 hover:text-lime-800">
           ← Storefront
         </Link>
-        <p className="mt-7 text-xs font-black uppercase tracking-[0.22em] text-orange-500">
+        <p className="mt-7 text-xs font-black uppercase tracking-eyebrow-prominent text-lime-700">
           Secure access
         </p>
         <h1 className="mt-2 text-3xl font-black tracking-tight">Sign in to CMS</h1>
@@ -85,7 +85,7 @@ export default function AdminLoginPage() {
               autoComplete="username"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-orange-500"
+              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-brand-primary"
             />
           </label>
           <label className="block text-sm font-bold text-slate-700">
@@ -96,12 +96,12 @@ export default function AdminLoginPage() {
               autoComplete="current-password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-orange-500"
+              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-brand-primary"
             />
           </label>
           <button
             disabled={!configured || busy}
-            className="w-full rounded-xl bg-orange-500 px-5 py-3.5 font-black text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-slate-300"
+            className="w-full rounded-xl bg-brand-primary px-5 py-3.5 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:bg-slate-300"
           >
             {busy ? "Signing in…" : "Sign in"}
           </button>

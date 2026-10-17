@@ -19,7 +19,7 @@ export default function PolicyPage({
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-12 text-slate-900 sm:px-6 lg:px-8">
       <article className="mx-auto max-w-3xl">
-        <p className="text-sm font-black uppercase tracking-[0.2em] text-orange-600">Umer Mobile Parts · Store draft</p>
+        <p className="text-sm font-black uppercase tracking-eyebrow-wide text-lime-700">Umer Mobile Parts · Store draft</p>
         <h1 className="mt-3 text-4xl font-black tracking-tight">{title}</h1>
         <p className="mt-4 text-lg leading-8 text-slate-600">{description}</p>
 
@@ -49,7 +49,7 @@ export default function PolicyPage({
         </p>
         <div className="mt-6 flex flex-wrap gap-4">
           <Link href="/customer-care" className="ui-button-primary">Contact Customer Care</Link>
-          <Link href="/faq" className="inline-flex min-h-11 items-center font-bold text-orange-700 hover:text-orange-800">Read FAQs</Link>
+          <Link href="/faq" className="inline-flex min-h-11 items-center font-bold text-lime-800 hover:text-lime-900">Read FAQs</Link>
         </div>
       </article>
     </main>

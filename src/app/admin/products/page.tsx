@@ -44,7 +44,7 @@ const emptyForm: ProductForm = {
 };
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-orange-500";
+  "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-primary";
 
 function mapRow(row: ProductRow): Product & { is_published: boolean } {
   const { old_price, retailer_discount_percent, ...product } = row;
@@ -308,7 +308,7 @@ export default function AdminProducts() {
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <p className="text-sm font-black uppercase tracking-[0.2em] text-orange-500">Inventory</p>
+            <p className="text-sm font-black uppercase tracking-eyebrow-wide text-lime-700">Inventory</p>
             <h1 className="mt-2 text-3xl font-black tracking-tight">Products</h1>
             <p className="mt-2 text-sm text-slate-500">Manage the shared storefront catalog.</p>
           </div>
@@ -321,7 +321,7 @@ export default function AdminProducts() {
               setError("");
               setNotice("");
             }}
-            className="rounded-xl bg-orange-500 px-5 py-3 font-black text-white transition hover:bg-orange-600"
+            className="rounded-xl bg-brand-primary px-5 py-3 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover"
           >
             + Add Product
           </button>
@@ -388,15 +388,15 @@ export default function AdminProducts() {
             </div>
 
             <label className="mt-5 flex items-center gap-3 text-sm font-bold">
-              <input type="checkbox" checked={form.published} onChange={(event) => changeField("published", event.target.checked)} className="h-4 w-4 accent-orange-500" />
+              <input type="checkbox" checked={form.published} onChange={(event) => changeField("published", event.target.checked)} className="h-4 w-4 accent-lime-500" />
               Publish product to the storefront
             </label>
             <label className="mt-3 flex items-center gap-3 text-sm font-bold">
-              <input type="checkbox" checked={form.featured} onChange={(event) => changeField("featured", event.target.checked)} className="h-4 w-4 accent-orange-500" />
+              <input type="checkbox" checked={form.featured} onChange={(event) => changeField("featured", event.target.checked)} className="h-4 w-4 accent-lime-500" />
               Include in homepage Featured Products section
             </label>
 
-            <button disabled={busy} className="mt-5 rounded-xl bg-orange-500 px-6 py-3 font-black text-white transition hover:bg-orange-600 disabled:opacity-60">
+            <button disabled={busy} className="mt-5 rounded-xl bg-brand-primary px-6 py-3 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:opacity-60">
               {busy ? "Saving…" : editingId === null ? "Save product" : "Update product"}
             </button>
           </form>
@@ -450,7 +450,7 @@ export default function AdminProducts() {
             <p className="p-8 text-center text-sm text-slate-500">No products match these filters. Try changing or clearing your search.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[900px] text-left text-sm">
+              <table className="w-full min-w-order-table text-left text-sm">
                 <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
                   <tr>
                     <th className="px-5 py-4">Product</th>
@@ -466,7 +466,7 @@ export default function AdminProducts() {
                   {visibleProducts.map((product) => (
                     <tr key={product.id}>
                       <td className="px-5 py-4">
-                        <p className="font-black">{product.name}{product.is_featured ? <span className="ml-2 text-xs font-bold text-orange-600">Featured</span> : null}</p>
+                        <p className="font-black">{product.name}{product.is_featured ? <span className="ml-2 text-xs font-bold text-lime-700">Featured</span> : null}</p>
                         <p className="mt-1 text-xs text-slate-500">{product.brand} · {product.model}</p>
                       </td>
                       <td className="px-5 py-4 text-slate-600">{product.category}</td>
@@ -479,7 +479,7 @@ export default function AdminProducts() {
                         </span>
                       </td>
                       <td className="space-x-3 px-5 py-4 text-right">
-                        <button type="button" onClick={() => beginEdit(product)} className="font-bold text-orange-600 hover:text-orange-700">Edit</button>
+                        <button type="button" onClick={() => beginEdit(product)} className="font-bold text-lime-700 hover:text-lime-800">Edit</button>
                         <button type="button" onClick={() => void deleteProduct(product)} className="font-bold text-red-600 hover:text-red-700">Delete</button>
                       </td>
                     </tr>

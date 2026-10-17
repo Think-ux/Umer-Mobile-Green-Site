@@ -19,10 +19,6 @@ type HomepageContent = {
   show_brands: boolean;
   featured_heading: string;
   show_featured: boolean;
-  products_heading: string;
-  show_products: boolean;
-  show_reviews: boolean;
-  reviews_heading: string;
   show_retailer_cta: boolean;
   retailer_heading: string;
   retailer_description: string;
@@ -51,10 +47,6 @@ const initialContent: HomepageContent = {
   show_brands: true,
   featured_heading: "Featured Products",
   show_featured: true,
-  products_heading: "More Products",
-  show_products: true,
-  show_reviews: true,
-  reviews_heading: "What Customers Say",
   show_retailer_cta: true,
   retailer_heading: "Looking for wholesale?",
   retailer_description: "For retailers and repair shops",
@@ -62,7 +54,7 @@ const initialContent: HomepageContent = {
 };
 
 const fieldClass =
-  "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-orange-500";
+  "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-primary";
 
 export default function AdminContentPage() {
   const { refresh } = useCatalog();
@@ -185,7 +177,7 @@ export default function AdminContentPage() {
         {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
         {notice && <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{notice}</p>}
 
-        <form onSubmit={saveContent} className="mt-6 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+        <form onSubmit={saveContent} className="mt-6 grid gap-6 xl:grid-cols-admin-content">
           <div className="space-y-6">
             <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
               <SectionHeading number="01" title="Hero section" />
@@ -242,7 +234,7 @@ export default function AdminContentPage() {
               <SectionHeading number="02" title="Storefront sections" />
               <div className="mt-5 grid gap-4 sm:grid-cols-2">
                 <label className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 text-sm font-semibold text-slate-700">
-                  <input type="checkbox" checked={content.show_categories} onChange={(event) => update("show_categories", event.target.checked)} className="h-4 w-4 accent-orange-500" />
+                  <input type="checkbox" checked={content.show_categories} onChange={(event) => update("show_categories", event.target.checked)} className="h-4 w-4 accent-lime-500" />
                   Show category section
                 </label>
                 <label className="text-sm font-bold text-slate-700">
@@ -254,7 +246,7 @@ export default function AdminContentPage() {
                   <input className={fieldClass} value={content.category_description} onChange={(event) => update("category_description", event.target.value)} />
                 </label>
                 <label className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 text-sm font-semibold text-slate-700">
-                  <input type="checkbox" checked={content.show_brands} onChange={(event) => update("show_brands", event.target.checked)} className="h-4 w-4 accent-orange-500" />
+                  <input type="checkbox" checked={content.show_brands} onChange={(event) => update("show_brands", event.target.checked)} className="h-4 w-4 accent-lime-500" />
                   Show brand section
                 </label>
                 <label className="text-sm font-bold text-slate-700">
@@ -266,31 +258,15 @@ export default function AdminContentPage() {
                   <input className={fieldClass} value={content.brand_description} onChange={(event) => update("brand_description", event.target.value)} />
                 </label>
                 <label className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 text-sm font-semibold text-slate-700">
-                  <input type="checkbox" checked={content.show_featured} onChange={(event) => update("show_featured", event.target.checked)} className="h-4 w-4 accent-orange-500" />
+                  <input type="checkbox" checked={content.show_featured} onChange={(event) => update("show_featured", event.target.checked)} className="h-4 w-4 accent-lime-500" />
                   Show featured products
                 </label>
                 <label className="text-sm font-bold text-slate-700 sm:col-span-2">
                   Featured products heading
                   <input className={fieldClass} value={content.featured_heading} onChange={(event) => update("featured_heading", event.target.value)} />
                 </label>
-                <label className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 text-sm font-semibold text-slate-700">
-                  <input type="checkbox" checked={content.show_products} onChange={(event) => update("show_products", event.target.checked)} className="h-4 w-4 accent-orange-500" />
-                  Show all products section
-                </label>
-                <label className="text-sm font-bold text-slate-700">
-                  All products heading
-                  <input className={fieldClass} value={content.products_heading} onChange={(event) => update("products_heading", event.target.value)} />
-                </label>
-                <label className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 text-sm font-semibold text-slate-700">
-                  <input type="checkbox" checked={content.show_reviews} onChange={(event) => update("show_reviews", event.target.checked)} className="h-4 w-4 accent-orange-500" />
-                  Show approved customer reviews
-                </label>
-                <label className="text-sm font-bold text-slate-700">
-                  Reviews heading
-                  <input className={fieldClass} value={content.reviews_heading} onChange={(event) => update("reviews_heading", event.target.value)} />
-                </label>
                 <label className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 text-sm font-semibold text-slate-700 sm:col-span-2">
-                  <input type="checkbox" checked={content.show_retailer_cta} onChange={(event) => update("show_retailer_cta", event.target.checked)} className="h-4 w-4 accent-orange-500" />
+                  <input type="checkbox" checked={content.show_retailer_cta} onChange={(event) => update("show_retailer_cta", event.target.checked)} className="h-4 w-4 accent-lime-500" />
                   Show retailer enquiry card
                 </label>
                 <label className="text-sm font-bold text-slate-700">
@@ -314,8 +290,8 @@ export default function AdminContentPage() {
             <p className="mt-3 text-xs leading-5 text-slate-500">
               Preview updates as you edit. Banners and live catalog products are not included.
             </p>
-            <div aria-label="Live homepage content preview" className="mt-5 overflow-hidden rounded-2xl bg-slate-950 p-5 text-white">
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-orange-300">
+            <div aria-label="Live homepage content preview" className="mt-5 overflow-hidden rounded-2xl bg-market-950 p-5 text-white">
+              <p className="text-3xs font-black uppercase tracking-eyebrow text-lime-300">
                 {content.eyebrow || "Store name"}
               </p>
               <h3 className="mt-3 text-2xl font-black leading-tight">
@@ -324,13 +300,13 @@ export default function AdminContentPage() {
               <p className="mt-3 text-sm leading-6 text-slate-300">
                 {content.description || "Supporting text appears here."}
               </p>
-              <span className="mt-5 inline-flex rounded-lg bg-orange-500 px-4 py-2 text-sm font-black">
+              <span className="mt-5 inline-flex rounded-lg bg-brand-primary px-4 py-2 text-sm font-black text-brand-primary-foreground">
                 {content.button_label || "Button label"} →
               </span>
               {content.hero_highlights.filter((highlight) => highlight.trim()).length > 0 && (
                 <ul className="mt-4 flex flex-wrap gap-2">
                   {content.hero_highlights.filter((highlight) => highlight.trim()).map((highlight, index) => (
-                    <li key={`${index}-${highlight}`} className="rounded-full border border-white/15 px-2.5 py-1 text-[11px] text-slate-200">
+                    <li key={`${index}-${highlight}`} className="rounded-full border border-white/15 px-2.5 py-1 text-2xs text-slate-200">
                       {highlight}
                     </li>
                   ))}
@@ -340,11 +316,10 @@ export default function AdminContentPage() {
             <h3 className="mt-5 text-xs font-black uppercase tracking-wider text-slate-500">Storefront sections</h3>
             <ul className="mt-3 space-y-2">
               {[
+                ["Trust benefits", "Product details · Delivery · Retailers · Support", true],
                 ["Categories", content.category_heading, content.show_categories],
                 ["Brands", content.brand_heading, content.show_brands],
                 ["Featured products", content.featured_heading, content.show_featured],
-                ["All products", content.products_heading, content.show_products],
-                ["Customer reviews", content.reviews_heading, content.show_reviews],
                 ["Retailer card", content.retailer_heading, content.show_retailer_cta],
               ].map(([title, detail, visible]) => (
                 <li key={String(title)} className="flex items-center justify-between gap-3 rounded-lg bg-slate-50 px-3 py-2">
@@ -352,7 +327,7 @@ export default function AdminContentPage() {
                     <span className="block text-xs font-bold text-slate-800">{title}</span>
                     <span className="block truncate text-xs text-slate-500">{detail}</span>
                   </span>
-                  <span className={`shrink-0 rounded-full px-2 py-1 text-[10px] font-black ${visible ? "bg-emerald-100 text-emerald-800" : "bg-slate-200 text-slate-600"}`}>
+                  <span className={`shrink-0 rounded-full px-2 py-1 text-3xs font-black ${visible ? "bg-emerald-100 text-emerald-800" : "bg-slate-200 text-slate-600"}`}>
                     {visible ? "Shown" : "Hidden"}
                   </span>
                 </li>
@@ -361,7 +336,7 @@ export default function AdminContentPage() {
             <button
               type="submit"
               disabled={loading || busy}
-              className="mt-5 w-full rounded-xl bg-orange-500 px-5 py-3 text-sm font-black text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-slate-300"
+              className="mt-5 w-full rounded-xl bg-brand-primary px-5 py-3 text-sm font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:bg-slate-300"
             >
               {loading ? "Loading…" : busy ? "Saving…" : "Save and publish"}
             </button>
@@ -383,7 +358,7 @@ function PageHeading({
 }) {
   return (
     <div>
-      <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-500">{eyebrow}</p>
+      <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">{eyebrow}</p>
       <h1 className="mt-2 text-3xl font-black tracking-tight">{title}</h1>
       <p className="mt-2 text-sm text-slate-500">{description}</p>
     </div>
@@ -393,7 +368,7 @@ function PageHeading({
 function SectionHeading({ number, title }: { number: string; title: string }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="flex h-9 min-w-9 items-center justify-center rounded-lg bg-orange-50 px-2 text-xs font-black text-orange-600">
+      <span className="flex h-9 min-w-9 items-center justify-center rounded-lg bg-lime-50 px-2 text-xs font-black text-lime-700">
         {number}
       </span>
       <h2 className="text-lg font-black">{title}</h2>
