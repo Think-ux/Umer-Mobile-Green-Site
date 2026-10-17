@@ -5,11 +5,6 @@ import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useCart } from "@/components/CartProvider";
 import { categorySlug, type Product } from "@/data/store";
-import {
-  getDevelopmentMockAccount,
-  isDevelopmentAuthMockEnabled,
-  subscribeToDevelopmentMockAccount,
-} from "@/lib/auth/development-mock";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { useCatalog } from "@/components/CatalogProvider";
 import { formatStorePrice, retailerPrice } from "@/lib/pricing";
@@ -22,7 +17,6 @@ type Props = {
 type ProductReview = {
   id: number;
   rating: number;
-  is_demo: boolean;
 };
 
 export default function ProductDetailClient({ product }: Props) {
@@ -32,26 +26,22 @@ export default function ProductDetailClient({ product }: Props) {
   const [added, setAdded] = useState(false);
   const [reviews, setReviews] = useState<ProductReview[]>([]);
   const [accountName, setAccountName] = useState("");
-  const [developmentAccountEmail, setDevelopmentAccountEmail] = useState("");
-  const [developmentDemoRating, setDevelopmentDemoRating] = useState<number | null>(null);
-  const [identityLoading, setIdentityLoading] = useState(
-    () => !isDevelopmentAuthMockEnabled() && Boolean(getSupabaseBrowserClient()),
-  );
+  const [identityLoading, setIdentityLoading] = useState(Boolean(getSupabaseBrowserClient()));
   const [hasAuthenticatedSession, setHasAuthenticatedSession] = useState(false);
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewBusy, setReviewBusy] = useState(false);
   const [reviewError, setReviewError] = useState("");
   const [reviewNotice, setReviewNotice] = useState("");
-  const canChooseRating =
-    isDevelopmentAuthMockEnabled()
-      ? Boolean(developmentAccountEmail)
-      : hasAuthenticatedSession && !identityLoading;
+  const canChooseRating = hasAuthenticatedSession && !identityLoading;
 
   const inStock = product.stock > 0;
   const maxQuantity = Math.max(1, product.stock);
   const discounted = product.oldPrice > product.price && product.oldPrice > 0;
   const discount = discounted
     ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
+    : 0;
+  const averageRating = reviews.length
+    ? reviews.reduce((total, review) => total + review.rating, 0) / reviews.length
     : 0;
 
   const formatPrice = (price: number) =>
@@ -72,7 +62,7 @@ export default function ProductDetailClient({ product }: Props) {
     }
     const { data, error: queryError } = await supabase
       .from("reviews")
-      .select("id,rating,is_demo")
+      .select("id,rating")
       .eq("product_id", product.id)
       .eq("status", "approved")
       .order("created_at", { ascending: false })
@@ -91,46 +81,7 @@ export default function ProductDetailClient({ product }: Props) {
   }, [loadReviews]);
 
   useEffect(() => {
-    if (!isDevelopmentAuthMockEnabled()) return;
-
-    const syncDevelopmentAccount = () => {
-      try {
-        const account = getDevelopmentMockAccount();
-        setDevelopmentAccountEmail(account?.email ?? "");
-        setAccountName(account?.fullName ?? "");
-        if (!account) {
-          setDevelopmentDemoRating(null);
-          setReviewRating(0);
-          return;
-        }
-
-        const storageKey = `mobile-studio-development-rating:${encodeURIComponent(account.email.toLowerCase())}:${product.id}`;
-        const storedRating = window.localStorage.getItem(storageKey);
-        if (storedRating === null) {
-          setDevelopmentDemoRating(null);
-          return;
-        }
-        const rating = Number(storedRating);
-        if (!Number.isFinite(rating) || rating < 0.5 || rating > 5 || rating * 2 !== Math.trunc(rating * 2)) {
-          throw new Error("The saved development rating is invalid. Clear this site's local storage and try again.");
-        }
-        setDevelopmentDemoRating(rating);
-      } catch (error) {
-        setReviewError(
-          error instanceof Error
-            ? error.message
-            : "Could not load the development demo rating.",
-        );
-      }
-    };
-
-    syncDevelopmentAccount();
-    return subscribeToDevelopmentMockAccount(syncDevelopmentAccount);
-  }, [product.id]);
-
-  useEffect(() => {
     let active = true;
-    if (isDevelopmentAuthMockEnabled()) return;
 
     const supabase = getSupabaseBrowserClient();
 
@@ -182,29 +133,6 @@ export default function ProductDetailClient({ product }: Props) {
     setReviewBusy(true);
     setReviewError("");
     setReviewNotice("");
-
-    if (isDevelopmentAuthMockEnabled()) {
-      if (!developmentAccountEmail) {
-        setReviewError("Sign in to a development account before choosing a demo rating.");
-        setReviewBusy(false);
-        return;
-      }
-      try {
-        const storageKey = `mobile-studio-development-rating:${encodeURIComponent(developmentAccountEmail.toLowerCase())}:${product.id}`;
-        window.localStorage.setItem(storageKey, String(reviewRating));
-        setDevelopmentDemoRating(reviewRating);
-        setReviewRating(0);
-        setReviewNotice(
-          `Demo rating saved: ${reviewRating.toFixed(1)} / 5. It is visible only in this browser and was not sent to the store.`,
-        );
-      } catch (error) {
-        setReviewError(
-          `Could not save the browser-only demo rating: ${error instanceof Error ? error.message : "Unknown error"}`,
-        );
-      }
-      setReviewBusy(false);
-      return;
-    }
 
     const supabase = getSupabaseBrowserClient();
     if (!supabase) {
@@ -335,13 +263,9 @@ export default function ProductDetailClient({ product }: Props) {
                 <div>
                   <h2 className="text-sm font-extrabold text-slate-900">Rate this product</h2>
                   <p className="mt-1 text-xs text-slate-600">
-                    {isDevelopmentAuthMockEnabled()
-                      ? developmentAccountEmail
-                        ? `Browser-only demo rating for ${accountName || developmentAccountEmail}.`
-                        : "Sign in to rate. Guest ratings are disabled."
-                      : accountName
-                        ? `Rating as ${accountName}`
-                        : "Sign in to a customer account to rate this product."}
+                    {accountName
+                      ? `Rating as ${accountName}`
+                      : "Sign in to a customer account to rate this product."}
                   </p>
                 </div>
                 <fieldset>
@@ -397,25 +321,14 @@ export default function ProductDetailClient({ product }: Props) {
                 >
                   {reviewBusy
                     ? "Submitting…"
-                    : isDevelopmentAuthMockEnabled()
-                      ? canChooseRating
-                        ? "Save demo rating"
-                        : "Sign in to rate"
-                      : canChooseRating
-                        ? "Submit rating"
-                        : "Sign in to rate"}
+                    : canChooseRating
+                      ? "Submit rating"
+                      : "Sign in to rate"}
                 </button>
                 {!canChooseRating && (
                   <Link href="/account" className="text-sm font-bold text-lime-800 hover:text-lime-900">
                     Sign in or create an account
                   </Link>
-                )}
-                {isDevelopmentAuthMockEnabled() && developmentDemoRating !== null && (
-                  <p className="flex items-center gap-2 text-sm font-semibold text-slate-600">
-                    Your saved demo rating:
-                    <StarRatingDisplay rating={developmentDemoRating} className="text-amber-500" />
-                    <span>{developmentDemoRating.toFixed(1)} / 5 (this browser only)</span>
-                  </p>
                 )}
                 {reviewNotice && (
                   <p role="status" className="text-sm font-semibold text-emerald-700">{reviewNotice}</p>
@@ -433,16 +346,14 @@ export default function ProductDetailClient({ product }: Props) {
                 href="#quick-rating"
                 className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-bold text-amber-700 transition hover:bg-amber-100"
               >
-                {reviews.some((review) => !review.is_demo) ? (
+                {reviews.length > 0 ? (
                   <>
-                    <StarRatingDisplay rating={reviews.filter((review) => !review.is_demo).reduce((total, review) => total + review.rating, 0) / reviews.filter((review) => !review.is_demo).length} className="text-amber-500" />
-                    {(reviews.filter((review) => !review.is_demo).reduce((total, review) => total + review.rating, 0) / reviews.filter((review) => !review.is_demo).length).toFixed(1)}
+                    <StarRatingDisplay rating={averageRating} className="text-amber-500" />
+                    {averageRating.toFixed(1)}
                     <span className="font-medium text-amber-800">
-                      ({reviews.filter((review) => !review.is_demo).length} {reviews.filter((review) => !review.is_demo).length === 1 ? "review" : "reviews"})
+                      ({reviews.length} {reviews.length === 1 ? "review" : "reviews"})
                     </span>
                   </>
-                ) : reviews.some((review) => review.is_demo) ? (
-                  "Demo review preview · no customer reviews yet"
                 ) : (
                   "No reviews yet · Be the first"
                 )}
@@ -481,6 +392,9 @@ export default function ProductDetailClient({ product }: Props) {
                   </p>
                   <p className="mt-1 text-xs text-emerald-800">
                     Listed price: {formatStorePrice(product.price)}
+                  </p>
+                  <p className="mt-2 text-xs leading-5 text-emerald-900">
+                    Retailer price is displayed for reference. Discounted wholesale checkout is not enabled yet; the cart uses the listed retail price.
                   </p>
                 </div>
               )}

@@ -5,11 +5,9 @@ import { useCatalog, type StoreCategory } from "@/components/CatalogProvider";
 import { categorySlug } from "@/data/store";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
-type CategoryRow = StoreCategory & {
-  id: number;
-  sort_order: number;
+type CategoryRow = Omit<StoreCategory, "parentId"> & {
+  parent_id: number | null;
   is_enabled: boolean;
-  icon_image_url?: string;
 };
 
 const inputClass =
@@ -20,6 +18,7 @@ export default function AdminCategories() {
   const [rows, setRows] = useState<CategoryRow[]>([]);
   const [name, setName] = useState("");
   const [icon, setIcon] = useState("▣");
+  const [parentId, setParentId] = useState<number | null>(null);
   const [iconImageUrl, setIconImageUrl] = useState("");
   const [iconImageFile, setIconImageFile] = useState<File | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -57,6 +56,7 @@ export default function AdminCategories() {
     setEditingId(null);
     setName("");
     setIcon("▣");
+    setParentId(null);
     setIconImageUrl("");
     setIconImageFile(null);
     setFormOpen(false);
@@ -66,6 +66,7 @@ export default function AdminCategories() {
     setEditingId(category.id);
     setName(category.name);
     setIcon(category.icon);
+    setParentId(category.parent_id);
     setIconImageUrl(category.icon_image_url ?? "");
     setIconImageFile(null);
     setFormOpen(true);
@@ -105,6 +106,7 @@ export default function AdminCategories() {
     const category = {
       name: normalizedName,
       icon: icon.trim() || "▣",
+      parent_id: parentId,
       updated_at: new Date().toISOString(),
     };
     let imageUrl = iconImageUrl.trim();
@@ -318,7 +320,25 @@ export default function AdminCategories() {
         {formOpen && (
           <form onSubmit={saveCategory} className="mt-6 grid gap-4 rounded-2xl border border-slate-200 bg-white p-5 sm:grid-cols-2 lg:grid-cols-admin-category-form lg:items-end">
             <label className="text-sm font-bold">
-              Category name
+                    Parent category
+                    <select
+                      className={inputClass}
+                      value={parentId ?? ""}
+                      onChange={(event) => setParentId(event.target.value ? Number(event.target.value) : null)}
+                    >
+                      <option value="">Top-level category</option>
+                      {rows
+                        .filter((row) => row.parent_id === null && row.id !== editingId)
+                        .map((row) => (
+                          <option key={row.id} value={row.id}>{row.name}</option>
+                        ))}
+                    </select>
+                    <span className="mt-1 block text-xs font-normal text-slate-500">
+                      Subcategories are limited to one level.
+                    </span>
+                  </label>
+                  <label className="text-sm font-bold">
+                    Category name
               <input required className={`${inputClass} min-h-14 text-lg font-semibold placeholder:text-slate-400`} placeholder="e.g. Charging Parts" value={name} onChange={(event) => setName(event.target.value)} />
               <span className="mt-1 block text-xs font-normal text-slate-500">
                 Storefront path: /shop/{categorySlug(name || "category")}
@@ -389,7 +409,11 @@ export default function AdminCategories() {
                     {category.is_enabled ? "Visible" : "Hidden"}
                   </span>
                 </div>
-                <p className="mt-5 text-xs font-black uppercase tracking-wider text-slate-400">Category {String(index + 1).padStart(2, "0")}</p>
+                <p className="mt-5 text-xs font-black uppercase tracking-wider text-slate-400">
+                  {category.parent_id === null
+                    ? `Category ${String(index + 1).padStart(2, "0")}`
+                    : `Subcategory · ${rows.find((row) => row.id === category.parent_id)?.name ?? "Parent missing"}`}
+                </p>
                 <h2 className="mt-1 text-lg font-black">{category.name}</h2>
                 <p className="mt-1 text-sm text-slate-500">
                   {category.count} published {category.count === 1 ? "product" : "products"}

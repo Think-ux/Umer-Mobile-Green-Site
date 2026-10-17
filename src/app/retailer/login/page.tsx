@@ -4,7 +4,6 @@ import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
-import { isRetailerDemoEnabled, startRetailerDemoSession } from "@/lib/auth/retailer-demo";
 
 export default function RetailerLogin() {
   const router = useRouter();
@@ -16,17 +15,6 @@ export default function RetailerLogin() {
   const [notice, setNotice] = useState("");
   const [resetMode, setResetMode] = useState(false);
   const configured = Boolean(getSupabaseBrowserClient());
-  const demoEnabled = isRetailerDemoEnabled();
-
-  function enterDemoAccount() {
-    setError("");
-    try {
-      startRetailerDemoSession();
-      router.replace("/retailer/dashboard");
-    } catch (demoError) {
-      setError(demoError instanceof Error ? demoError.message : "Could not start retailer demo access.");
-    }
-  }
 
   async function signIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -95,15 +83,9 @@ export default function RetailerLogin() {
           </p>
 
           {!configured && (
-            demoEnabled ? (
-              <p role="status" className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
-                Supabase is not configured. Use the clearly marked demo account to preview the retailer area; demo access is unavailable in production.
-              </p>
-            ) : (
-              <p role="status" className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
-                The retailer account service is not configured. Contact the store for assistance.
-              </p>
-            )
+            <p role="status" className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
+              The retailer account service is not configured. Contact the store for assistance.
+            </p>
           )}
           {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</p>}
           {notice && <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">{notice}</p>}
@@ -147,19 +129,6 @@ export default function RetailerLogin() {
               {busy ? (resetMode ? "Sending link…" : "Signing in…") : (resetMode ? "Send password setup link" : "Sign in")}
             </button>
           </form>
-          {demoEnabled && !resetMode && (
-            <div className="mt-6 rounded-2xl border border-dashed border-lime-300 bg-lime-50 p-4">
-              <p className="text-sm font-black text-lime-900">Testing only — demo retailer</p>
-              <p className="mt-1 text-sm leading-6 text-lime-900">No Supabase account or password is used. Demo access stays in this browser and is disabled in production.</p>
-              <button
-                type="button"
-                onClick={enterDemoAccount}
-                className="mt-4 w-full rounded-xl border border-lime-300 bg-white px-4 py-3 text-sm font-black text-lime-900 transition hover:bg-lime-100"
-              >
-                Enter retailer demo
-              </button>
-            </div>
-          )}
           <button
             type="button"
             onClick={() => {

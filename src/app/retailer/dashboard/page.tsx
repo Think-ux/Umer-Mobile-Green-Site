@@ -4,11 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
-import {
-  endRetailerDemoSession,
-  hasRetailerDemoSession,
-  isRetailerDemoEnabled,
-} from "@/lib/auth/retailer-demo";
 
 type DashboardState = "checking" | "ready" | "signed-out" | "not-retailer" | "unconfigured" | "error";
 
@@ -20,31 +15,6 @@ export default function RetailerDashboard() {
 
   useEffect(() => {
     let active = true;
-    if (isRetailerDemoEnabled()) {
-      try {
-        if (hasRetailerDemoSession()) {
-          void Promise.resolve().then(() => {
-            if (!active) return;
-            setBusinessName("Demo Retailer");
-            setStatus("ready");
-          });
-          return () => {
-            active = false;
-          };
-        }
-      } catch (demoError) {
-        const message = demoError instanceof Error ? demoError.message : "Could not verify retailer demo access.";
-        void Promise.resolve().then(() => {
-          if (!active) return;
-          setError(message);
-          setStatus("error");
-        });
-        return () => {
-          active = false;
-        };
-      }
-    }
-
     const supabase = getSupabaseBrowserClient();
     if (!supabase) {
       void Promise.resolve().then(() => {
@@ -99,19 +69,6 @@ export default function RetailerDashboard() {
   }, [router]);
 
   async function signOut() {
-    if (isRetailerDemoEnabled()) {
-      try {
-        if (hasRetailerDemoSession()) {
-          endRetailerDemoSession();
-          router.replace("/retailer/login");
-          return;
-        }
-      } catch (demoError) {
-        setError(demoError instanceof Error ? demoError.message : "Could not end retailer demo access.");
-        return;
-      }
-    }
-
     const supabase = getSupabaseBrowserClient();
     if (!supabase) {
       setError("The account service is not configured, so sign-out could not be completed.");
@@ -149,7 +106,7 @@ export default function RetailerDashboard() {
 
   const overviewCards = [
     { label: "Pricing status", value: "Awaiting approval", tone: "lime" },
-    { label: "Orders", value: isRetailerDemoEnabled() && hasRetailerDemoSession() ? "Sample data" : "Pending review", tone: "slate" },
+    { label: "Orders", value: "Pending review", tone: "slate" },
     { label: "Account status", value: "Approved", tone: "emerald" },
   ];
 
@@ -159,11 +116,6 @@ export default function RetailerDashboard() {
         <section className="overflow-hidden rounded-[28px] bg-slate-950 text-white shadow-2xl shadow-slate-900/10">
           <div className="bg-[radial-gradient(circle_at_top_right,_rgba(198,255,0,0.18),transparent_30%),linear-gradient(135deg,#101612_0%,#171d1a_100%)] p-6 sm:p-9">
             <p className="text-sm font-black uppercase tracking-[0.2em] text-lime-300">Retailer account</p>
-            {isRetailerDemoEnabled() && hasRetailerDemoSession() && (
-              <p className="mt-4 w-fit rounded-full border border-amber-300/40 bg-amber-300/10 px-3 py-1 text-xs font-black uppercase tracking-[0.16em] text-amber-200">
-                Demo mode · sample data only · no Supabase
-              </p>
-            )}
             <div className="mt-4 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
               <div>
                 <h1 className="text-3xl font-black sm:text-4xl">Welcome, {businessName}</h1>
@@ -203,11 +155,6 @@ export default function RetailerDashboard() {
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <Link href="/search" className="ui-button-primary">Browse current catalog</Link>
-            {isRetailerDemoEnabled() && hasRetailerDemoSession() && (
-              <Link href="/retailer/orders" className="inline-flex min-h-11 items-center rounded-xl border border-lime-300/30 bg-lime-50 px-5 py-3 font-bold text-lime-900 transition hover:bg-lime-100">
-                View sample retailer orders
-              </Link>
-            )}
             <Link href="/customer-care" className="inline-flex min-h-11 items-center rounded-xl border border-slate-200 px-5 py-3 font-bold text-slate-800 transition hover:border-lime-300 hover:text-lime-800">
               Ask about wholesale terms
             </Link>

@@ -103,6 +103,12 @@ function CheckoutForm() {
   const [locationStatus, setLocationStatus] = useState<LocationStatus>("idle");
   const [locationMessage, setLocationMessage] = useState("");
   const [detailsConfirmed, setDetailsConfirmed] = useState(false);
+  const [otpCode, setOtpCode] = useState("");
+  const [otpPhone, setOtpPhone] = useState("");
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [otpBusy, setOtpBusy] = useState(false);
+  const [otpMessage, setOtpMessage] = useState("");
+  const [otpError, setOtpError] = useState("");
 
   function updateField<K extends keyof CustomerForm>(field: K, value: CustomerForm[K]) {
     setForm((current) => field === "city"
@@ -123,7 +129,90 @@ function CheckoutForm() {
       setFieldErrors((current) => ({ ...current, [errorField]: undefined }));
       setDetailsConfirmed(false);
     }
+    if (field === "phone") {
+      setOtpCode("");
+      setOtpPhone("");
+      setOtpVerified(false);
+      setOtpMessage("");
+      setOtpError("");
+    }
     setError("");
+  }
+
+  function toPakistanE164(phone: string) {
+    const digits = phone.replace(/\D/g, "");
+    return `+92${digits.slice(1)}`;
+  }
+
+  async function sendPhoneCode() {
+    const phoneError = validateField("phone", form.phone);
+    setFieldErrors((current) => ({ ...current, phone: phoneError }));
+    setOtpMessage("");
+    setOtpError("");
+    if (phoneError) return;
+
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      setOtpError("Phone verification is unavailable because Supabase is not configured.");
+      return;
+    }
+
+    setOtpBusy(true);
+    const phone = toPakistanE164(form.phone);
+    const { error: sendError } = await supabase.auth.signInWithOtp({
+      phone,
+      options: { shouldCreateUser: true },
+    });
+    if (sendError) {
+      setOtpError(`Could not send the verification code: ${sendError.message}`);
+    } else {
+      setOtpPhone(form.phone.replace(/\D/g, ""));
+      setOtpVerified(false);
+      setOtpMessage(`A verification code was sent to ${phone}.`);
+    }
+    setOtpBusy(false);
+  }
+
+  async function verifyPhoneCode() {
+    const digits = form.phone.replace(/\D/g, "");
+    if (!otpPhone || otpPhone !== digits) {
+      setOtpError("Request a new code for the mobile number entered above.");
+      setOtpVerified(false);
+      return;
+    }
+    if (!/^\d{6}$/.test(otpCode.trim())) {
+      setOtpError("Enter the 6-digit code sent to your mobile.");
+      setOtpVerified(false);
+      return;
+    }
+
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      setOtpError("Phone verification is unavailable because Supabase is not configured.");
+      return;
+    }
+
+    setOtpBusy(true);
+    setOtpError("");
+    const { data, error: verifyError } = await supabase.auth.verifyOtp({
+      phone: toPakistanE164(form.phone),
+      token: otpCode.trim(),
+      type: "sms",
+    });
+    const verifiedDigits = data.user?.phone?.replace(/\D/g, "") ?? "";
+    const matchesRequestedPhone =
+      verifiedDigits === digits || verifiedDigits === `92${digits.slice(1)}`;
+    if (verifyError) {
+      setOtpError(`Could not verify the code: ${verifyError.message}`);
+      setOtpVerified(false);
+    } else if (!data.user?.phone_confirmed_at || !matchesRequestedPhone) {
+      setOtpError("Supabase did not confirm the mobile number entered. Request a new code and try again.");
+      setOtpVerified(false);
+    } else {
+      setOtpVerified(true);
+      setOtpMessage("Mobile number verified. You can submit your order.");
+    }
+    setOtpBusy(false);
   }
 
   function validateField(field: CheckoutField, value: string) {
@@ -270,6 +359,11 @@ function CheckoutForm() {
       document.getElementById("checkout-details-confirmed")?.focus();
       return;
     }
+    if (!otpVerified || otpPhone !== phone.replace(/\D/g, "")) {
+      setError("Verify your mobile number before submitting the order.");
+      document.getElementById("checkout-phone-code")?.focus();
+      return;
+    }
 
     const supabase = getSupabaseBrowserClient();
     if (!supabase) {
@@ -282,7 +376,7 @@ function CheckoutForm() {
     let data: unknown;
     let createError: { message: string } | null;
     try {
-      const result = await supabase.rpc("create_customer_order", {
+      const result = await supabase.rpc("create_verified_customer_order", {
         p_name: name,
         p_phone: phone,
         p_address: fulfillmentMethod === "store_pickup" ? "" : address,
@@ -480,6 +574,49 @@ function CheckoutForm() {
                   {fieldErrors.phone
                     ? <p id="checkout-phone-error" className="mt-1.5 text-xs font-medium text-red-700">{fieldErrors.phone}</p>
                     : <p id="checkout-phone-help" className="mt-1.5 text-xs text-slate-500">11 digits, starting with 03.</p>}
+                  <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <p className="text-xs font-bold text-slate-700">
+                        {otpVerified ? "Mobile verified" : "Verify this number by SMS before ordering"}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => void sendPhoneCode()}
+                        disabled={otpBusy || otpVerified}
+                        className="rounded-lg border border-lime-300 bg-white px-3 py-2 text-xs font-bold text-lime-900 hover:bg-lime-50 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {otpBusy ? "Please wait…" : otpPhone ? "Resend code" : "Send code"}
+                      </button>
+                    </div>
+                    {otpPhone && !otpVerified && (
+                      <div className="mt-3 flex gap-2">
+                        <input
+                          id="checkout-phone-code"
+                          inputMode="numeric"
+                          autoComplete="one-time-code"
+                          maxLength={6}
+                          value={otpCode}
+                          onChange={(event) => {
+                            setOtpCode(event.target.value.replace(/\D/g, "").slice(0, 6));
+                            setOtpError("");
+                          }}
+                          aria-label="SMS verification code"
+                          placeholder="6-digit code"
+                          className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => void verifyPhoneCode()}
+                          disabled={otpBusy || otpCode.length !== 6}
+                          className="rounded-lg bg-slate-900 px-3 py-2 text-xs font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                          Verify
+                        </button>
+                      </div>
+                    )}
+                    {otpMessage && <p role="status" className="mt-2 text-xs font-medium text-emerald-700">{otpMessage}</p>}
+                    {otpError && <p role="alert" className="mt-2 text-xs font-medium text-red-700">{otpError}</p>}
+                  </div>
                 </div>
 
                 {fulfillmentMethod === "delivery" && <div className="sm:col-span-2">

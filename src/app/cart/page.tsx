@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
+import { useCatalog } from "@/components/CatalogProvider";
 
 export default function CartPage() {
+  const { isRetailer } = useCatalog();
   const {
     items,
     updateQuantity,
@@ -58,6 +60,12 @@ export default function CartPage() {
           </p>
         </div>
 
+        {isRetailer && (
+          <p role="status" className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-900">
+            Retailer discounts are shown on product pages, but discounted wholesale checkout is not enabled yet. This cart and any customer checkout use the listed retail prices; contact the store for approved wholesale ordering.
+          </p>
+        )}
+
         <div className="grid gap-8 lg:grid-cols-cart">
           <div className="space-y-4">
             {items.map((item) => (
@@ -83,8 +91,13 @@ export default function CartPage() {
                         </p>
                       </div>
 
-                      <div className="text-lg font-black text-slate-900">
-                        Rs. {(item.product.price * item.quantity).toLocaleString()}
+                      <div className="text-right">
+                        <p className="text-lg font-black text-slate-900">
+                          Rs. {(item.product.price * item.quantity).toLocaleString()}
+                        </p>
+                        <p className="text-xs font-medium text-slate-500">
+                          Listed retail price
+                        </p>
                       </div>
                     </div>
 

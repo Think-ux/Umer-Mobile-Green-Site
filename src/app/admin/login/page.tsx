@@ -10,12 +10,15 @@ export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
+  const [resetMode, setResetMode] = useState(false);
   const configured = Boolean(getSupabaseBrowserClient());
 
   async function signIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
+    setNotice("");
     const supabase = getSupabaseBrowserClient();
 
     if (!supabase) {
@@ -24,6 +27,19 @@ export default function AdminLoginPage() {
     }
 
     setBusy(true);
+    if (resetMode) {
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/retailer/setup-password`,
+      });
+      if (resetError) {
+        setError(`Could not send a password reset email: ${resetError.message}`);
+      } else {
+        setNotice("If an admin account exists for this email, a password reset link will arrive shortly.");
+      }
+      setBusy(false);
+      return;
+    }
+
     const { data, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -75,6 +91,11 @@ export default function AdminLoginPage() {
             {error}
           </p>
         )}
+        {notice && (
+          <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+            {notice}
+          </p>
+        )}
 
         <form onSubmit={signIn} className="mt-6 space-y-4">
           <label className="block text-sm font-bold text-slate-700">
@@ -88,24 +109,38 @@ export default function AdminLoginPage() {
               className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-brand-primary"
             />
           </label>
-          <label className="block text-sm font-bold text-slate-700">
-            Password
-            <input
-              required
-              type="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-brand-primary"
-            />
-          </label>
+          {!resetMode && (
+            <label className="block text-sm font-bold text-slate-700">
+              Password
+              <input
+                required
+                type="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-brand-primary"
+              />
+            </label>
+          )}
           <button
             disabled={!configured || busy}
             className="w-full rounded-xl bg-brand-primary px-5 py-3.5 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:bg-slate-300"
           >
-            {busy ? "Signing in…" : "Sign in"}
+            {busy ? (resetMode ? "Sending link…" : "Signing in…") : (resetMode ? "Send password reset link" : "Sign in")}
           </button>
         </form>
+        <button
+          type="button"
+          onClick={() => {
+            setResetMode((current) => !current);
+            setPassword("");
+            setError("");
+            setNotice("");
+          }}
+          className="mt-4 w-full text-center text-sm font-bold text-lime-800 hover:text-lime-900"
+        >
+          {resetMode ? "Back to sign in" : "Forgot your password?"}
+        </button>
       </section>
     </main>
   );

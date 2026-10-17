@@ -9,23 +9,19 @@ import {
   useState,
 } from "react";
 import {
-  categories as initialCategories,
-  products as initialProducts,
   type Product,
 } from "@/data/store";
 import { normalizeDeliveryRates, type DeliveryRate } from "@/lib/delivery";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
-import {
-  hasRetailerDemoSession,
-  isRetailerDemoEnabled,
-  subscribeToRetailerDemoSession,
-} from "@/lib/auth/retailer-demo";
 
 export type StoreCategory = {
+  id: number;
   name: string;
   icon: string;
   icon_image_url?: string;
   count: number;
+  parentId: number | null;
+  sort_order: number;
 };
 
 export type StoreBrand = {
@@ -40,7 +36,6 @@ export type StoreReview = {
   reviewer_name: string;
   rating: number;
   review_text: string;
-  is_demo: boolean;
   created_at: string;
   product_name: string;
 };
@@ -150,9 +145,8 @@ const initialSettings: StoreSettings = {
 const CatalogContext = createContext<CatalogContextValue | null>(null);
 
 export function CatalogProvider({ children }: { children: React.ReactNode }) {
-  const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [categories, setCategories] =
-    useState<StoreCategory[]>(initialCategories);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<StoreCategory[]>([]);
   const [brands, setBrands] = useState<StoreBrand[]>([]);
   const [reviews, setReviews] = useState<StoreReview[]>([]);
   const [homepage, setHomepage] = useState(initialHomepage);
@@ -167,8 +161,8 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
     const supabase = getSupabaseBrowserClient();
 
     if (!supabase) {
-      setProducts(initialProducts);
-      setCategories(initialCategories);
+      setProducts([]);
+      setCategories([]);
       setBrands([]);
       setReviews([]);
       setHomepage(initialHomepage);
@@ -192,10 +186,10 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
         .returns<(Omit<Product, "oldPrice" | "retailerDiscountPercent"> & { old_price: number; retailer_discount_percent: number })[]>(),
       supabase
         .from("categories")
-        .select("name,icon,count,sort_order")
+        .select("id,name,icon,count,sort_order,parent_id")
         .eq("is_enabled", true)
         .order("sort_order")
-        .returns<StoreCategory[]>(),
+        .returns<Array<Omit<StoreCategory, "icon_image_url" | "parentId"> & { parent_id: number | null }>>(),
       supabase
         .from("brands")
         .select("id,name,sort_order")
@@ -204,7 +198,7 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
         .returns<StoreBrand[]>(),
       supabase
         .from("reviews")
-        .select("id,product_id,reviewer_name,rating,review_text,is_demo,created_at")
+        .select("id,product_id,reviewer_name,rating,review_text,created_at")
         .eq("status", "approved")
         .order("created_at", { ascending: false })
         .limit(6),
@@ -245,8 +239,8 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
       ]
         .filter(Boolean)
         .join(" ");
-      setProducts(initialProducts);
-      setCategories(initialCategories);
+      setProducts([]);
+      setCategories([]);
       setBrands([]);
       setReviews([]);
       setHomepage(initialHomepage);
@@ -281,13 +275,23 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
         category.icon_image_url,
       ])
     );
-    const enabledCategories = categoryResult.data.map((category) => ({
-      ...category,
-      icon_image_url: categoryImages.get(category.name) ?? "",
-      count: publishedProducts.filter(
-        (product) => product.category === category.name
-      ).length,
-    }));
+    const enabledCategoryIds = new Set(categoryResult.data.map((category) => category.id));
+    const enabledCategories = categoryResult.data
+      .filter(
+        (category) =>
+          category.parent_id === null ||
+          enabledCategoryIds.has(category.parent_id)
+      )
+      .map(
+      ({ parent_id, ...category }) => ({
+        ...category,
+        parentId: parent_id,
+        icon_image_url: categoryImages.get(category.name) ?? "",
+        count: publishedProducts.filter(
+          (product) => product.category === category.name
+        ).length,
+      })
+    );
     const enabledCategoryNames = new Set(
       enabledCategories.map((category) => category.name)
     );
@@ -397,22 +401,6 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let active = true;
     const refreshRetailerAccess = async () => {
-      if (isRetailerDemoEnabled()) {
-        try {
-          if (hasRetailerDemoSession()) {
-            setIsRetailer(true);
-            setRetailerAccessError("");
-            return;
-          }
-        } catch (accessError) {
-          setIsRetailer(false);
-          setRetailerAccessError(
-            accessError instanceof Error ? accessError.message : "Could not verify retailer demo access.",
-          );
-          return;
-        }
-      }
-
       const supabase = getSupabaseBrowserClient();
       if (!supabase) {
         setIsRetailer(false);
@@ -435,14 +423,10 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
     const { data: authData } = supabase?.auth.onAuthStateChange(() => {
       void refreshRetailerAccess();
     }) ?? { data: { subscription: null } };
-    const unsubscribeDemo = subscribeToRetailerDemoSession(() => {
-      void refreshRetailerAccess();
-    });
 
     return () => {
       active = false;
       authData.subscription?.unsubscribe();
-      unsubscribeDemo();
     };
   }, []);
 

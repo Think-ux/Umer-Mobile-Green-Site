@@ -23,7 +23,7 @@ export default function PrivacyPolicyPage() {
         {
           heading: "Sharing, storage, and security",
           paragraphs: [
-            "The checkout form does not collect payment-card details; payment arrangements are confirmed with the store. In local development, the mock account keeps only its email and display name in that browser's local storage and does not store the password or send it to Supabase Auth.",
+            "The checkout form does not collect payment-card details; payment arrangements are confirmed with the store. Customer and retailer sign-in use Supabase Auth; passwords are not stored by this website.",
             "Account, order, review, and application data is available to the store through its connected services. The store should restrict administrative access and protect credentials and private documents. Information may also be disclosed if required by law or needed to address fraud, security, or service issues.",
           ],
         },

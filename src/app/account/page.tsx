@@ -2,13 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
-import {
-  clearDevelopmentMockAccount,
-  getDevelopmentMockAccount,
-  isDevelopmentAuthMockEnabled,
-  saveDevelopmentMockAccount,
-  type DevelopmentMockAccount,
-} from "@/lib/auth/development-mock";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type AccountStatus = "loading" | "ready" | "unconfigured";
@@ -18,14 +11,6 @@ type AccountIdentity = {
   user_metadata: Record<string, unknown>;
   app_metadata: Record<string, unknown>;
 };
-
-function mockAccountIdentity(account: DevelopmentMockAccount): AccountIdentity {
-  return {
-    email: account.email,
-    user_metadata: { full_name: account.fullName },
-    app_metadata: { role: "customer" },
-  };
-}
 
 function accountName(user: AccountIdentity) {
   const metadataName = [
@@ -49,11 +34,7 @@ function accountRole(user: AccountIdentity) {
 
 export default function AccountPage() {
   const [status, setStatus] = useState<AccountStatus>(
-    () => (
-      isDevelopmentAuthMockEnabled() || getSupabaseBrowserClient()
-        ? "loading"
-        : "unconfigured"
-    ),
+    () => (getSupabaseBrowserClient() ? "loading" : "unconfigured"),
   );
   const [user, setUser] = useState<AccountIdentity | null>(null);
   const [mode, setMode] = useState<AccountMode>("sign-in");
@@ -66,27 +47,6 @@ export default function AccountPage() {
 
   useEffect(() => {
     let active = true;
-    if (isDevelopmentAuthMockEnabled()) {
-      void Promise.resolve().then(() => {
-        if (!active) return;
-        try {
-          const account = getDevelopmentMockAccount();
-          if (account) setUser(mockAccountIdentity(account));
-        } catch (loadError) {
-          setError(
-            loadError instanceof Error
-              ? loadError.message
-              : "Could not load the development account.",
-          );
-        }
-        setStatus("ready");
-      });
-
-      return () => {
-        active = false;
-      };
-    }
-
     const supabase = getSupabaseBrowserClient();
     if (!supabase) return;
     const client = supabase;
@@ -114,43 +74,6 @@ export default function AccountPage() {
     setBusy(true);
     setError("");
     setNotice("");
-
-    if (isDevelopmentAuthMockEnabled()) {
-      try {
-        const mockAccount: DevelopmentMockAccount = {
-          email: email.trim(),
-          fullName: name.trim(),
-        };
-
-        if (mode === "sign-up") {
-          if (!mockAccount.fullName) {
-            setError("Enter your name to create a development account.");
-          } else {
-            saveDevelopmentMockAccount(mockAccount);
-            setUser(mockAccountIdentity(mockAccount));
-            setNotice("Development account created locally. No email was sent.");
-          }
-        } else {
-          const savedAccount = getDevelopmentMockAccount();
-          if (!savedAccount) {
-            setError("No local development account exists yet. Create one first.");
-          } else if (savedAccount.email.toLowerCase() !== mockAccount.email.toLowerCase()) {
-            setError("That email does not match the local development account.");
-          } else {
-            setUser(mockAccountIdentity(savedAccount));
-            setNotice("Signed in to the local development account. No email was sent.");
-          }
-        }
-      } catch (mockError) {
-        setError(
-          mockError instanceof Error
-            ? mockError.message
-            : "Could not access local development account storage.",
-        );
-      }
-      setBusy(false);
-      return;
-    }
 
     const supabase = getSupabaseBrowserClient();
     if (!supabase) {
@@ -201,22 +124,6 @@ export default function AccountPage() {
     setBusy(true);
     setError("");
     setNotice("");
-    if (isDevelopmentAuthMockEnabled()) {
-      try {
-        clearDevelopmentMockAccount();
-        setUser(null);
-        setPassword("");
-        setNotice("Signed out of the local development account. No email was sent.");
-      } catch (mockError) {
-        setError(
-          mockError instanceof Error
-            ? mockError.message
-            : "Could not sign out of the local development account.",
-        );
-      }
-      setBusy(false);
-      return;
-    }
 
     const supabase = getSupabaseBrowserClient();
     if (!supabase) {
@@ -276,12 +183,6 @@ export default function AccountPage() {
               {notice}
             </p>
           )}
-          {isDevelopmentAuthMockEnabled() && (
-            <p role="status" className="mt-5 rounded-xl border border-sky-200 bg-sky-50 p-4 text-sm leading-6 text-sky-900">
-              Development mock is active. Sign-up and sign-in stay in this browser; no Supabase Auth request or email is sent. Passwords are not stored or checked.
-            </p>
-          )}
-
           {status === "loading" ? (
             <p role="status" className="mt-6 rounded-xl bg-slate-50 p-4 text-sm text-slate-600">
               Checking your account…

@@ -25,7 +25,7 @@ export default function HomePage() {
     : [...new Set(products.map((product) => product.brand))];
   const featuredProducts = products.filter((product) => product.is_featured).slice(0, 3);
   const categoryList = Array.isArray(categories)
-    ? categories
+    ? categories.filter((category) => category.parentId === null)
     : [];
 
   return (
@@ -200,10 +200,17 @@ export default function HomePage() {
           <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
             {categoryList.map((category) => {
               const name = category.name;
+              const children = categories.filter(
+                (item) => item.parentId === category.id
+              );
+              const categoryNames = new Set([
+                name,
+                ...children.map((child) => child.name),
+              ]);
               const categoryImages = [
                 category.icon_image_url,
                 ...products
-                  .filter((product) => product.category === name)
+                  .filter((product) => categoryNames.has(product.category))
                   .map((product) => product.image),
               ].filter((image): image is string => Boolean(image));
 
@@ -226,6 +233,19 @@ export default function HomePage() {
                       <span aria-hidden="true" className="text-content-secondary transition group-hover:translate-x-1 group-hover:text-brand-primary">→</span>
                     </span>
                   </Link>
+                  {children.length > 0 && (
+                    <div className="flex flex-wrap gap-2 border-t border-border-default px-4 py-3">
+                      {children.map((child) => (
+                        <Link
+                          key={child.id}
+                          href={`/shop/${categorySlug(child.name)}`}
+                          className="rounded-full bg-surface px-2.5 py-1 text-xs font-semibold text-content-secondary transition hover:bg-brand-primary hover:text-brand-primary-foreground"
+                        >
+                          {child.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </Card>
               );
             })}

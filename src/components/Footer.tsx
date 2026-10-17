@@ -1,15 +1,23 @@
 "use client";
 
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useCatalog } from "@/components/CatalogProvider";
 import { categorySlug } from "@/data/store";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 const linkClass = "text-sm text-slate-400 transition hover:text-brand-primary";
 
 export default function Footer() {
   const { categories, brands, settings } = useCatalog();
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterBusy, setNewsletterBusy] = useState(false);
+  const [newsletterError, setNewsletterError] = useState("");
+  const [newsletterNotice, setNewsletterNotice] = useState("");
   const whatsapp = settings.whatsapp.replace(/\D/g, "");
-  const featuredCategories = categories.slice(0, 4);
+  const featuredCategories = categories
+    .filter((category) => category.parentId === null)
+    .slice(0, 4);
   const featuredBrands = brands.slice(0, 4);
   const socialLinks = [
     ["Instagram", settings.social.instagram],
@@ -17,20 +25,36 @@ export default function Footer() {
     ["TikTok", settings.social.tiktok],
   ].filter(([, value]) => isHttpsUrl(value));
 
+  async function subscribe(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setNewsletterBusy(true);
+    setNewsletterError("");
+    setNewsletterNotice("");
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      setNewsletterError("Newsletter signup is unavailable because Supabase is not configured.");
+      setNewsletterBusy(false);
+      return;
+    }
+    const { error } = await supabase.rpc("subscribe_newsletter", {
+      p_email: newsletterEmail.trim(),
+    });
+    if (error) {
+      setNewsletterError(`Could not subscribe: ${error.message}`);
+      setNewsletterBusy(false);
+      return;
+    }
+    setNewsletterEmail("");
+    setNewsletterNotice("Thanks for subscribing. You can unsubscribe by contacting the store.");
+    setNewsletterBusy(false);
+  }
+
   return (
     <footer className="border-t border-market-800 bg-market-950 text-white">
-      <div className="mx-auto grid max-w-7xl gap-9 px-4 py-10 sm:grid-cols-2 lg:grid-cols-footer lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-9 px-4 py-10 sm:grid-cols-2 lg:grid-cols-6 lg:px-8">
         <div>
           <Link href="/" className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-primary text-xl font-black text-brand-primary-foreground">
-              U
-            </span>
-            <span>
-              <span className="block text-lg font-black">{settings.storeName}</span>
-              <span className="block text-xs font-bold tracking-wider text-brand-primary">
-                MOBILE PARTS
-              </span>
-            </span>
+            <img src="/images/umer-mobile-parts-logo.svg" alt={settings.storeName} className="h-14 w-auto" />
           </Link>
           <p className="mt-4 max-w-xs text-sm leading-6 text-slate-400">
             Find mobile spare parts by category, brand and device model.
@@ -90,6 +114,40 @@ export default function Footer() {
         </div>
 
         <div>
+          <h2 className="text-sm font-black uppercase tracking-wider">Newsletter</h2>
+          <p className="mt-4 text-sm leading-6 text-slate-400">
+            Get store updates and new-part announcements by email.
+          </p>
+          <form onSubmit={subscribe} className="mt-4 space-y-3">
+            <label htmlFor="footer-newsletter-email" className="sr-only">Email address</label>
+            <input
+              id="footer-newsletter-email"
+              type="email"
+              required
+              maxLength={254}
+              autoComplete="email"
+              value={newsletterEmail}
+              onChange={(event) => setNewsletterEmail(event.target.value)}
+              placeholder="you@example.com"
+              className="w-full rounded-xl border border-market-700 bg-market-900 px-3 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-brand-primary"
+            />
+            <label className="flex items-start gap-2 text-xs leading-5 text-slate-400">
+              <input type="checkbox" required className="mt-1 accent-lime-400" />
+              <span>I agree to receive email updates from Umer Mobile Parts.</span>
+            </label>
+            <button
+              type="submit"
+              disabled={newsletterBusy}
+              className="w-full rounded-xl bg-brand-primary px-4 py-3 text-sm font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:opacity-60"
+            >
+              {newsletterBusy ? "Subscribing…" : "Subscribe"}
+            </button>
+          </form>
+          {newsletterError && <p role="alert" className="mt-3 text-xs text-red-300">{newsletterError}</p>}
+          {newsletterNotice && <p role="status" className="mt-3 text-xs text-emerald-300">{newsletterNotice}</p>}
+        </div>
+
+        <div>
           <h2 className="text-sm font-black uppercase tracking-wider">Contact</h2>
           <div className="mt-4 flex flex-col items-start gap-4">
             {settings.phone && (
@@ -112,21 +170,10 @@ export default function Footer() {
                 {settings.supportEmail}
               </a>
             )}
-            {socialLinks.map(([label, url]) => (
-              <a
-                className={linkClass}
-                href={url}
-                key={label}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {label}
-              </a>
-            ))}
             {!settings.phone &&
               !settings.whatsapp &&
               !settings.supportEmail &&
-              socialLinks.length === 0 && (
+              (
               <p className="max-w-xs text-sm leading-6 text-slate-400">
                 Contact details are being confirmed. Check the FAQs for current information.
               </p>
@@ -138,9 +185,20 @@ export default function Footer() {
       <div className="border-t border-market-800">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between lg:px-8">
           <p>{"\u00A9"} 2026 {settings.storeName}. All rights reserved.</p>
-          <Link className="hover:text-slate-300" href="/retailer">
-            Retailer enquiries
-          </Link>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 sm:justify-end">
+            <Link className="hover:text-slate-300" href="/retailer">Retailer enquiries</Link>
+            {socialLinks.map(([label, url]) => (
+              <a
+                key={label}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-slate-400 transition hover:text-brand-primary"
+              >
+                {label}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </footer>

@@ -26,10 +26,24 @@ export default function ShopCategoryClient({ category }: Props) {
   const matchedCategory = categories.find(
     (item) => categorySlug(item.name) === category
   );
+  const parentCategory = categories.find(
+    (item) => item.id === matchedCategory?.parentId
+  );
+  const childCategories = categories.filter(
+    (item) => item.parentId === matchedCategory?.id
+  );
 
   const categoryProducts = useMemo(
-    () => products.filter((product) => product.category === matchedCategory?.name),
-    [matchedCategory?.name, products]
+    () => {
+      const categoryNames = new Set([
+        matchedCategory?.name,
+        ...categories
+          .filter((item) => item.parentId === matchedCategory?.id)
+          .map((item) => item.name),
+      ].filter((name): name is string => Boolean(name)));
+      return products.filter((product) => categoryNames.has(product.category));
+    },
+    [categories, matchedCategory?.id, matchedCategory?.name, products]
   );
 
   const brands = [...new Set(categoryProducts.map((p) => p.brand))];
@@ -280,6 +294,17 @@ export default function ShopCategoryClient({ category }: Props) {
             <span className="mx-2">/</span>
             <Link href="/search" className="transition hover:text-lime-700">Shop</Link>
             <span className="mx-2">/</span>
+            {parentCategory && (
+              <>
+                <Link
+                  href={`/shop/${categorySlug(parentCategory.name)}`}
+                  className="transition hover:text-lime-700"
+                >
+                  {parentCategory.name}
+                </Link>
+                <span className="mx-2">/</span>
+              </>
+            )}
             <span className="font-semibold text-slate-900">
               {matchedCategory.name}
             </span>
@@ -300,6 +325,24 @@ export default function ShopCategoryClient({ category }: Props) {
                 Find compatible mobile spare parts, compare prices and check
                 product availability before placing your order.
               </p>
+              {childCategories.length > 0 && (
+                <nav aria-label={`${matchedCategory.name} subcategories`} className="mt-5">
+                  <p className="text-xs font-black uppercase tracking-wide text-slate-500">
+                    Browse by part type
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {childCategories.map((child) => (
+                      <Link
+                        key={child.id}
+                        href={`/shop/${categorySlug(child.name)}`}
+                        className="rounded-full border border-lime-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 transition hover:border-lime-400 hover:text-lime-800"
+                      >
+                        {child.name}
+                      </Link>
+                    ))}
+                  </div>
+                </nav>
+              )}
             </div>
 
             <div className="flex shrink-0 items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">

@@ -10,7 +10,6 @@ type Review = {
   reviewer_name: string;
   rating: number;
   review_text: string;
-  is_demo: boolean;
   status: "pending" | "approved" | "rejected";
   created_at: string;
   products: { name: string } | null;
@@ -33,7 +32,7 @@ export default function AdminReviews() {
 
     const { data, error: queryError } = await supabase
       .from("reviews")
-      .select("id,product_id,reviewer_name,rating,review_text,status,is_demo,created_at,products(name)")
+      .select("id,product_id,reviewer_name,rating,review_text,status,created_at,products(name)")
       .order("created_at", { ascending: false })
       .returns<Review[]>();
 
@@ -119,11 +118,6 @@ export default function AdminReviews() {
               <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
                 <div>
                   <StarRatingDisplay rating={review.rating} className="text-amber-500" />
-                  {review.is_demo && (
-                    <p className="mt-2 inline-flex rounded-full border border-amber-300 bg-amber-50 px-2.5 py-1 text-2xs font-black uppercase tracking-wide text-amber-900">
-                      Demo — not customer feedback
-                    </p>
-                  )}
                   {review.review_text ? (
                     <p className="mt-3 text-sm leading-6 text-slate-600">“{review.review_text}”</p>
                   ) : (

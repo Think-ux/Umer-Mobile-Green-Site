@@ -455,6 +455,22 @@
   --ds-shadow-confirmation: 0 20px 60px rgb(15 23 42 / 8%);
 }
 
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  --market-canvas: #0d110e;
+  --market-elevated: #242b25;
+  --market-dark: #151b16;
+  --market-black: #090c0a;
+  --background: #0d110e;
+  --foreground: #edf2ee;
+  --surface: #151b16;
+  --surface-base: #151b16;
+  --text-secondary: #aab5ac;
+  --border: #303a32;
+  --canvas-muted: #111713;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -470,6 +486,44 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-family-sans);
+  transition:
+    background-color var(--duration-fast) ease,
+    color var(--duration-fast) ease;
+}
+
+html[data-theme="dark"] .bg-slate-50,
+html[data-theme="dark"] .bg-slate-100 {
+  background-color: #151b16;
+}
+
+html[data-theme="dark"] .bg-slate-200 {
+  background-color: #202822;
+}
+
+html[data-theme="dark"] .bg-slate-800,
+html[data-theme="dark"] .bg-slate-900,
+html[data-theme="dark"] .bg-slate-950 {
+  background-color: #090c0a;
+}
+
+html[data-theme="dark"] .text-slate-700,
+html[data-theme="dark"] .text-slate-800,
+html[data-theme="dark"] .text-slate-900,
+html[data-theme="dark"] .text-slate-950 {
+  color: var(--foreground);
+}
+
+html[data-theme="dark"] .text-slate-500,
+html[data-theme="dark"] .text-slate-600 {
+  color: var(--text-secondary);
+}
+
+html[data-theme="dark"] .border-slate-100,
+html[data-theme="dark"] .border-slate-200,
+html[data-theme="dark"] .border-slate-300,
+html[data-theme="dark"] .border-slate-700,
+html[data-theme="dark"] .border-market-800 {
+  border-color: var(--border);
 }
 
 button,
@@ -536,15 +590,15 @@ textarea {
   .type-display {
     font-size: clamp(var(--type-4xl), 7vw, var(--type-7xl));
     font-weight: var(--weight-black);
-    line-height: 0.98;
-    letter-spacing: -0.04em;
+    line-height: var(--line-height-display);
+    letter-spacing: var(--letter-spacing-heading);
   }
 
   .type-heading {
     font-size: var(--type-3xl);
     font-weight: var(--weight-extrabold);
-    line-height: var(--leading-3xl);
-    letter-spacing: -0.035em;
+    line-height: var(--line-height-page-heading);
+    letter-spacing: var(--letter-spacing-heading);
   }
 
   .type-body {
@@ -562,7 +616,7 @@ textarea {
     font-size: var(--type-xs);
     font-weight: var(--weight-bold);
     line-height: var(--leading-xs);
-    letter-spacing: 0.04em;
+    letter-spacing: var(--letter-spacing-wide);
   }
 
   .type-overline {
@@ -584,8 +638,8 @@ textarea {
   .banner-slide-background {
     background-image: linear-gradient(
         90deg,
-        color-mix(in srgb, var(--foreground) 78%, transparent),
-        color-mix(in srgb, var(--foreground) 8%, transparent)
+        var(--banner-overlay-strong),
+        var(--banner-overlay-soft)
       ),
       var(--banner-image);
   }

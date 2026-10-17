@@ -6,14 +6,15 @@ import { useEffect, useState } from "react";
 import { useCart } from "@/components/CartProvider";
 import { useCatalog } from "@/components/CatalogProvider";
 import { categorySlug } from "@/data/store";
-import {
-  getDevelopmentMockAccount,
-  isDevelopmentAuthMockEnabled,
-  subscribeToDevelopmentMockAccount,
-} from "@/lib/auth/development-mock";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
-export default function Header() {
+export default function Header({
+  darkMode,
+  onToggleTheme,
+}: {
+  darkMode: boolean;
+  onToggleTheme: () => void;
+}) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
@@ -24,24 +25,6 @@ export default function Header() {
   const { categories, products, settings } = useCatalog();
 
   useEffect(() => {
-    if (isDevelopmentAuthMockEnabled()) {
-      const updateMockAccountLabel = () => {
-        try {
-          setAccountLabel(getDevelopmentMockAccount()?.fullName || "Guest");
-        } catch {
-          setAccountLabel("Account error");
-        }
-      };
-
-      const unsubscribe = subscribeToDevelopmentMockAccount(updateMockAccountLabel);
-      window.addEventListener("focus", updateMockAccountLabel);
-      void Promise.resolve().then(updateMockAccountLabel);
-      return () => {
-        unsubscribe();
-        window.removeEventListener("focus", updateMockAccountLabel);
-      };
-    }
-
     const supabase = getSupabaseBrowserClient();
     if (!supabase) return;
 
@@ -90,10 +73,20 @@ export default function Header() {
   const categoryHref = (name: string) => `/shop/${categorySlug(name)}`;
   const activeCategory =
     categories.find((category) => category.name === activeCategoryName) ??
+    categories.find((category) => category.parentId === null) ??
     categories[0];
+  const activeCategoryNames = new Set([
+    activeCategory?.name,
+    ...categories
+      .filter((category) => category.parentId === activeCategory?.id)
+      .map((category) => category.name),
+  ].filter((name): name is string => Boolean(name)));
   const activeCategoryProducts = activeCategory
-    ? products.filter((product) => product.category === activeCategory.name)
+    ? products.filter((product) => activeCategoryNames.has(product.category))
     : [];
+  const activeSubcategories = categories.filter(
+    (category) => category.parentId === activeCategory?.id
+  );
 
   const closeMenus = () => {
     setMobileOpen(false);
@@ -116,7 +109,7 @@ export default function Header() {
 
       {/* Main header */}
       <div className="mx-auto max-w-7xl px-4">
-        <div className="flex min-h-header items-center gap-3 py-3 lg:gap-7">
+        <div className="flex min-h-header items-center gap-1 py-2 sm:gap-3 sm:py-3 lg:gap-7">
           {/* Brand */}
           <Link
             href="/"
@@ -204,8 +197,37 @@ export default function Header() {
               <circle cx="12" cy="8" r="3.5" />
               <path strokeLinecap="round" d="M5 20c.7-3.3 3.2-5 7-5s6.3 1.7 7 5" />
             </svg>
-            <span className="max-w-24 truncate">{accountLabel}</span>
+            <span className="max-w-24 truncate">
+              {accountLabel === "Guest" ? (
+                <>
+                  <span className="hidden sm:inline">Sign in / Register</span>
+                  <span className="sm:hidden">Account</span>
+                </>
+              ) : (
+                accountLabel
+              )}
+            </span>
           </Link>
+
+          <button
+            type="button"
+            onClick={onToggleTheme}
+            aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+            aria-pressed={darkMode}
+            title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-market-800 text-slate-200 transition hover:border-brand-primary hover:text-brand-primary"
+          >
+            {darkMode ? (
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5">
+                <circle cx="12" cy="12" r="4" />
+                <path strokeLinecap="round" d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" />
+              </svg>
+            ) : (
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z" />
+              </svg>
+            )}
+          </button>
 
           {/* Mobile menu button */}
           <button
@@ -214,7 +236,7 @@ export default function Header() {
             aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={mobileOpen}
             aria-controls="mobile-navigation"
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-market-800 text-2xl text-white transition hover:border-brand-primary hover:text-brand-primary md:hidden"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-market-800 text-2xl text-white transition hover:border-brand-primary hover:text-brand-primary md:hidden"
           >
             {mobileOpen ? "×" : "☰"}
           </button>
@@ -264,7 +286,13 @@ export default function Header() {
                   </p>
                   {categories.map((category) => {
                     const productCount = products.filter(
-                      (product) => product.category === category.name
+                      (product) =>
+                        product.category === category.name ||
+                        categories.some(
+                          (child) =>
+                            child.parentId === category.id &&
+                            child.name === product.category
+                        )
                     ).length;
                     const active = activeCategory?.name === category.name;
                     return (
@@ -272,6 +300,7 @@ export default function Header() {
                         key={category.name}
                         onMouseEnter={() => setActiveCategoryName(category.name)}
                         className={`flex items-center rounded-xl ${
+                          category.parentId !== null ? "ml-4 border-l border-slate-200 pl-2" : ""} ${
                           active ? "bg-lime-50" : "hover:bg-slate-50"
                         }`}
                       >
@@ -335,6 +364,25 @@ export default function Header() {
                           View category →
                         </Link>
                       </div>
+                      {activeSubcategories.length > 0 && (
+                        <div className="mt-4 border-b border-slate-100 pb-4">
+                          <p className="text-xs font-black uppercase tracking-wider text-slate-400">
+                            Browse part types
+                          </p>
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {activeSubcategories.map((subcategory) => (
+                              <Link
+                                key={subcategory.id}
+                                href={categoryHref(subcategory.name)}
+                                onClick={closeMenus}
+                                className="rounded-full bg-lime-50 px-3 py-2 text-xs font-bold text-lime-800 hover:bg-lime-100"
+                              >
+                                {subcategory.name}
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                       {activeCategoryProducts.length > 0 ? (
                         <div className="mt-3 grid gap-1 sm:grid-cols-2">
                           {activeCategoryProducts.map((product) => (
@@ -460,10 +508,13 @@ export default function Header() {
                       (product) => product.category === category.name
                     );
                     const expanded = mobileCategoryName === category.name;
+                    const parentCategory = categories.find(
+                      (item) => item.id === category.parentId
+                    );
 
                     return (
                       <div key={category.name} className="border-b border-slate-100 last:border-0">
-                        <div className="flex items-center">
+                        <div className={`flex items-center ${parentCategory ? "ml-4" : ""}`}>
                           <Link
                             href={categoryHref(category.name)}
                             onClick={closeMenus}

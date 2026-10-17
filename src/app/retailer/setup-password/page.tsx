@@ -94,18 +94,28 @@ export default function RetailerSetupPasswordPage() {
       setBusy(false);
       return;
     }
-    router.replace(accountRole === "retailer" ? "/retailer/dashboard" : "/account");
+    router.replace(
+      accountRole === "admin"
+        ? "/admin"
+        : accountRole === "retailer"
+          ? "/retailer/dashboard"
+          : "/account"
+    );
   }
+
+  const isAdmin = accountRole === "admin";
 
   return (
     <main className="grid min-h-page-content place-items-center bg-slate-50 px-4 py-12">
       <section className="ui-card w-full max-w-md p-7 sm:p-9">
-        <Link href="/retailer/login" className="text-sm font-bold text-lime-800 hover:text-lime-900">
-          ← Retailer sign in
+        <Link href={isAdmin ? "/admin/login" : "/retailer/login"} className="text-sm font-bold text-lime-800 hover:text-lime-900">
+          {isAdmin ? "← Admin sign in" : "← Retailer sign in"}
         </Link>
-        <h1 className="mt-6 text-3xl font-black">Set your password</h1>
+        <h1 className="mt-6 text-3xl font-black">{isAdmin ? "Reset your password" : "Set your password"}</h1>
         <p className="mt-2 text-sm leading-6 text-slate-600">
-          Choose a private password for your account. The store cannot see it.
+          {isAdmin
+            ? "Choose a new password for your secure CMS admin account."
+            : "Choose a private password for your account. The store cannot see it."}
         </p>
         {!configured && <p role="alert" className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">Retailer account setup is unavailable because the backend is not configured.</p>}
         {configured && !ready && !error && <p role="status" className="mt-5 text-sm text-slate-500">Verifying your secure setup link…</p>}
@@ -121,7 +131,7 @@ export default function RetailerSetupPasswordPage() {
               <input required minLength={8} type="password" autoComplete="new-password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} className="ui-field mt-2" />
             </label>
             <button disabled={busy} className="ui-button-primary w-full disabled:cursor-not-allowed disabled:bg-slate-300">
-              {busy ? "Saving password…" : "Set password and continue"}
+              {busy ? "Saving password…" : isAdmin ? "Save password and open CMS" : "Set password and continue"}
             </button>
           </form>
         )}
