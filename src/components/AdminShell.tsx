@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -41,12 +41,23 @@ function NavigationLinks({
   role: string | null;
 }) {
   const pathname = usePathname();
-  const visibleGroups = navigation
+    const visibleGroups = navigation
     .map((group) => ({
       ...group,
-      items: group.items.filter(
-        (item) => item.href !== "/admin/accounts" || role === "admin",
-      ),
+      items: group.items.filter((item) => {
+        if (role !== "admin" && item.href === "/admin/accounts") {
+          return false;
+        }
+
+        if (
+          role !== "admin" &&
+          ["/admin/content", "/admin/banners", "/admin/settings"].includes(item.href)
+        ) {
+          return false;
+        }
+
+        return true;
+      }),
     }))
     .filter((group) => group.items.length > 0);
 
@@ -192,8 +203,8 @@ export default function AdminShell({
         : visibleAuthState === "not-admin"
           ? "This account does not have CMS access. Ask the project owner to assign an admin or store_manager role."
           : visibleAuthState === "signed-out"
-            ? "Redirecting to the secure admin sign-in page…"
-            : "Checking admin session…";
+            ? "Redirecting to the secure admin sign-in pageâ€¦"
+            : "Checking admin sessionâ€¦";
 
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
@@ -224,7 +235,18 @@ export default function AdminShell({
     );
   }
 
-  if (pathname.startsWith("/admin/accounts") && userRole !== "admin") {
+  const adminOnlyPaths = [
+    "/admin/accounts",
+    "/admin/content",
+    "/admin/banners",
+    "/admin/settings",
+  ];
+
+  const isAdminOnlyPath = adminOnlyPaths.some(
+    (path) => pathname === path || pathname.startsWith(`${path}/`),
+  );
+
+  if (isAdminOnlyPath && userRole !== "admin") {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
         <section className="ui-card max-w-lg p-7 text-center">
@@ -282,7 +304,7 @@ export default function AdminShell({
               disabled={signingOut}
               className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 disabled:opacity-60"
             >
-              {signingOut ? "Signing out…" : "Sign out"}
+              {signingOut ? "Signing outâ€¦" : "Sign out"}
             </button>
           </div>
           <div className="mt-3 overflow-x-auto">
@@ -298,7 +320,7 @@ export default function AdminShell({
               href="/"
               className="text-sm font-bold text-lime-700 transition hover:text-lime-800"
             >
-              View storefront →
+              View storefront â†’
             </Link>
             <button
               type="button"
@@ -306,7 +328,7 @@ export default function AdminShell({
               disabled={signingOut}
               className="text-sm font-bold text-slate-600 transition hover:text-red-700 disabled:opacity-60"
             >
-              {signingOut ? "Signing out…" : "Sign out"}
+              {signingOut ? "Signing outâ€¦" : "Sign out"}
             </button>
           </div>
         </div>
@@ -323,3 +345,4 @@ export default function AdminShell({
     </div>
   );
 }
+

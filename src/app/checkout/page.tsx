@@ -106,6 +106,7 @@ function CheckoutForm() {
   const [otpCode, setOtpCode] = useState("");
   const [otpPhone, setOtpPhone] = useState("");
   const [otpVerified, setOtpVerified] = useState(false);
+  const [otpRequested, setOtpRequested] = useState(false);
   const [otpBusy, setOtpBusy] = useState(false);
   const [otpMessage, setOtpMessage] = useState("");
   const [otpError, setOtpError] = useState("");
@@ -130,6 +131,7 @@ function CheckoutForm() {
       setDetailsConfirmed(false);
     }
     if (field === "phone") {
+      setOtpRequested(false);
       setOtpCode("");
       setOtpPhone("");
       setOtpVerified(false);
@@ -359,9 +361,31 @@ function CheckoutForm() {
       document.getElementById("checkout-details-confirmed")?.focus();
       return;
     }
-    if (!otpVerified || otpPhone !== phone.replace(/\D/g, "")) {
-      setError("Verify your mobile number before submitting the order.");
-      document.getElementById("checkout-phone-code")?.focus();
+    const normalizedPhone = phone.replace(/\D/g, "");
+
+    if (!otpVerified || otpPhone !== normalizedPhone) {
+      setError("");
+
+      if (!normalizedPhone) {
+        setFieldErrors((current) => ({
+          ...current,
+          phone: "Please enter your mobile number to receive OTP.",
+        }));
+        document.getElementById("checkout-phone")?.focus();
+        return;
+      }
+
+      if (!validateField("phone", phone)) {
+        setOtpRequested(true);
+        await sendPhoneCode();
+      } else {
+        setFieldErrors((current) => ({
+          ...current,
+          phone: validateField("phone", phone),
+        }));
+        document.getElementById("checkout-phone")?.focus();
+      }
+
       return;
     }
 
@@ -574,7 +598,8 @@ function CheckoutForm() {
                   {fieldErrors.phone
                     ? <p id="checkout-phone-error" className="mt-1.5 text-xs font-medium text-red-700">{fieldErrors.phone}</p>
                     : <p id="checkout-phone-help" className="mt-1.5 text-xs text-slate-500">11 digits, starting with 03.</p>}
-                  <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  {otpRequested && (
+                    <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <p className="text-xs font-bold text-slate-700">
                         {otpVerified ? "Mobile verified" : "Verify this number by SMS before ordering"}
@@ -617,6 +642,7 @@ function CheckoutForm() {
                     {otpMessage && <p role="status" className="mt-2 text-xs font-medium text-emerald-700">{otpMessage}</p>}
                     {otpError && <p role="alert" className="mt-2 text-xs font-medium text-red-700">{otpError}</p>}
                   </div>
+                  )}
                 </div>
 
                 {fulfillmentMethod === "delivery" && <div className="sm:col-span-2">
@@ -838,3 +864,4 @@ function CheckoutForm() {
     </main>
   );
 }
+
