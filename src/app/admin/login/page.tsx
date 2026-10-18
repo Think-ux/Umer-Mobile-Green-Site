@@ -13,6 +13,7 @@ export default function AdminLoginPage() {
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
   const [resetMode, setResetMode] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const configured = Boolean(getSupabaseBrowserClient());
 
   async function signIn(event: FormEvent<HTMLFormElement>) {
@@ -51,9 +52,9 @@ export default function AdminLoginPage() {
       return;
     }
 
-    if (data.user?.app_metadata.role !== "admin") {
+    if (!["admin", "store_manager"].includes(String(data.user?.app_metadata.role))) {
       await supabase.auth.signOut();
-      setError("This account does not have CMS admin access.");
+      setError("This account does not have CMS access.");
       setBusy(false);
       return;
     }
@@ -72,11 +73,11 @@ export default function AdminLoginPage() {
         </p>
         <h1 className="mt-2 text-3xl font-black tracking-tight">Sign in to CMS</h1>
         <p className="mt-2 text-sm leading-6 text-slate-500">
-          Sign in with the Supabase account assigned the CMS admin role.
+          Sign in with your CMS admin or store manager account.
         </p>
 
         {!configured && (
-          <p className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
+          <p className="ui-feedback ui-feedback--warning mt-5 leading-6">
             Supabase connection details are missing. Set
             {" "}
             <code>NEXT_PUBLIC_SUPABASE_URL</code> and
@@ -87,12 +88,12 @@ export default function AdminLoginPage() {
         )}
 
         {error && (
-          <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          <p role="alert" className="ui-feedback ui-feedback--error mt-5">
             {error}
           </p>
         )}
         {notice && (
-          <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+          <p role="status" className="ui-feedback ui-feedback--success mt-5">
             {notice}
           </p>
         )}
@@ -112,14 +113,24 @@ export default function AdminLoginPage() {
           {!resetMode && (
             <label className="block text-sm font-bold text-slate-700">
               Password
-              <input
-                required
-                type="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-brand-primary"
-              />
+              <div className="relative mt-2">
+                <input
+                  required
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  className="w-full rounded-xl border border-slate-200 px-4 py-3 pr-12 outline-none transition focus:border-brand-primary"
+                />
+                <button
+                  type="button"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  onClick={() => setShowPassword((current) => !current)}
+                  className="absolute inset-y-0 right-3 flex items-center text-xs font-bold text-lime-800 hover:text-lime-900"
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </div>
             </label>
           )}
           <button
@@ -136,6 +147,7 @@ export default function AdminLoginPage() {
             setPassword("");
             setError("");
             setNotice("");
+            setShowPassword(false);
           }}
           className="mt-4 w-full text-center text-sm font-bold text-lime-800 hover:text-lime-900"
         >

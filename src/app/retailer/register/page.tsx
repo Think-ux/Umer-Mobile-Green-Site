@@ -96,9 +96,9 @@ export default function RetailerRegister() {
           ← Back to retailer information
         </Link>
 
-        <div className="mt-6 rounded-[32px] border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60 md:p-8">
+        <div className="mt-6 rounded-card border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60 md:p-8">
           <div className="mb-8">
-            <p className="text-sm font-black uppercase tracking-[0.2em] text-lime-700">
+            <p className="text-sm font-black uppercase tracking-eyebrow-wide text-lime-700">
               Retailer application
             </p>
             <h1 className="mt-2 text-4xl font-black tracking-tight">Become a Umer retailer</h1>
@@ -181,8 +181,8 @@ export default function RetailerRegister() {
               Submitting an application does not create a login or send an authentication email. The store will contact you using the email or phone above after review.
             </p>
 
-            {notice && <p role="status" className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">{notice}</p>}
-            {error && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</p>}
+            {notice && <p role="status" className="ui-feedback ui-feedback--success">{notice}</p>}
+            {error && <p role="alert" className="ui-feedback ui-feedback--error">{error}</p>}
 
             <button
               disabled={busy}

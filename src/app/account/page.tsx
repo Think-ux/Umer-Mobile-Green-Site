@@ -26,6 +26,9 @@ function accountRole(user: AccountIdentity) {
   if (user.app_metadata.role === "admin") {
     return { label: "Administrator", dashboard: "/admin", dashboardLabel: "Open admin CMS" };
   }
+  if (user.app_metadata.role === "store_manager") {
+    return { label: "Store manager", dashboard: "/admin", dashboardLabel: "Open store dashboard" };
+  }
   if (user.app_metadata.role === "retailer") {
     return { label: "Retailer", dashboard: "/retailer/dashboard", dashboardLabel: "Open retailer dashboard" };
   }
@@ -169,17 +172,17 @@ export default function AccountPage() {
           </p>
 
           {status === "unconfigured" && (
-            <p role="status" className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+            <p role="status" className="ui-feedback ui-feedback--warning mt-5">
               Customer accounts are unavailable because Supabase is not configured.
             </p>
           )}
           {error && (
-            <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+            <p role="alert" className="ui-feedback ui-feedback--error mt-5">
               {error}
             </p>
           )}
           {notice && (
-            <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+            <p role="status" className="ui-feedback ui-feedback--success mt-5">
               {notice}
             </p>
           )}

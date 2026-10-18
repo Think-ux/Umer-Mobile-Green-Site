@@ -1,0 +1,1144 @@
+DESIGN SYSTEM AUDIT
+Project: C:\Users\M.Zohaib\Desktop\Umer Mobile Green Site
+Files scanned: 72
+
+===== Hardcoded colors =====
+src\app\admin\page.tsx:80: <div className="flex flex-col gap-6 bg-[radial-gradient(circle_at_top_right,_rgba(198,255,0,0.18),transparent_28%),linear-gradient(135deg,#0b0d0b_0%,#111712_35%,#0b0d0b_100%)] p-6 sm:p-8 lg:flex-row lg:items-end lg:justify-between">
+src\app\retailer\dashboard\page.tsx:117: <div className="bg-[radial-gradient(circle_at_top_right,_rgba(198,255,0,0.18),transparent_30%),linear-gradient(135deg,#101612_0%,#171d1a_100%)] p-6 sm:p-9">
+src\app\retailer\page.tsx:26: <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(198,255,0,0.2),transparent_28%),radial-gradient(circle_at_bottom_left,_rgba(198,255,0,0.12),transparent_20%)]" />
+src\app\globals.css:4: --color-slate-50: #f5f7f5;
+src\app\globals.css:5: --color-slate-100: #f3f4f6;
+src\app\globals.css:6: --color-slate-200: #e5e7eb;
+src\app\globals.css:7: --color-slate-300: #d1d5db;
+src\app\globals.css:8: --color-slate-400: #9ca3af;
+src\app\globals.css:9: --color-slate-500: #6b7280;
+src\app\globals.css:10: --color-slate-600: #4b5563;
+src\app\globals.css:11: --color-slate-700: #374151;
+src\app\globals.css:12: --color-slate-800: #191d19;
+src\app\globals.css:13: --color-slate-900: #111412;
+src\app\globals.css:14: --color-slate-950: #080a09;
+src\app\globals.css:16: --color-lime-50: #f7fee7;
+src\app\globals.css:17: --color-lime-100: #ecfccb;
+src\app\globals.css:18: --color-lime-200: #d9f99d;
+src\app\globals.css:19: --color-lime-300: #d6ff66;
+src\app\globals.css:20: --color-lime-400: #c8ff00;
+src\app\globals.css:21: --color-lime-500: #b5eb00;
+src\app\globals.css:22: --color-lime-600: #8fbf00;
+src\app\globals.css:23: --color-lime-700: #617f00;
+src\app\globals.css:24: --color-lime-800: #4d6400;
+src\app\globals.css:25: --color-lime-900: #405300;
+src\app\globals.css:26: --color-lime-950: #202c08;
+src\app\globals.css:28: --color-amber-50: #fffbeb;
+src\app\globals.css:29: --color-amber-100: #fef3c7;
+src\app\globals.css:30: --color-amber-200: #fde68a;
+src\app\globals.css:31: --color-amber-300: #fcd34d;
+src\app\globals.css:32: --color-amber-400: #fbbf24;
+src\app\globals.css:33: --color-amber-500: #f59e0b;
+src\app\globals.css:34: --color-amber-600: #d97706;
+src\app\globals.css:35: --color-amber-700: #b45309;
+src\app\globals.css:36: --color-amber-800: #92400e;
+src\app\globals.css:37: --color-amber-900: #78350f;
+src\app\globals.css:38: --color-amber-950: #451a03;
+src\app\globals.css:40: --color-green-50: #f0fdf4;
+src\app\globals.css:41: --color-green-100: #dcfce7;
+src\app\globals.css:42: --color-green-200: #bbf7d0;
+src\app\globals.css:43: --color-green-300: #86efac;
+src\app\globals.css:44: --color-green-400: #4ade80;
+src\app\globals.css:45: --color-green-500: #22c55e;
+src\app\globals.css:46: --color-green-600: #16a34a;
+src\app\globals.css:47: --color-green-700: #15803d;
+src\app\globals.css:48: --color-green-800: #166534;
+src\app\globals.css:49: --color-green-900: #14532d;
+src\app\globals.css:50: --color-green-950: #052e16;
+src\app\globals.css:52: --color-emerald-50: #ecfdf5;
+src\app\globals.css:53: --color-emerald-100: #d1fae5;
+src\app\globals.css:54: --color-emerald-200: #a7f3d0;
+src\app\globals.css:55: --color-emerald-300: #6ee7b7;
+src\app\globals.css:56: --color-emerald-400: #34d399;
+src\app\globals.css:57: --color-emerald-500: #10b981;
+src\app\globals.css:58: --color-emerald-600: #059669;
+src\app\globals.css:59: --color-emerald-700: #047857;
+src\app\globals.css:60: --color-emerald-800: #065f46;
+src\app\globals.css:61: --color-emerald-900: #064e3b;
+src\app\globals.css:62: --color-emerald-950: #022c22;
+src\app\globals.css:64: --color-red-50: #fef2f2;
+src\app\globals.css:65: --color-red-100: #fee2e2;
+src\app\globals.css:66: --color-red-200: #fecaca;
+src\app\globals.css:67: --color-red-300: #fca5a5;
+src\app\globals.css:68: --color-red-400: #f87171;
+src\app\globals.css:69: --color-red-500: #ef4444;
+src\app\globals.css:70: --color-red-600: #dc2626;
+src\app\globals.css:71: --color-red-700: #b91c1c;
+src\app\globals.css:72: --color-red-800: #991b1b;
+src\app\globals.css:73: --color-red-900: #7f1d1d;
+src\app\globals.css:74: --color-red-950: #450a0a;
+src\app\globals.css:76: --color-blue-50: #eff6ff;
+src\app\globals.css:77: --color-blue-100: #dbeafe;
+src\app\globals.css:78: --color-blue-200: #bfdbfe;
+src\app\globals.css:79: --color-blue-300: #93c5fd;
+src\app\globals.css:80: --color-blue-400: #60a5fa;
+src\app\globals.css:81: --color-blue-500: #3b82f6;
+src\app\globals.css:82: --color-blue-600: #2563eb;
+src\app\globals.css:83: --color-blue-700: #1d4ed8;
+src\app\globals.css:84: --color-blue-800: #1e40af;
+src\app\globals.css:85: --color-blue-900: #1e3a8a;
+src\app\globals.css:86: --color-blue-950: #172554;
+src\app\globals.css:88: --color-sky-50: #f0f9ff;
+src\app\globals.css:89: --color-sky-100: #e0f2fe;
+src\app\globals.css:90: --color-sky-200: #bae6fd;
+src\app\globals.css:91: --color-sky-300: #7dd3fc;
+src\app\globals.css:92: --color-sky-400: #38bdf8;
+src\app\globals.css:93: --color-sky-500: #0ea5e9;
+src\app\globals.css:94: --color-sky-600: #0284c7;
+src\app\globals.css:95: --color-sky-700: #0369a1;
+src\app\globals.css:96: --color-sky-800: #075985;
+src\app\globals.css:97: --color-sky-900: #0c4a6e;
+src\app\globals.css:98: --color-sky-950: #082f49;
+src\app\globals.css:100: --color-violet-50: #f5f3ff;
+src\app\globals.css:101: --color-violet-100: #ede9fe;
+src\app\globals.css:102: --color-violet-200: #ddd6fe;
+src\app\globals.css:103: --color-violet-300: #c4b5fd;
+src\app\globals.css:104: --color-violet-400: #a78bfa;
+src\app\globals.css:105: --color-violet-500: #8b5cf6;
+src\app\globals.css:106: --color-violet-600: #7c3aed;
+src\app\globals.css:107: --color-violet-700: #6d28d9;
+src\app\globals.css:108: --color-violet-800: #5b21b6;
+src\app\globals.css:109: --color-violet-900: #4c1d95;
+src\app\globals.css:110: --color-violet-950: #2e1065;
+src\app\globals.css:294: --market-canvas: #f5f7f5;
+src\app\globals.css:295: --market-elevated: #191d19;
+src\app\globals.css:296: --market-dark: #111412;
+src\app\globals.css:297: --market-black: #080a09;
+src\app\globals.css:299: --foreground: #111827;
+src\app\globals.css:303: --text-secondary: #6b7280;
+src\app\globals.css:305: --surface-base: #ffffff;
+src\app\globals.css:310: --border: #e5e7eb;
+src\app\globals.css:447: --ds-shadow-xs: 0 1px 2px rgb(15 23 42 / 5%);
+src\app\globals.css:448: --ds-shadow-sm: 0 1px 2px rgb(15 23 42 / 5%);
+src\app\globals.css:449: --ds-shadow-md: 0 4px 6px -1px rgb(15 23 42 / 10%),
+src\app\globals.css:450: 0 2px 4px -2px rgb(15 23 42 / 10%);
+src\app\globals.css:451: --ds-shadow-lg: 0 10px 15px -3px rgb(15 23 42 / 10%),
+src\app\globals.css:452: 0 4px 6px -4px rgb(15 23 42 / 10%);
+src\app\globals.css:453: --ds-shadow-xl: 0 20px 25px -5px rgb(15 23 42 / 10%),
+src\app\globals.css:454: 0 8px 10px -6px rgb(15 23 42 / 10%);
+src\app\globals.css:455: --ds-shadow-confirmation: 0 20px 60px rgb(15 23 42 / 8%);
+src\app\globals.css:461: --market-canvas: #0d110e;
+src\app\globals.css:462: --market-elevated: #242b25;
+src\app\globals.css:463: --market-dark: #151b16;
+src\app\globals.css:464: --market-black: #090c0a;
+src\app\globals.css:465: --background: #0d110e;
+src\app\globals.css:466: --foreground: #edf2ee;
+src\app\globals.css:467: --surface: #151b16;
+src\app\globals.css:468: --surface-base: #151b16;
+src\app\globals.css:469: --text-secondary: #aab5ac;
+src\app\globals.css:470: --border: #303a32;
+src\app\globals.css:471: --canvas-muted: #111713;
+src\app\globals.css:496: background-color: #151b16;
+src\app\globals.css:500: background-color: #202822;
+src\app\globals.css:506: background-color: #090c0a;
+src\app\globals.css:756: border-color: rgb(255 255 255 / 30%);
+src\app\globals.css:757: background: rgb(255 255 255 / 8%);
+src\app\globals.css:763: border-color: rgb(255 255 255 / 60%);
+src\app\globals.css:764: background: rgb(255 255 255 / 15%);
+
+===== Inline styles =====
+src\components\BannerCarousel.tsx:54: style={{ transform: `translateX(-${visibleIndex * 100}%)` }}
+src\components\BannerCarousel.tsx:71: style={{
+src\components\BannerDetailClient.tsx:31: style={{ backgroundImage: `url("${banner.image_url}")` }}
+src\components\ProductDetailClient.tsx:284: style={{ width: `${fill * 100}%` }}
+src\components\StarRatingDisplay.tsx:22: style={{ width: `${fill * 100}%` }}
+
+===== Arbitrary Tailwind colors =====
+No matches found.
+
+===== Arbitrary Tailwind sizing/spacing =====
+No matches found.
+
+===== Arbitrary typography =====
+src\app\admin\page.tsx:82: <p className="text-xs font-black uppercase tracking-[0.24em] text-lime-300">
+src\app\admin\page.tsx:96: className={`inline-flex rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[0.14em] ${
+src\app\admin\page.tsx:120: <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">
+src\app\admin\page.tsx:126: className={`rounded-full px-2 py-1 text-[10px] font-black uppercase tracking-[0.14em] ${
+src\app\admin\page.tsx:145: <p className="text-[11px] font-black uppercase tracking-[0.2em] text-lime-700">
+src\app\admin\page.tsx:166: <p className="text-[11px] font-black uppercase tracking-[0.2em] text-lime-700">
+src\app\retailer\dashboard\page.tsx:96: <p className="text-xs font-black uppercase tracking-[0.2em] text-lime-700">Retailer account</p>
+src\app\retailer\dashboard\page.tsx:118: <p className="text-sm font-black uppercase tracking-[0.2em] text-lime-300">Retailer account</p>
+src\app\retailer\dashboard\page.tsx:138: <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">{label}</p>
+src\app\retailer\dashboard\page.tsx:141: <span className={`rounded-full px-2 py-1 text-[10px] font-black uppercase tracking-[0.14em] ${
+src\app\retailer\pending\page.tsx:13: <p className="mt-6 text-sm font-black uppercase tracking-[0.2em] text-lime-700">
+src\app\retailer\pending\page.tsx:24: <strong className="rounded-full bg-amber-100 px-3 py-1 text-xs font-black uppercase tracking-[0.16em] text-amber-800">
+src\app\retailer\register\page.tsx:101: <p className="text-sm font-black uppercase tracking-[0.2em] text-lime-700">
+src\app\retailer\page.tsx:31: <div className="inline-flex rounded-full border border-lime-400/40 bg-lime-400/10 px-3 py-1.5 text-sm font-black uppercase tracking-[0.18em] text-lime-300">
+src\app\retailer\page.tsx:91: <p className="text-sm font-black uppercase tracking-[0.2em] text-lime-700">
+src\app\retailer\page.tsx:114: <p className="text-sm font-black uppercase tracking-[0.2em] text-lime-700">
+src\app\retailer\page.tsx:138: <p className="text-sm font-black uppercase tracking-[0.2em] text-lime-100">
+src\app\page.tsx:107: <span className="font-semibold uppercase tracking-[0.18em] text-white/60">Popular:</span>
+src\components\AdminShell.tsx:47: className={`mb-2 px-3 text-[10px] font-black uppercase tracking-[0.2em] ${
+src\components\AdminShell.tsx:178: <p className="text-xs font-black uppercase tracking-[0.2em] text-lime-700">
+src\components\AdminShell.tsx:208: <p className="text-[10px] font-black uppercase tracking-[0.24em] text-lime-300">
+src\components\AdminShell.tsx:248: <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
+
+===== CSS variables/tokens =====
+src\app\globals.css:4: --color-slate-50: #f5f7f5;
+src\app\globals.css:5: --color-slate-100: #f3f4f6;
+src\app\globals.css:6: --color-slate-200: #e5e7eb;
+src\app\globals.css:7: --color-slate-300: #d1d5db;
+src\app\globals.css:8: --color-slate-400: #9ca3af;
+src\app\globals.css:9: --color-slate-500: #6b7280;
+src\app\globals.css:10: --color-slate-600: #4b5563;
+src\app\globals.css:11: --color-slate-700: #374151;
+src\app\globals.css:12: --color-slate-800: #191d19;
+src\app\globals.css:13: --color-slate-900: #111412;
+src\app\globals.css:14: --color-slate-950: #080a09;
+src\app\globals.css:16: --color-lime-50: #f7fee7;
+src\app\globals.css:17: --color-lime-100: #ecfccb;
+src\app\globals.css:18: --color-lime-200: #d9f99d;
+src\app\globals.css:19: --color-lime-300: #d6ff66;
+src\app\globals.css:20: --color-lime-400: #c8ff00;
+src\app\globals.css:21: --color-lime-500: #b5eb00;
+src\app\globals.css:22: --color-lime-600: #8fbf00;
+src\app\globals.css:23: --color-lime-700: #617f00;
+src\app\globals.css:24: --color-lime-800: #4d6400;
+src\app\globals.css:25: --color-lime-900: #405300;
+src\app\globals.css:26: --color-lime-950: #202c08;
+src\app\globals.css:28: --color-amber-50: #fffbeb;
+src\app\globals.css:29: --color-amber-100: #fef3c7;
+src\app\globals.css:30: --color-amber-200: #fde68a;
+src\app\globals.css:31: --color-amber-300: #fcd34d;
+src\app\globals.css:32: --color-amber-400: #fbbf24;
+src\app\globals.css:33: --color-amber-500: #f59e0b;
+src\app\globals.css:34: --color-amber-600: #d97706;
+src\app\globals.css:35: --color-amber-700: #b45309;
+src\app\globals.css:36: --color-amber-800: #92400e;
+src\app\globals.css:37: --color-amber-900: #78350f;
+src\app\globals.css:38: --color-amber-950: #451a03;
+src\app\globals.css:40: --color-green-50: #f0fdf4;
+src\app\globals.css:41: --color-green-100: #dcfce7;
+src\app\globals.css:42: --color-green-200: #bbf7d0;
+src\app\globals.css:43: --color-green-300: #86efac;
+src\app\globals.css:44: --color-green-400: #4ade80;
+src\app\globals.css:45: --color-green-500: #22c55e;
+src\app\globals.css:46: --color-green-600: #16a34a;
+src\app\globals.css:47: --color-green-700: #15803d;
+src\app\globals.css:48: --color-green-800: #166534;
+src\app\globals.css:49: --color-green-900: #14532d;
+src\app\globals.css:50: --color-green-950: #052e16;
+src\app\globals.css:52: --color-emerald-50: #ecfdf5;
+src\app\globals.css:53: --color-emerald-100: #d1fae5;
+src\app\globals.css:54: --color-emerald-200: #a7f3d0;
+src\app\globals.css:55: --color-emerald-300: #6ee7b7;
+src\app\globals.css:56: --color-emerald-400: #34d399;
+src\app\globals.css:57: --color-emerald-500: #10b981;
+src\app\globals.css:58: --color-emerald-600: #059669;
+src\app\globals.css:59: --color-emerald-700: #047857;
+src\app\globals.css:60: --color-emerald-800: #065f46;
+src\app\globals.css:61: --color-emerald-900: #064e3b;
+src\app\globals.css:62: --color-emerald-950: #022c22;
+src\app\globals.css:64: --color-red-50: #fef2f2;
+src\app\globals.css:65: --color-red-100: #fee2e2;
+src\app\globals.css:66: --color-red-200: #fecaca;
+src\app\globals.css:67: --color-red-300: #fca5a5;
+src\app\globals.css:68: --color-red-400: #f87171;
+src\app\globals.css:69: --color-red-500: #ef4444;
+src\app\globals.css:70: --color-red-600: #dc2626;
+src\app\globals.css:71: --color-red-700: #b91c1c;
+src\app\globals.css:72: --color-red-800: #991b1b;
+src\app\globals.css:73: --color-red-900: #7f1d1d;
+src\app\globals.css:74: --color-red-950: #450a0a;
+src\app\globals.css:76: --color-blue-50: #eff6ff;
+src\app\globals.css:77: --color-blue-100: #dbeafe;
+src\app\globals.css:78: --color-blue-200: #bfdbfe;
+src\app\globals.css:79: --color-blue-300: #93c5fd;
+src\app\globals.css:80: --color-blue-400: #60a5fa;
+src\app\globals.css:81: --color-blue-500: #3b82f6;
+src\app\globals.css:82: --color-blue-600: #2563eb;
+src\app\globals.css:83: --color-blue-700: #1d4ed8;
+src\app\globals.css:84: --color-blue-800: #1e40af;
+src\app\globals.css:85: --color-blue-900: #1e3a8a;
+src\app\globals.css:86: --color-blue-950: #172554;
+src\app\globals.css:88: --color-sky-50: #f0f9ff;
+src\app\globals.css:89: --color-sky-100: #e0f2fe;
+src\app\globals.css:90: --color-sky-200: #bae6fd;
+src\app\globals.css:91: --color-sky-300: #7dd3fc;
+src\app\globals.css:92: --color-sky-400: #38bdf8;
+src\app\globals.css:93: --color-sky-500: #0ea5e9;
+src\app\globals.css:94: --color-sky-600: #0284c7;
+src\app\globals.css:95: --color-sky-700: #0369a1;
+src\app\globals.css:96: --color-sky-800: #075985;
+src\app\globals.css:97: --color-sky-900: #0c4a6e;
+src\app\globals.css:98: --color-sky-950: #082f49;
+src\app\globals.css:100: --color-violet-50: #f5f3ff;
+src\app\globals.css:101: --color-violet-100: #ede9fe;
+src\app\globals.css:102: --color-violet-200: #ddd6fe;
+src\app\globals.css:103: --color-violet-300: #c4b5fd;
+src\app\globals.css:104: --color-violet-400: #a78bfa;
+src\app\globals.css:105: --color-violet-500: #8b5cf6;
+src\app\globals.css:106: --color-violet-600: #7c3aed;
+src\app\globals.css:107: --color-violet-700: #6d28d9;
+src\app\globals.css:108: --color-violet-800: #5b21b6;
+src\app\globals.css:109: --color-violet-900: #4c1d95;
+src\app\globals.css:110: --color-violet-950: #2e1065;
+src\app\globals.css:112: --spacing: 0.25rem;
+src\app\globals.css:113: --spacing-ui-xs: var(--space-1);
+src\app\globals.css:114: --spacing-ui-sm: var(--space-2);
+src\app\globals.css:115: --spacing-ui-md: var(--space-4);
+src\app\globals.css:116: --spacing-ui-lg: var(--space-6);
+src\app\globals.css:117: --spacing-ui-xl: var(--space-8);
+src\app\globals.css:118: --spacing-ui-2xl: var(--space-12);
+src\app\globals.css:122: --font-sans: var(--font-family-sans);
+src\app\globals.css:124: --color-brand-primary: var(--brand-primary);
+src\app\globals.css:125: --color-brand-primary-hover: var(--brand-primary-hover);
+src\app\globals.css:126: --color-brand-primary-foreground: var(--brand-primary-foreground);
+src\app\globals.css:127: --color-market-50: var(--market-canvas);
+src\app\globals.css:128: --color-market-800: var(--market-elevated);
+src\app\globals.css:129: --color-market-900: var(--market-dark);
+src\app\globals.css:130: --color-market-950: var(--market-black);
+src\app\globals.css:131: --color-canvas: var(--background);
+src\app\globals.css:132: --color-canvas-muted: var(--canvas-muted);
+src\app\globals.css:133: --color-surface: var(--surface);
+src\app\globals.css:134: --color-white: var(--surface);
+src\app\globals.css:135: --color-content-primary: var(--foreground);
+src\app\globals.css:136: --color-content-secondary: var(--text-secondary);
+src\app\globals.css:137: --color-border-default: var(--border);
+src\app\globals.css:138: --color-success: var(--success);
+src\app\globals.css:139: --color-error: var(--error);
+src\app\globals.css:140: --color-warning: var(--warning);
+src\app\globals.css:141: --color-info: var(--info);
+src\app\globals.css:143: --text-xs: var(--type-xs);
+src\app\globals.css:144: --text-xs--line-height: var(--leading-xs);
+src\app\globals.css:145: --text-sm: var(--type-sm);
+src\app\globals.css:146: --text-sm--line-height: var(--leading-sm);
+src\app\globals.css:147: --text-base: var(--type-base);
+src\app\globals.css:148: --text-base--line-height: var(--leading-base);
+src\app\globals.css:149: --text-lg: var(--type-lg);
+src\app\globals.css:150: --text-lg--line-height: var(--leading-lg);
+src\app\globals.css:151: --text-xl: var(--type-xl);
+src\app\globals.css:152: --text-xl--line-height: var(--leading-xl);
+src\app\globals.css:153: --text-2xl: var(--type-2xl);
+src\app\globals.css:154: --text-2xl--line-height: var(--leading-2xl);
+src\app\globals.css:155: --text-3xl: var(--type-3xl);
+src\app\globals.css:156: --text-3xl--line-height: var(--leading-3xl);
+src\app\globals.css:157: --text-4xl: var(--type-4xl);
+src\app\globals.css:158: --text-4xl--line-height: var(--leading-4xl);
+src\app\globals.css:159: --text-5xl: var(--type-5xl);
+src\app\globals.css:160: --text-5xl--line-height: var(--leading-5xl);
+src\app\globals.css:161: --text-6xl: var(--type-6xl);
+src\app\globals.css:162: --text-6xl--line-height: var(--leading-6xl);
+src\app\globals.css:163: --text-7xl: var(--type-7xl);
+src\app\globals.css:164: --text-7xl--line-height: var(--leading-7xl);
+src\app\globals.css:165: --text-8xl: var(--type-8xl);
+src\app\globals.css:166: --text-8xl--line-height: var(--leading-8xl);
+src\app\globals.css:167: --text-2xs: var(--type-2xs);
+src\app\globals.css:168: --text-2xs--line-height: var(--leading-2xs);
+src\app\globals.css:169: --text-3xs: var(--type-3xs);
+src\app\globals.css:170: --text-3xs--line-height: var(--leading-3xs);
+src\app\globals.css:172: --spacing-page-content: var(--size-page-content);
+src\app\globals.css:173: --spacing-shop-content: var(--size-shop-content);
+src\app\globals.css:174: --spacing-header: var(--size-header);
+src\app\globals.css:175: --spacing-hero: var(--size-hero);
+src\app\globals.css:176: --spacing-hero-lg: var(--size-hero-lg);
+src\app\globals.css:177: --spacing-dropdown-height: var(--size-dropdown-height);
+src\app\globals.css:178: --spacing-dropdown-width: var(--size-dropdown-width);
+src\app\globals.css:179: --spacing-order-table: var(--size-order-table);
+src\app\globals.css:180: --spacing-filter-select: var(--size-filter-select);
+src\app\globals.css:181: --border-width-active-nav: var(--border-active-nav);
+src\app\globals.css:182: --object-position-hero: var(--position-hero);
+src\app\globals.css:184: --font-weight-normal: var(--weight-normal);
+src\app\globals.css:185: --font-weight-medium: var(--weight-medium);
+src\app\globals.css:186: --font-weight-semibold: var(--weight-semibold);
+src\app\globals.css:187: --font-weight-bold: var(--weight-bold);
+src\app\globals.css:188: --font-weight-extrabold: var(--weight-extrabold);
+src\app\globals.css:189: --font-weight-black: var(--weight-black);
+src\app\globals.css:191: --leading-none: var(--line-height-none);
+src\app\globals.css:192: --leading-tight: var(--line-height-tight);
+src\app\globals.css:193: --leading-snug: var(--line-height-snug);
+src\app\globals.css:194: --leading-normal: var(--line-height-normal);
+src\app\globals.css:195: --leading-relaxed: var(--line-height-relaxed);
+src\app\globals.css:196: --leading-loose: var(--line-height-loose);
+src\app\globals.css:198: --tracking-tighter: var(--letter-spacing-tighter);
+src\app\globals.css:199: --tracking-tight: var(--letter-spacing-tight);
+src\app\globals.css:200: --tracking-normal: var(--letter-spacing-normal);
+src\app\globals.css:201: --tracking-wide: var(--letter-spacing-wide);
+src\app\globals.css:202: --tracking-wider: var(--letter-spacing-wider);
+src\app\globals.css:203: --tracking-widest: var(--letter-spacing-widest);
+src\app\globals.css:204: --tracking-label: var(--letter-spacing-label);
+src\app\globals.css:205: --tracking-eyebrow-compact: var(--letter-spacing-eyebrow-compact);
+src\app\globals.css:206: --tracking-eyebrow: var(--letter-spacing-eyebrow);
+src\app\globals.css:207: --tracking-eyebrow-wide: var(--letter-spacing-eyebrow-wide);
+src\app\globals.css:208: --tracking-eyebrow-prominent: var(--letter-spacing-eyebrow-prominent);
+src\app\globals.css:209: --tracking-eyebrow-display: var(--letter-spacing-eyebrow-display);
+src\app\globals.css:210: --tracking-eyebrow-strong: var(--letter-spacing-eyebrow-strong);
+src\app\globals.css:212: --leading-display: var(--line-height-display);
+src\app\globals.css:213: --aspect-banner-mobile: var(--ratio-banner-mobile);
+src\app\globals.css:214: --aspect-banner-tablet: var(--ratio-banner-tablet);
+src\app\globals.css:215: --aspect-banner-desktop: var(--ratio-banner-desktop);
+src\app\globals.css:216: --aspect-banner-card-mobile: var(--ratio-banner-card-mobile);
+src\app\globals.css:217: --aspect-banner-card-tablet: var(--ratio-banner-card-tablet);
+src\app\globals.css:218: --aspect-banner-card-desktop: var(--ratio-banner-card-desktop);
+src\app\globals.css:219: --aspect-banner-carousel-mobile: var(--ratio-banner-carousel-mobile);
+src\app\globals.css:220: --aspect-banner-carousel-tablet: var(--ratio-banner-carousel-tablet);
+src\app\globals.css:222: --radius-xs: var(--ds-radius-xs);
+src\app\globals.css:223: --radius-sm: var(--ds-radius-sm);
+src\app\globals.css:224: --radius-md: var(--ds-radius-md);
+src\app\globals.css:225: --radius-lg: var(--ds-radius-lg);
+src\app\globals.css:226: --radius-xl: var(--ds-radius-xl);
+src\app\globals.css:227: --radius-2xl: var(--ds-radius-2xl);
+src\app\globals.css:228: --radius-3xl: var(--ds-radius-3xl);
+src\app\globals.css:229: --radius-card: var(--ds-radius-card);
+src\app\globals.css:231: --shadow-xs: var(--ds-shadow-xs);
+src\app\globals.css:232: --shadow-sm: var(--ds-shadow-sm);
+src\app\globals.css:233: --shadow-md: var(--ds-shadow-md);
+src\app\globals.css:234: --shadow-lg: var(--ds-shadow-lg);
+src\app\globals.css:235: --shadow-xl: var(--ds-shadow-xl);
+src\app\globals.css:236: --shadow-confirmation: var(--ds-shadow-confirmation);
+src\app\globals.css:240: grid-template-columns: var(--layout-footer);
+src\app\globals.css:244: grid-template-columns: var(--layout-category-browser);
+src\app\globals.css:248: grid-template-columns: var(--layout-product-detail);
+src\app\globals.css:252: grid-template-columns: var(--layout-cart);
+src\app\globals.css:256: grid-template-columns: var(--layout-order-lookup);
+src\app\globals.css:260: grid-template-columns: var(--layout-checkout);
+src\app\globals.css:264: grid-template-columns: var(--layout-admin-content);
+src\app\globals.css:268: grid-template-columns: var(--layout-admin-category-form);
+src\app\globals.css:272: grid-template-columns: var(--layout-admin-banner-row);
+src\app\globals.css:276: grid-template-columns: var(--layout-admin-retailer-form);
+src\app\globals.css:280: grid-template-columns: var(--layout-retailer-hero);
+src\app\globals.css:284: grid-template-columns: var(--layout-category-menu);
+src\app\globals.css:288: grid-template-columns: var(--layout-home-hero);
+src\app\globals.css:294: --market-canvas: #f5f7f5;
+src\app\globals.css:295: --market-elevated: #191d19;
+src\app\globals.css:296: --market-dark: #111412;
+src\app\globals.css:297: --market-black: #080a09;
+src\app\globals.css:298: --background: var(--market-canvas);
+src\app\globals.css:299: --foreground: #111827;
+src\app\globals.css:300: --brand-primary: var(--color-lime-400);
+src\app\globals.css:301: --brand-primary-hover: var(--color-lime-500);
+src\app\globals.css:302: --brand-primary-foreground: var(--market-black);
+src\app\globals.css:303: --text-secondary: #6b7280;
+src\app\globals.css:304: --surface: var(--surface-base);
+src\app\globals.css:305: --surface-base: #ffffff;
+src\app\globals.css:306: --success: var(--color-green-600);
+src\app\globals.css:307: --error: var(--color-red-600);
+src\app\globals.css:308: --warning: var(--color-amber-600);
+src\app\globals.css:309: --info: var(--color-blue-600);
+src\app\globals.css:310: --border: #e5e7eb;
+src\app\globals.css:311: --font-family-sans: Inter, ui-sans-serif, system-ui, -apple-system,
+src\app\globals.css:314: --space-0: 0;
+src\app\globals.css:315: --space-0-5: 0.125rem;
+src\app\globals.css:316: --space-1: 0.25rem;
+src\app\globals.css:317: --space-1-5: 0.375rem;
+src\app\globals.css:318: --space-2: 0.5rem;
+src\app\globals.css:319: --space-2-5: 0.625rem;
+src\app\globals.css:320: --space-3: 0.75rem;
+src\app\globals.css:321: --space-4: 1rem;
+src\app\globals.css:322: --space-5: 1.25rem;
+src\app\globals.css:323: --space-6: 1.5rem;
+src\app\globals.css:324: --space-8: 2rem;
+src\app\globals.css:325: --space-10: 2.5rem;
+src\app\globals.css:326: --space-12: 3rem;
+src\app\globals.css:327: --space-16: 4rem;
+src\app\globals.css:328: --space-20: 5rem;
+src\app\globals.css:329: --space-24: 6rem;
+src\app\globals.css:331: --ds-radius-xs: 0.125rem;
+src\app\globals.css:332: --ds-radius-sm: 0.25rem;
+src\app\globals.css:333: --ds-radius-md: 0.375rem;
+src\app\globals.css:334: --ds-radius-lg: 0.5rem;
+src\app\globals.css:335: --ds-radius-xl: 0.75rem;
+src\app\globals.css:336: --ds-radius-2xl: 1rem;
+src\app\globals.css:337: --ds-radius-3xl: 1.5rem;
+src\app\globals.css:338: --ds-radius-card: 2rem;
+src\app\globals.css:339: --ds-radius-full: 9999px;
+src\app\globals.css:340: --border-active-nav: 3px;
+src\app\globals.css:341: --position-hero: 68% center;
+src\app\globals.css:343: --size-page-content: 65vh;
+src\app\globals.css:344: --size-shop-content: 60vh;
+src\app\globals.css:345: --size-header: 5.125rem;
+src\app\globals.css:346: --size-hero: 26rem;
+src\app\globals.css:347: --size-hero-lg: 30rem;
+src\app\globals.css:348: --size-dropdown-height: 70vh;
+src\app\globals.css:349: --size-dropdown-width: min(56rem, calc(100vw - 2 * var(--space-4)));
+src\app\globals.css:350: --size-order-table: 56.25rem;
+src\app\globals.css:351: --size-filter-select: 190px;
+src\app\globals.css:352: --canvas-muted: var(--color-market-50);
+src\app\globals.css:354: --type-xs: 0.75rem;
+src\app\globals.css:355: --type-2xs: 0.6875rem;
+src\app\globals.css:356: --type-3xs: 0.625rem;
+src\app\globals.css:357: --type-sm: 0.875rem;
+src\app\globals.css:358: --type-base: 1rem;
+src\app\globals.css:359: --type-lg: 1.125rem;
+src\app\globals.css:360: --type-xl: 1.25rem;
+src\app\globals.css:361: --type-2xl: 1.5rem;
+src\app\globals.css:362: --type-3xl: 1.875rem;
+src\app\globals.css:363: --type-4xl: 2.25rem;
+src\app\globals.css:364: --type-5xl: 3rem;
+src\app\globals.css:365: --type-6xl: 3.75rem;
+src\app\globals.css:366: --type-7xl: 4.5rem;
+src\app\globals.css:367: --type-8xl: 6rem;
+src\app\globals.css:369: --leading-xs: 1rem;
+src\app\globals.css:370: --leading-2xs: 1rem;
+src\app\globals.css:371: --leading-3xs: 1rem;
+src\app\globals.css:372: --leading-sm: 1.25rem;
+src\app\globals.css:373: --leading-base: 1.5rem;
+src\app\globals.css:374: --leading-lg: 1.75rem;
+src\app\globals.css:375: --leading-xl: 1.75rem;
+src\app\globals.css:376: --leading-2xl: 2rem;
+src\app\globals.css:377: --leading-3xl: 2.25rem;
+src\app\globals.css:378: --leading-4xl: 2.5rem;
+src\app\globals.css:379: --leading-5xl: 1;
+src\app\globals.css:380: --leading-6xl: 1;
+src\app\globals.css:381: --leading-7xl: 1;
+src\app\globals.css:382: --leading-8xl: 1;
+src\app\globals.css:383: --line-height-none: 1;
+src\app\globals.css:384: --line-height-tight: 1.25;
+src\app\globals.css:385: --line-height-snug: 1.375;
+src\app\globals.css:386: --line-height-normal: 1.5;
+src\app\globals.css:387: --line-height-relaxed: 1.625;
+src\app\globals.css:388: --line-height-loose: 2;
+src\app\globals.css:390: --letter-spacing-tighter: -0.05em;
+src\app\globals.css:391: --letter-spacing-tight: -0.025em;
+src\app\globals.css:392: --letter-spacing-normal: 0;
+src\app\globals.css:393: --letter-spacing-wide: 0.025em;
+src\app\globals.css:394: --letter-spacing-wider: 0.05em;
+src\app\globals.css:395: --letter-spacing-widest: 0.1em;
+src\app\globals.css:396: --letter-spacing-label: 0.15em;
+src\app\globals.css:397: --letter-spacing-eyebrow-compact: 0.16em;
+src\app\globals.css:398: --letter-spacing-eyebrow: 0.18em;
+src\app\globals.css:399: --letter-spacing-eyebrow-wide: 0.2em;
+src\app\globals.css:400: --letter-spacing-eyebrow-prominent: 0.22em;
+src\app\globals.css:401: --letter-spacing-eyebrow-display: 0.24em;
+src\app\globals.css:402: --letter-spacing-eyebrow-strong: 0.25em;
+src\app\globals.css:403: --letter-spacing-heading: -0.035em;
+src\app\globals.css:404: --line-height-display: 0.98;
+src\app\globals.css:405: --line-height-page-heading: 1.15;
+src\app\globals.css:406: --duration-instant: 0.01ms;
+src\app\globals.css:407: --duration-fast: 160ms;
+src\app\globals.css:408: --duration-enter: 650ms;
+src\app\globals.css:409: --duration-drift: 18s;
+src\app\globals.css:410: --focus-outline-width: 3px;
+src\app\globals.css:411: --focus-outline-offset: 3px;
+src\app\globals.css:412: --outline-ring-width: 3px;
+src\app\globals.css:413: --outline-ring-opacity: 15%;
+src\app\globals.css:414: --banner-overlay-strong: color-mix(in srgb, var(--foreground) 78%, transparent);
+src\app\globals.css:415: --banner-overlay-soft: color-mix(in srgb, var(--foreground) 8%, transparent);
+src\app\globals.css:417: --layout-footer: 1.2fr repeat(4, 1fr);
+src\app\globals.css:418: --layout-category-browser: 15.625rem minmax(0, 1fr);
+src\app\globals.css:419: --layout-product-detail: 1.05fr 0.95fr;
+src\app\globals.css:420: --layout-cart: 1fr 22.5rem;
+src\app\globals.css:421: --layout-order-lookup: 1fr 1fr auto;
+src\app\globals.css:422: --layout-checkout: minmax(0, 1fr) 23.75rem;
+src\app\globals.css:423: --layout-admin-content: 1.1fr 0.9fr;
+src\app\globals.css:424: --layout-admin-category-form: 1fr 7.5rem auto auto;
+src\app\globals.css:425: --layout-admin-banner-row: 7rem 1fr auto;
+src\app\globals.css:426: --layout-admin-retailer-form: 1.5fr 1fr auto;
+src\app\globals.css:427: --layout-retailer-hero: 1.2fr 0.8fr;
+src\app\globals.css:428: --layout-category-menu: minmax(13rem, 0.8fr) minmax(0, 1.2fr);
+src\app\globals.css:429: --layout-home-hero: minmax(0, 1fr) minmax(15rem, 0.55fr);
+src\app\globals.css:431: --ratio-banner-mobile: 2 / 1;
+src\app\globals.css:432: --ratio-banner-tablet: 8 / 3;
+src\app\globals.css:433: --ratio-banner-desktop: 16 / 5;
+src\app\globals.css:434: --ratio-banner-card-mobile: 16 / 9;
+src\app\globals.css:435: --ratio-banner-card-tablet: 16 / 7;
+src\app\globals.css:436: --ratio-banner-card-desktop: 16 / 6;
+src\app\globals.css:437: --ratio-banner-carousel-mobile: 16 / 8;
+src\app\globals.css:438: --ratio-banner-carousel-tablet: 16 / 6;
+src\app\globals.css:440: --weight-normal: 400;
+src\app\globals.css:441: --weight-medium: 500;
+src\app\globals.css:442: --weight-semibold: 600;
+src\app\globals.css:443: --weight-bold: 700;
+src\app\globals.css:444: --weight-extrabold: 800;
+src\app\globals.css:445: --weight-black: 900;
+src\app\globals.css:447: --ds-shadow-xs: 0 1px 2px rgb(15 23 42 / 5%);
+src\app\globals.css:448: --ds-shadow-sm: 0 1px 2px rgb(15 23 42 / 5%);
+src\app\globals.css:449: --ds-shadow-md: 0 4px 6px -1px rgb(15 23 42 / 10%),
+src\app\globals.css:451: --ds-shadow-lg: 0 10px 15px -3px rgb(15 23 42 / 10%),
+src\app\globals.css:453: --ds-shadow-xl: 0 20px 25px -5px rgb(15 23 42 / 10%),
+src\app\globals.css:455: --ds-shadow-confirmation: 0 20px 60px rgb(15 23 42 / 8%);
+src\app\globals.css:461: --market-canvas: #0d110e;
+src\app\globals.css:462: --market-elevated: #242b25;
+src\app\globals.css:463: --market-dark: #151b16;
+src\app\globals.css:464: --market-black: #090c0a;
+src\app\globals.css:465: --background: #0d110e;
+src\app\globals.css:466: --foreground: #edf2ee;
+src\app\globals.css:467: --surface: #151b16;
+src\app\globals.css:468: --surface-base: #151b16;
+src\app\globals.css:469: --text-secondary: #aab5ac;
+src\app\globals.css:470: --border: #303a32;
+src\app\globals.css:471: --canvas-muted: #111713;
+src\app\globals.css:486: background: var(--background);
+src\app\globals.css:487: color: var(--foreground);
+src\app\globals.css:488: font-family: var(--font-family-sans);
+src\app\globals.css:490: background-color var(--duration-fast) ease,
+src\app\globals.css:491: color var(--duration-fast) ease;
+src\app\globals.css:513: color: var(--foreground);
+src\app\globals.css:518: color: var(--text-secondary);
+src\app\globals.css:526: border-color: var(--border);
+src\app\globals.css:538: outline: var(--focus-outline-width) solid var(--brand-primary);
+src\app\globals.css:539: outline-offset: var(--focus-outline-offset);
+src\app\globals.css:543: background: var(--color-lime-100);
+src\app\globals.css:544: color: var(--foreground);
+src\app\globals.css:548: animation: hero-enter var(--duration-enter) cubic-bezier(0.2, 0.75, 0.25, 1) both;
+src\app\globals.css:564: animation: hero-image-drift var(--duration-drift) ease-in-out both;
+src\app\globals.css:570: transform: translateY(var(--space-5));
+src\app\globals.css:591: font-size: clamp(var(--type-4xl), 7vw, var(--type-7xl));
+src\app\globals.css:592: font-weight: var(--weight-black);
+src\app\globals.css:593: line-height: var(--line-height-display);
+src\app\globals.css:594: letter-spacing: var(--letter-spacing-heading);
+src\app\globals.css:598: font-size: var(--type-3xl);
+src\app\globals.css:599: font-weight: var(--weight-extrabold);
+src\app\globals.css:600: line-height: var(--line-height-page-heading);
+src\app\globals.css:601: letter-spacing: var(--letter-spacing-heading);
+src\app\globals.css:605: font-size: var(--type-base);
+src\app\globals.css:606: line-height: var(--leading-base);
+src\app\globals.css:610: font-size: var(--type-sm);
+src\app\globals.css:611: line-height: var(--leading-sm);
+src\app\globals.css:612: color: var(--text-secondary);
+src\app\globals.css:616: font-size: var(--type-xs);
+src\app\globals.css:617: font-weight: var(--weight-bold);
+src\app\globals.css:618: line-height: var(--leading-xs);
+src\app\globals.css:619: letter-spacing: var(--letter-spacing-wide);
+src\app\globals.css:623: font-size: var(--type-xs);
+src\app\globals.css:624: font-weight: var(--weight-black);
+src\app\globals.css:625: line-height: var(--leading-xs);
+src\app\globals.css:626: letter-spacing: var(--tracking-eyebrow-wide);
+src\app\globals.css:633: color-mix(in srgb, var(--brand-primary) 28%, transparent),
+src\app\globals.css:641: var(--banner-overlay-strong),
+src\app\globals.css:642: var(--banner-overlay-soft)
+src\app\globals.css:644: var(--banner-image);
+src\app\globals.css:648: border: 1px solid var(--border);
+src\app\globals.css:649: border-radius: var(--ds-radius-2xl);
+src\app\globals.css:650: background: var(--surface);
+src\app\globals.css:651: box-shadow: var(--ds-shadow-sm);
+src\app\globals.css:660: gap: var(--space-2);
+src\app\globals.css:662: border-radius: var(--ds-radius-xl);
+src\app\globals.css:663: padding: var(--space-3) var(--space-5);
+src\app\globals.css:665: font-size: var(--type-sm);
+src\app\globals.css:666: font-weight: var(--weight-bold);
+src\app\globals.css:667: line-height: var(--leading-sm);
+src\app\globals.css:672: color var(--duration-fast) ease,
+src\app\globals.css:673: background-color var(--duration-fast) ease,
+src\app\globals.css:674: border-color var(--duration-fast) ease,
+src\app\globals.css:675: box-shadow var(--duration-fast) ease,
+src\app\globals.css:676: transform var(--duration-fast) ease;
+src\app\globals.css:681: outline: var(--focus-outline-width) solid var(--brand-primary);
+src\app\globals.css:682: outline-offset: var(--space-1);
+src\app\globals.css:693: border-radius: var(--ds-radius-lg);
+src\app\globals.css:694: padding: var(--space-1-5) var(--space-3);
+src\app\globals.css:695: font-size: var(--type-xs);
+src\app\globals.css:696: line-height: var(--leading-xs);
+src\app\globals.css:701: padding: var(--space-3) var(--space-6);
+src\app\globals.css:702: font-size: var(--type-base);
+src\app\globals.css:703: line-height: var(--leading-base);
+src\app\globals.css:708: background: var(--brand-primary);
+src\app\globals.css:709: color: var(--brand-primary-foreground);
+src\app\globals.css:712: .ui-button--primary:hover:not(:disabled),
+src\app\globals.css:714: background: var(--brand-primary-hover);
+src\app\globals.css:718: background: var(--color-slate-100);
+src\app\globals.css:719: color: var(--foreground);
+src\app\globals.css:722: .ui-button--secondary:hover:not(:disabled) {
+src\app\globals.css:723: background: var(--color-slate-200);
+src\app\globals.css:727: border-color: var(--border);
+src\app\globals.css:728: background: var(--surface);
+src\app\globals.css:729: color: var(--foreground);
+src\app\globals.css:732: .ui-button--outline:hover:not(:disabled) {
+src\app\globals.css:733: border-color: var(--brand-primary);
+src\app\globals.css:734: background: var(--color-lime-50);
+src\app\globals.css:739: color: var(--foreground);
+src\app\globals.css:742: .ui-button--ghost:hover:not(:disabled) {
+src\app\globals.css:743: background: var(--color-slate-100);
+src\app\globals.css:747: background: var(--error);
+src\app\globals.css:751: .ui-button--danger:hover:not(:disabled) {
+src\app\globals.css:752: background: var(--color-red-700);
+src\app\globals.css:762: .ui-button--inverse:hover:not(:disabled) {
+src\app\globals.css:768: background: var(--color-slate-950);
+src\app\globals.css:772: .ui-button--contrast:hover:not(:disabled) {
+src\app\globals.css:773: background: var(--color-slate-800);
+src\app\globals.css:779: border: 1px solid var(--border);
+src\app\globals.css:780: border-radius: var(--ds-radius-xl);
+src\app\globals.css:781: background: var(--surface);
+src\app\globals.css:782: padding: var(--space-3) var(--space-4);
+src\app\globals.css:783: color: var(--foreground);
+src\app\globals.css:785: font-size: var(--type-sm);
+src\app\globals.css:786: transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+src\app\globals.css:790: color: var(--color-slate-400);
+src\app\globals.css:794: border-color: var(--brand-primary);
+src\app\globals.css:796: box-shadow: 0 0 0 var(--outline-ring-width)
+src\app\globals.css:797: color-mix(in srgb, var(--brand-primary) var(--outline-ring-opacity), transparent);
+src\app\globals.css:801: border-color: var(--error);
+src\app\globals.css:807: gap: var(--space-1);
+src\app\globals.css:808: border-radius: var(--ds-radius-full);
+src\app\globals.css:809: padding: var(--space-1) var(--space-2-5);
+src\app\globals.css:810: font-size: var(--type-xs);
+src\app\globals.css:811: font-weight: var(--weight-bold);
+src\app\globals.css:812: line-height: var(--leading-xs);
+src\app\globals.css:817: background: var(--color-lime-100);
+src\app\globals.css:818: color: var(--color-lime-900);
+src\app\globals.css:822: background: var(--brand-primary);
+src\app\globals.css:823: color: var(--brand-primary-foreground);
+src\app\globals.css:827: background: var(--color-slate-100);
+src\app\globals.css:828: color: var(--color-slate-700);
+src\app\globals.css:832: background: var(--color-green-50);
+src\app\globals.css:833: color: var(--color-green-800);
+src\app\globals.css:837: background: var(--color-amber-50);
+src\app\globals.css:838: color: var(--color-amber-800);
+src\app\globals.css:842: background: var(--color-red-50);
+src\app\globals.css:843: color: var(--color-red-700);
+src\app\globals.css:848: color: var(--foreground);
+src\app\globals.css:853: letter-spacing: var(--letter-spacing-heading);
+src\app\globals.css:854: line-height: var(--line-height-page-heading);
+src\app\globals.css:860: border-radius: var(--ds-radius-xl);
+src\app\globals.css:867: border-color: var(--brand-primary-hover);
+src\app\globals.css:876: transition-duration: var(--duration-instant) !important;
+src\app\globals.css:877: animation-duration: var(--duration-instant) !important;
+src\components\BannerCarousel.tsx:72: backgroundImage: `linear-gradient(90deg, var(--banner-overlay-strong), var(--banner-overlay-soft)), url("${banner.image_url}")`,
+
+===== Font declarations =====
+src\app\globals.css:488: font-family: var(--font-family-sans);
+src\app\globals.css:849: font-family: inherit;
+
+===== Theme/config definitions =====
+src\app\globals.css:3: @theme {
+src\app\globals.css:121: @theme inline {
+src\components\Header.tsx:16: onToggleTheme: () => void;
+src\components\Layout.tsx:46: onToggleTheme: () => void;
+
+===== Repeated component styling candidates =====
+src\app\account\page.tsx:154: <div className="mt-5 rounded-3xl border border-slate-200 bg-white p-7 shadow-sm sm:p-9">
+src\app\account\page.tsx:172: <p role="status" className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+src\app\account\page.tsx:177: <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+src\app\account\page.tsx:182: <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+src\app\account\page.tsx:187: <p role="status" className="mt-6 rounded-xl bg-slate-50 p-4 text-sm text-slate-600">
+src\app\account\page.tsx:191: <div className="mt-6 rounded-2xl bg-slate-50 p-5">
+src\app\account\page.tsx:200: className="mt-5 flex w-full items-center justify-center rounded-xl bg-brand-primary px-5 py-3 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover"
+src\app\account\page.tsx:209: className="mt-3 w-full rounded-xl border border-slate-300 bg-white px-5 py-3 font-bold text-slate-700 transition hover:border-lime-300 hover:text-lime-800 disabled:opacity-60"
+src\app\account\page.tsx:266: <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
+src\app\account\page.tsx:272: className="mt-4 flex w-full items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 font-bold text-slate-700 transition hover:border-lime-300 hover:text-lime-800"
+src\app\admin\accounts\page.tsx:97: {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+src\app\admin\accounts\page.tsx:113: className={`rounded-xl border px-4 py-2.5 text-sm font-bold transition ${
+src\app\admin\accounts\page.tsx:134: className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm sm:max-w-md"
+src\app\admin\accounts\page.tsx:140: className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 disabled:opacity-50"
+src\app\admin\accounts\page.tsx:146: <div id="account-records" role="tabpanel" aria-labelledby={`account-tab-${source}`} className="mt-5 overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+src\app\admin\accounts\page.tsx:171: <span className={`rounded-full px-2.5 py-1 text-xs font-bold capitalize ${
+src\app\admin\accounts\page.tsx:195: className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 disabled:opacity-50"
+src\app\admin\accounts\page.tsx:204: className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 disabled:opacity-50"
+src\app\admin\banners\page.tsx:27: "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-primary";
+src\app\admin\banners\page.tsx:222: className="rounded-xl bg-brand-primary px-5 py-3 text-sm font-black text-brand-primary-foreground hover:bg-brand-primary-hover"
+src\app\admin\banners\page.tsx:228: {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+src\app\admin\banners\page.tsx:229: {notice && <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{notice}</p>}
+src\app\admin\banners\page.tsx:232: <form onSubmit={saveBanner} className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+src\app\admin\banners\page.tsx:264: <button disabled={busy} className="mt-5 rounded-xl bg-brand-primary px-5 py-3 text-sm font-black text-brand-primary-foreground disabled:opacity-60">
+src\app\admin\banners\page.tsx:271: <div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
+src\app\admin\banners\page.tsx:275: <section className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+src\app\admin\banners\page.tsx:279: <img src={banner.image_url} alt="" className="h-20 w-full rounded-xl bg-slate-100 object-cover sm:w-28" />
+src\app\admin\banners\page.tsx:286: <span className={`rounded-full px-3 py-1 text-xs font-black ${banner.status === "published" ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>{banner.status}</span>
+src\app\admin\brands\page.tsx:10: "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-brand-primary";
+src\app\admin\brands\page.tsx:123: {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+src\app\admin\brands\page.tsx:124: {notice && <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{notice}</p>}
+src\app\admin\brands\page.tsx:125: <form onSubmit={addBrand} className="mt-6 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 sm:flex-row sm:items-end">
+src\app\admin\brands\page.tsx:130: <button disabled={busy} className="rounded-xl bg-brand-primary px-5 py-3 text-sm font-black text-brand-primary-foreground disabled:opacity-60">
+src\app\admin\brands\page.tsx:136: <article key={brand.id} className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5">
+src\app\admin\brands\page.tsx:152: <p className="rounded-xl bg-slate-50 p-5 text-sm text-slate-500">No brands added yet.</p>
+src\app\admin\categories\page.tsx:14: "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-brand-primary";
+src\app\admin\categories\page.tsx:311: className="rounded-xl bg-brand-primary px-5 py-3 font-black text-brand-primary-foreground hover:bg-brand-primary-hover"
+src\app\admin\categories\page.tsx:317: {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+src\app\admin\categories\page.tsx:318: {notice && <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{notice}</p>}
+src\app\admin\categories\page.tsx:321: <form onSubmit={saveCategory} className="mt-6 grid gap-4 rounded-2xl border border-slate-200 bg-white p-5 sm:grid-cols-2 lg:grid-cols-admin-category-form lg:items-end">
+src\app\admin\categories\page.tsx:377: <div className="flex items-center gap-3 rounded-xl border border-slate-200 p-3 sm:col-span-2 lg:col-span-4">
+src\app\admin\categories\page.tsx:378: <img src={iconImageUrl} alt="Category icon preview" className="h-12 w-12 rounded-lg object-cover" />
+src\app\admin\categories\page.tsx:382: <button disabled={busy} className="rounded-xl bg-brand-primary px-5 py-3 text-sm font-black text-brand-primary-foreground disabled:opacity-60">
+src\app\admin\categories\page.tsx:385: <button type="button" onClick={resetForm} className="rounded-xl border border-slate-200 px-5 py-3 text-sm font-bold">
+src\app\admin\categories\page.tsx:392: <div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
+src\app\admin\categories\page.tsx:398: <article key={category.id} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+src\app\admin\categories\page.tsx:400: <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-lime-50 text-2xl text-lime-700">
+src\app\admin\categories\page.tsx:408: <span className={`rounded-full px-3 py-1 text-xs font-black ${category.is_enabled ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-500"}`}>
+src\app\admin\categories\page.tsx:423: <button type="button" aria-label={`Move ${category.name} up`} disabled={index === 0 || reorderingId !== null} onClick={() => void moveCategory(category, -1)} className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-slate-700 disabled:cursor-not-allowed disabled:opacity-40">?</button>
+src\app\admin\categories\page.tsx:424: <button type="button" aria-label={`Move ${category.name} down`} disabled={index === rows.length - 1 || reorderingId !== null} onClick={() => void moveCategory(category, 1)} className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-slate-700 disabled:cursor-not-allowed disabled:opacity-40">?</button>
+src\app\admin\content\page.tsx:57: "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-primary";
+src\app\admin\content\page.tsx:177: {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+src\app\admin\content\page.tsx:178: {notice && <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{notice}</p>}
+src\app\admin\content\page.tsx:182: <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+src\app\admin\content\page.tsx:233: <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+src\app\admin\content\page.tsx:236: <label className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 text-sm font-semibold text-slate-700">
+src\app\admin\content\page.tsx:248: <label className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 text-sm font-semibold text-slate-700">
+src\app\admin\content\page.tsx:260: <label className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 text-sm font-semibold text-slate-700">
+src\app\admin\content\page.tsx:268: <label className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 text-sm font-semibold text-slate-700 sm:col-span-2">
+src\app\admin\content\page.tsx:288: <aside className="h-fit rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+src\app\admin\content\page.tsx:293: <div aria-label="Live homepage content preview" className="mt-5 overflow-hidden rounded-2xl bg-market-950 p-5 text-white">
+src\app\admin\content\page.tsx:303: <span className="mt-5 inline-flex rounded-lg bg-brand-primary px-4 py-2 text-sm font-black text-brand-primary-foreground">
+src\app\admin\content\page.tsx:309: <li key={`${index}-${highlight}`} className="rounded-full border border-white/15 px-2.5 py-1 text-2xs text-slate-200">
+src\app\admin\content\page.tsx:325: <li key={String(title)} className="flex items-center justify-between gap-3 rounded-lg bg-slate-50 px-3 py-2">
+src\app\admin\content\page.tsx:330: <span className={`shrink-0 rounded-full px-2 py-1 text-3xs font-black ${visible ? "bg-emerald-100 text-emerald-800" : "bg-slate-200 text-slate-600"}`}>
+src\app\admin\content\page.tsx:339: className="mt-5 w-full rounded-xl bg-brand-primary px-5 py-3 text-sm font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:bg-slate-300"
+src\app\admin\content\page.tsx:371: <span className="flex h-9 min-w-9 items-center justify-center rounded-lg bg-lime-50 px-2 text-xs font-black text-lime-700">
+src\app\admin\login\page.tsx:66: <section className="w-full max-w-md rounded-3xl border border-white/10 bg-white p-7 shadow-2xl sm:p-9">
+src\app\admin\login\page.tsx:79: <p className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
+src\app\admin\login\page.tsx:90: <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+src\app\admin\login\page.tsx:95: <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+src\app\admin\login\page.tsx:109: className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-brand-primary"
+src\app\admin\login\page.tsx:121: className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-brand-primary"
+src\app\admin\login\page.tsx:127: className="w-full rounded-xl bg-brand-primary px-5 py-3.5 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:bg-slate-300"
+src\app\admin\orders\page.tsx:210: {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</p>}
+src\app\admin\orders\page.tsx:212: <p role="status" className="mt-6 rounded-xl bg-slate-50 p-5 text-sm text-slate-500">Loading shared orders…</p>
+src\app\admin\products\page.tsx:47: "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-primary";
+src\app\admin\products\page.tsx:324: className="rounded-xl bg-brand-primary px-5 py-3 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover"
+src\app\admin\products\page.tsx:333: <form onSubmit={saveProduct} className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+src\app\admin\products\page.tsx:399: <button disabled={busy} className="mt-5 rounded-xl bg-brand-primary px-6 py-3 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:opacity-60">
+src\app\admin\products\page.tsx:405: <section aria-label="Filter products" className="mt-6 grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 sm:grid-cols-2 lg:grid-cols-4">
+src\app\admin\products\page.tsx:440: <section className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+src\app\admin\products\page.tsx:477: <span className={`rounded-full px-3 py-1 text-xs font-black ${product.is_published ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>
+src\app\admin\products\page.tsx:495: <button type="button" disabled={visiblePage <= 1} onClick={() => setPage(visiblePage - 1)} className="min-h-10 rounded-lg border border-slate-200 px-4 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50">Previous</button>
+src\app\admin\products\page.tsx:496: <button type="button" disabled={visiblePage >= pageCount} onClick={() => setPage(visiblePage + 1)} className="min-h-10 rounded-lg border border-slate-200 px-4 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50">Next</button>
+src\app\admin\products\page.tsx:512: return <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>;
+src\app\admin\products\page.tsx:515: return <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{notice}</p>;
+src\app\admin\retailers\page.tsx:163: {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+src\app\admin\retailers\page.tsx:164: {notice && <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{notice}</p>}
+src\app\admin\retailers\page.tsx:167: <p role="status" className="rounded-xl bg-slate-50 p-5 text-sm text-slate-500">Loading retailer applications…</p>
+src\app\admin\retailers\page.tsx:169: <p className="rounded-xl bg-slate-50 p-5 text-sm text-slate-500">No retailer applications have been submitted yet.</p>
+src\app\admin\retailers\page.tsx:171: <article key={application.id} className="rounded-2xl bg-slate-50 p-5">
+src\app\admin\retailers\page.tsx:181: <span className={`w-fit rounded-full px-3 py-1 text-xs font-bold capitalize ${
+src\app\admin\retailers\page.tsx:187: <button type="button" onClick={() => void openDocument(application)} className="w-fit rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-lime-800">
+src\app\admin\retailers\page.tsx:196: className="mt-2 min-h-20 w-full rounded-xl border border-slate-200 bg-white p-3 text-sm font-normal"
+src\app\admin\retailers\page.tsx:207: className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold capitalize text-slate-700 hover:border-lime-300 disabled:cursor-not-allowed disabled:opacity-50"
+src\app\admin\retailers\page.tsx:219: className="rounded-xl bg-brand-primary px-4 py-2.5 text-sm font-bold text-brand-primary-foreground hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+src\app\admin\reviews\page.tsx:109: {error && <p role="alert" className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+src\app\admin\reviews\page.tsx:110: {notice && <p role="status" className="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{notice}</p>}
+src\app\admin\reviews\page.tsx:113: <p role="status" className="rounded-xl bg-slate-50 p-5 text-sm text-slate-500">Loading reviews…</p>
+src\app\admin\reviews\page.tsx:115: <p className="rounded-xl bg-slate-50 p-5 text-sm text-slate-500">No customer reviews have been submitted yet.</p>
+src\app\admin\reviews\page.tsx:117: <article key={review.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+src\app\admin\reviews\page.tsx:132: <span className={`rounded-full px-3 py-1 text-xs font-bold capitalize ${
+src\app\admin\reviews\page.tsx:142: className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold capitalize text-slate-700 hover:border-lime-300 disabled:cursor-not-allowed disabled:opacity-50"
+src\app\admin\reviews\page.tsx:151: className="rounded-xl border border-red-200 bg-white px-3 py-2 text-xs font-bold text-red-700 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+src\app\admin\settings\page.tsx:60: "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-primary";
+src\app\admin\settings\page.tsx:262: {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+src\app\admin\settings\page.tsx:263: {notice && <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{notice}</p>}
+src\app\admin\settings\page.tsx:279: <label className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 text-sm font-semibold text-slate-700 sm:col-span-2">
+src\app\admin\settings\page.tsx:297: <fieldset key={`delivery-zone-${index}`} className="grid gap-3 rounded-xl border border-slate-200 p-4 sm:grid-cols-2">
+src\app\admin\settings\page.tsx:318: }))} className="min-h-11 rounded-xl border border-red-200 px-4 py-2 text-sm font-bold text-red-700 hover:bg-red-50">
+src\app\admin\settings\page.tsx:328: }))} className="mt-3 min-h-11 rounded-xl border border-lime-200 px-4 py-2 text-sm font-bold text-lime-900 hover:bg-lime-50">
+src\app\admin\settings\page.tsx:335: <label className="flex items-center gap-3 rounded-xl border border-slate-200 p-4 text-sm font-semibold text-slate-700 sm:col-span-2">
+src\app\admin\settings\page.tsx:361: <div className="flex flex-col justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-5 sm:flex-row sm:items-center">
+src\app\admin\settings\page.tsx:363: <button disabled={loading || busy} className="rounded-xl bg-brand-primary px-5 py-3 text-sm font-black text-brand-primary-foreground hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:bg-slate-300">
+src\app\admin\settings\page.tsx:389: <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+src\app\admin\page.tsx:79: <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-slate-950 text-white shadow-2xl shadow-slate-900/15">
+src\app\admin\page.tsx:96: className={`inline-flex rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[0.14em] ${
+src\app\admin\page.tsx:106: className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white transition hover:border-lime-300 hover:text-lime-200"
+src\app\admin\page.tsx:118: className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+src\app\admin\page.tsx:126: className={`rounded-full px-2 py-1 text-[10px] font-black uppercase tracking-[0.14em] ${
+src\app\admin\page.tsx:184: <div className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm leading-6 text-amber-900 shadow-sm">
+src\app\admin\page.tsx:203: className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-lime-200 hover:shadow-lg"
+src\app\admin\page.tsx:206: <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-lime-50 text-xl font-black text-lime-700">
+src\app\admin\page.tsx:209: <span className="text-sm font-black text-slate-400 transition group-hover:text-lime-700">
+src\app\cart\page.tsx:28: <div className="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-20 text-center shadow-sm">
+src\app\cart\page.tsx:29: <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-lime-50 text-3xl text-lime-700">
+src\app\cart\page.tsx:40: className="mt-7 inline-flex rounded-xl bg-brand-primary px-7 py-3 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover"
+src\app\cart\page.tsx:64: <p role="status" className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-900">
+src\app\cart\page.tsx:72: <div key={item.product.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+src\app\cart\page.tsx:77: className="h-28 w-full rounded-xl object-cover sm:w-28"
+src\app\cart\page.tsx:105: <div className="inline-flex overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+src\app\cart\page.tsx:132: className="text-sm font-bold text-red-500 transition hover:text-red-700"
+src\app\cart\page.tsx:143: <aside className="h-fit rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+src\app\cart\page.tsx:174: className="mt-7 block rounded-xl bg-brand-primary px-6 py-4 text-center font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover"
+src\app\cart\page.tsx:181: className="mt-3 block text-center text-sm font-bold text-slate-500 transition hover:text-lime-700"
+src\app\checkout\page.tsx:432: <Link href="/search" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 font-bold hover:border-lime-300 hover:text-lime-800">
+src\app\checkout\page.tsx:444: <div className="mx-auto max-w-xl rounded-3xl bg-white p-10 text-center shadow-sm">
+src\app\checkout\page.tsx:446: <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-lime-50 text-2xl">
+src\app\checkout\page.tsx:460: className="mt-7 inline-flex rounded-xl bg-brand-primary px-6 py-3 font-black text-brand-primary-foreground hover:bg-brand-primary-hover"
+src\app\checkout\page.tsx:471: `mt-2 w-full rounded-xl border bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:bg-white ${
+src\app\checkout\page.tsx:500: <span className="inline-flex items-center gap-2 text-lime-800"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-lime-100">1</span>Choose fulfillment</span>
+src\app\checkout\page.tsx:501: <span className="inline-flex items-center gap-2"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200">2</span>Store confirmation</span>
+src\app\checkout\page.tsx:502: <span className="inline-flex items-center gap-2"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200">3</span>Payment</span>
+src\app\checkout\page.tsx:508: <section aria-labelledby="fulfillment-heading" className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+src\app\checkout\page.tsx:510: <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-lime-50 text-lime-800"><CheckoutIcon name="truck" /></span>
+src\app\checkout\page.tsx:522: <label key={option.value} className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition ${fulfillmentMethod === option.value ? "border-brand-primary bg-lime-50" : "border-slate-200 hover:border-lime-200"}`}>
+src\app\checkout\page.tsx:537: <section aria-labelledby="contact-heading" className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+src\app\checkout\page.tsx:539: <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-lime-50 text-lime-800"><CheckoutIcon name="user" /></span>
+src\app\checkout\page.tsx:577: <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+src\app\checkout\page.tsx:586: className="rounded-lg border border-lime-300 bg-white px-3 py-2 text-xs font-bold text-lime-900 hover:bg-lime-50 disabled:cursor-not-allowed disabled:opacity-60"
+src\app\checkout\page.tsx:605: className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+src\app\checkout\page.tsx:611: className="rounded-lg bg-slate-900 px-3 py-2 text-xs font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
+src\app\checkout\page.tsx:636: className="inline-flex min-h-9 items-center gap-2 rounded-lg border border-lime-200 px-3 py-1.5 text-xs font-bold text-lime-900 transition hover:bg-lime-50 disabled:cursor-wait disabled:opacity-60">
+src\app\checkout\page.tsx:676: <section aria-labelledby="payment-heading" className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+src\app\checkout\page.tsx:696: {fulfillmentMethod === "delivery" && <section aria-labelledby="delivery-heading" className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+src\app\checkout\page.tsx:698: <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700"><CheckoutIcon name="truck" /></span>
+src\app\checkout\page.tsx:705: <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+src\app\checkout\page.tsx:735: {fulfillmentMethod === "store_pickup" && <section aria-labelledby="pickup-heading" className="rounded-2xl border border-lime-200 bg-lime-50 p-5 sm:p-7">
+src\app\checkout\page.tsx:737: <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-lime-800"><CheckoutIcon name="pin" /></span>
+src\app\checkout\page.tsx:745: <section aria-labelledby="confirmation-heading" className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+src\app\checkout\page.tsx:747: <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700"><CheckoutIcon name="shield" /></span>
+src\app\checkout\page.tsx:753: <label className="mt-5 flex cursor-pointer items-start gap-3 rounded-xl bg-slate-50 p-4 text-sm leading-5 text-slate-700">
+src\app\checkout\page.tsx:765: <aside className="h-fit rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-6 sm:p-7">
+src\app\checkout\page.tsx:771: <span className="rounded-full bg-lime-50 px-2.5 py-1 text-xs font-black text-lime-900">
+src\app\checkout\page.tsx:782: <p className="mt-1 inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-2xs font-semibold text-slate-600">
+src\app\checkout\page.tsx:792: <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-xs leading-5 text-amber-900">
+src\app\checkout\page.tsx:823: <div role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-semibold text-red-700">
+src\app\checkout\page.tsx:829: className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand-primary px-5 py-3 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover focus:outline-none focus:ring-4 focus:ring-lime-200 disabled:cursor-not-allowed disabled:opacity-60">
+src\app\customer-care\page.tsx:43: className="inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/5 px-6 py-4 font-black text-white transition hover:bg-white hover:text-slate-950"
+src\app\customer-care\page.tsx:58: className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-lime-300 hover:shadow-md"
+src\app\customer-care\page.tsx:60: <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-lime-100 text-2xl">
+src\app\customer-care\page.tsx:75: className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-lime-300 hover:shadow-md"
+src\app\customer-care\page.tsx:77: <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-lime-100 text-2xl">
+src\app\customer-care\page.tsx:92: className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-lime-300 hover:shadow-md"
+src\app\customer-care\page.tsx:94: <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-lime-100 text-2xl">
+src\app\customer-care\page.tsx:108: <div role="status" className="rounded-2xl border border-amber-200 bg-amber-50 p-6 text-sm leading-6 text-amber-950 md:col-span-3">
+src\app\customer-care\page.tsx:131: <div key={title} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+src\app\customer-care\page.tsx:153: <div key={faq.question} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+src\app\customer-care\page.tsx:166: <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-lg font-black">
+src\app\customer-care\page.tsx:198: className="rounded-xl border-2 border-slate-900 px-6 py-3 font-black transition hover:bg-slate-900 hover:text-white"
+src\app\customer-care\page.tsx:207: className="rounded-xl bg-green-500 px-6 py-3 font-black text-white transition hover:bg-green-600"
+src\app\my-orders\page.tsx:59: <Link href="/" className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-eyebrow-wide text-lime-700 transition hover:text-lime-800">? Home</Link>
+src\app\my-orders\page.tsx:60: <div className="mt-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+src\app\my-orders\page.tsx:64: <form onSubmit={findOrder} className="mt-6 grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:grid-cols-order-lookup sm:items-end">
+src\app\my-orders\page.tsx:67: <input required value={orderNumber} onChange={(event) => setOrderNumber(event.target.value)} placeholder="123456" inputMode="numeric" maxLength={16} className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-brand-primary" />
+src\app\my-orders\page.tsx:71: <input required value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="03XXXXXXXXX" inputMode="tel" className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-brand-primary" />
+src\app\my-orders\page.tsx:73: <button disabled={loading} className="rounded-xl bg-brand-primary px-6 py-3 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:opacity-60">
+src\app\my-orders\page.tsx:77: {error && <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-600">{error}</p>}
+src\app\my-orders\page.tsx:79: <p className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-slate-600">No order matched those details.</p>
+src\app\my-orders\page.tsx:82: <article className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+src\app\my-orders\page.tsx:89: <span className="rounded-full bg-lime-50 px-4 py-2 text-sm font-black text-lime-800">{order.status}</span>
+src\app\my-orders\page.tsx:104: <Link href={`/track-order?order=${encodeURIComponent(order.trackingCode ?? order.orderNumber)}`} className="rounded-xl bg-slate-950 px-5 py-3 font-black text-white transition hover:bg-slate-800">Track Order Status</Link>
+src\app\order-confirmation\page.tsx:31: <Link href="/search" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 font-bold hover:border-lime-300 hover:text-lime-800">
+src\app\order-confirmation\page.tsx:44: <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100 text-3xl font-black text-green-700">
+src\app\order-confirmation\page.tsx:55: <div className="mt-8 rounded-3xl border border-slate-200 bg-slate-50 p-6 text-left">
+src\app\order-confirmation\page.tsx:62: <Link href="/search" className="inline-flex min-h-11 items-center justify-center rounded-xl border-2 border-slate-900 px-6 py-3 font-black text-slate-900 transition hover:bg-slate-900 hover:text-white">
+src\app\product\[slug]\page.tsx:44: className="mt-6 inline-flex rounded-xl bg-brand-primary px-5 py-3 font-black text-brand-primary-foreground"
+src\app\retailer\dashboard\page.tsx:116: <section className="overflow-hidden rounded-[28px] bg-slate-950 text-white shadow-2xl shadow-slate-900/10">
+src\app\retailer\dashboard\page.tsx:126: <button type="button" onClick={signOut} className="min-h-11 rounded-xl border border-white/20 px-5 py-3 font-bold text-white transition hover:bg-white/10">
+src\app\retailer\dashboard\page.tsx:133: {error && <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</p>}
+src\app\retailer\dashboard\page.tsx:137: <div key={label} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+src\app\retailer\dashboard\page.tsx:141: <span className={`rounded-full px-2 py-1 text-[10px] font-black uppercase tracking-[0.14em] ${
+src\app\retailer\dashboard\page.tsx:151: <section className="mt-6 rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+src\app\retailer\dashboard\page.tsx:158: <Link href="/customer-care" className="inline-flex min-h-11 items-center rounded-xl border border-slate-200 px-5 py-3 font-bold text-slate-800 transition hover:border-lime-300 hover:text-lime-800">
+src\app\retailer\login\page.tsx:76: <div className="mt-5 rounded-[28px] border border-slate-200 bg-white p-7 shadow-lg shadow-slate-200/60 sm:p-9">
+src\app\retailer\login\page.tsx:77: <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-primary text-xl font-black text-brand-primary-foreground">
+src\app\retailer\login\page.tsx:86: <p role="status" className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
+src\app\retailer\login\page.tsx:90: {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</p>}
+src\app\retailer\login\page.tsx:91: {notice && <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">{notice}</p>}
+src\app\retailer\login\page.tsx:102: className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-lime-500 focus:bg-white"
+src\app\retailer\login\page.tsx:115: className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-12 text-slate-900 outline-none transition focus:border-lime-500 focus:bg-white"
+src\app\retailer\login\page.tsx:128: <button disabled={!configured || busy} className="w-full rounded-xl bg-brand-primary px-5 py-3.5 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:bg-slate-300">
+src\app\retailer\orders\page.tsx:6: <section className="mx-auto max-w-2xl rounded-3xl border border-slate-200 bg-white p-7 text-center shadow-sm sm:p-10">
+src\app\retailer\orders\page.tsx:24: className="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 font-bold hover:border-lime-300 hover:text-lime-800"
+src\app\retailer\pending\page.tsx:6: <section className="mx-auto max-w-xl rounded-[28px] border border-slate-200 bg-white p-8 text-center shadow-lg shadow-slate-200/60 sm:p-10">
+src\app\retailer\pending\page.tsx:9: className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-amber-100 text-3xl font-black text-amber-700"
+src\app\retailer\pending\page.tsx:21: <div className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-6 text-left">
+src\app\retailer\pending\page.tsx:24: <strong className="rounded-full bg-amber-100 px-3 py-1 text-xs font-black uppercase tracking-[0.16em] text-amber-800">
+src\app\retailer\pending\page.tsx:36: className="inline-flex min-h-11 items-center justify-center rounded-xl bg-brand-primary px-5 py-3 font-black text-brand-primary-foreground"
+src\app\retailer\pending\page.tsx:42: className="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 font-bold text-slate-800 transition hover:border-lime-300 hover:text-lime-800"
+src\app\retailer\register\page.tsx:99: <div className="mt-6 rounded-[32px] border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60 md:p-8">
+src\app\retailer\register\page.tsx:110: <div className="mb-6 rounded-2xl border border-lime-200 bg-lime-50 p-4 text-sm leading-6 text-lime-900">
+src\app\retailer\register\page.tsx:119: <input name="owner_name" required maxLength={120} autoComplete="name" className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-lime-500 focus:bg-white" />
+src\app\retailer\register\page.tsx:123: <input name="email" required type="email" maxLength={254} autoComplete="email" className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-lime-500 focus:bg-white" />
+src\app\retailer\register\page.tsx:130: <input name="business_name" required maxLength={160} autoComplete="organization" className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-lime-500 focus:bg-white" />
+src\app\retailer\register\page.tsx:134: <select name="business_type" required defaultValue="" className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-lime-500 focus:bg-white">
+src\app\retailer\register\page.tsx:147: <input name="phone" required maxLength={40} type="tel" autoComplete="tel" className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-lime-500 focus:bg-white" />
+src\app\retailer\register\page.tsx:151: <input name="city" required maxLength={120} autoComplete="address-level2" className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-lime-500 focus:bg-white" />
+src\app\retailer\register\page.tsx:157: <input name="address" required maxLength={300} autoComplete="street-address" className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-lime-500 focus:bg-white" />
+src\app\retailer\register\page.tsx:162: <textarea name="business_details" maxLength={2000} placeholder="For example: screens, batteries, charging parts, brands/models, or the products you usually source." className="mt-2 min-h-32 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-lime-500 focus:bg-white" />
+src\app\retailer\register\page.tsx:167: <input required name="required_document" type="file" accept="application/pdf,image/jpeg,image/png" className="mt-2 w-full rounded-xl border border-dashed border-slate-300 bg-slate-50 p-3 text-sm text-slate-600 outline-none transition file:mr-3 file:rounded-lg file:border-0 file:bg-lime-100 file:px-3 file:py-2 file:font-bold file:text-lime-900 hover:file:bg-lime-200" />
+src\app\retailer\register\page.tsx:184: {notice && <p role="status" className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">{notice}</p>}
+src\app\retailer\register\page.tsx:185: {error && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</p>}
+src\app\retailer\register\page.tsx:189: className="rounded-xl bg-brand-primary px-5 py-4 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:bg-slate-300"
+src\app\retailer\setup-password\page.tsx:120: {!configured && <p role="alert" className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">Retailer account setup is unavailable because the backend is not configured.</p>}
+src\app\retailer\setup-password\page.tsx:122: {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</p>}
+src\app\retailer\page.tsx:31: <div className="inline-flex rounded-full border border-lime-400/40 bg-lime-400/10 px-3 py-1.5 text-sm font-black uppercase tracking-[0.18em] text-lime-300">
+src\app\retailer\page.tsx:48: className="inline-flex items-center justify-center rounded-xl bg-brand-primary px-6 py-4 text-center font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover"
+src\app\retailer\page.tsx:55: className="inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/5 px-6 py-4 text-center font-black text-white transition hover:bg-white/10"
+src\app\retailer\page.tsx:62: <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-lime-950/20 backdrop-blur-sm">
+src\app\retailer\page.tsx:64: <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+src\app\retailer\page.tsx:69: <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+src\app\retailer\page.tsx:74: <div className="rounded-2xl bg-brand-primary p-4 text-slate-950">
+src\app\retailer\page.tsx:101: <div key={item} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+src\app\retailer\page.tsx:102: <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-lime-50 text-xl font-black text-lime-700">
+src\app\retailer\page.tsx:124: <div key={number} className="rounded-2xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
+src\app\retailer\page.tsx:135: <div className="rounded-3xl bg-gradient-to-r from-lime-500 to-lime-600 px-6 py-10 text-white shadow-xl shadow-lime-500/25 sm:px-10">
+src\app\retailer\page.tsx:148: className="inline-flex min-h-12 items-center justify-center rounded-xl bg-white px-6 py-3 text-center font-black text-lime-800 transition hover:bg-slate-100"
+src\app\search\page.tsx:119: <div className="flex overflow-hidden rounded-2xl border border-white/10 bg-white p-2 shadow-xl shadow-lime-950/20">
+src\app\search\page.tsx:131: className="rounded-xl bg-brand-primary px-6 py-3 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover"
+src\app\search\page.tsx:145: className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:border-lime-300 hover:text-lime-300"
+src\app\search\page.tsx:167: <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-600 shadow-sm">
+src\app\search\page.tsx:215: <div className="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-20 text-center shadow-sm">
+src\app\search\page.tsx:216: <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-lime-50 text-4xl text-lime-700">
+src\app\search\page.tsx:229: className="mt-6 rounded-xl bg-brand-primary px-6 py-3 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover"
+src\app\search\page.tsx:244: <Link href="/" className="inline-flex items-center gap-2 font-bold text-lime-700 transition hover:text-lime-800">
+src\app\track-order\page.tsx:84: <Link href="/" className="inline-flex items-center gap-2 font-bold text-lime-700 transition hover:text-lime-800">
+src\app\track-order\page.tsx:87: <div className="mt-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+src\app\track-order\page.tsx:91: <form onSubmit={track} className="mt-6 space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+src\app\track-order\page.tsx:94: <input required value={number} onChange={(event) => setNumber(event.target.value)} placeholder="123456" inputMode="numeric" maxLength={16} className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-brand-primary" />
+src\app\track-order\page.tsx:98: <input required value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="03XXXXXXXXX" inputMode="tel" className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-brand-primary" />
+src\app\track-order\page.tsx:100: <button disabled={loading} className="w-full rounded-xl bg-brand-primary px-6 py-4 font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:opacity-60">
+src\app\track-order\page.tsx:104: {error && <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-red-600">{error}</p>}
+src\app\track-order\page.tsx:106: <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+src\app\track-order\page.tsx:111: <p className="mt-4 rounded-xl bg-red-50 p-4 font-bold text-red-700">This order has been cancelled. Contact the store for details.</p>
+src\app\track-order\page.tsx:119: <span className={`flex h-8 w-8 items-center justify-center rounded-full font-black ${complete ? "bg-green-600 text-white" : "bg-slate-100 text-slate-400"}`}>{complete ? "?" : stepIndex + 1}</span>
+src\app\globals.css:232: --shadow-sm: var(--ds-shadow-sm);
+src\app\globals.css:233: --shadow-md: var(--ds-shadow-md);
+src\app\globals.css:234: --shadow-lg: var(--ds-shadow-lg);
+src\app\globals.css:235: --shadow-xl: var(--ds-shadow-xl);
+src\app\globals.css:448: --ds-shadow-sm: 0 1px 2px rgb(15 23 42 / 5%);
+src\app\globals.css:449: --ds-shadow-md: 0 4px 6px -1px rgb(15 23 42 / 10%),
+src\app\globals.css:451: --ds-shadow-lg: 0 10px 15px -3px rgb(15 23 42 / 10%),
+src\app\globals.css:453: --ds-shadow-xl: 0 20px 25px -5px rgb(15 23 42 / 10%),
+src\app\globals.css:489: transition:
+src\app\globals.css:651: box-shadow: var(--ds-shadow-sm);
+src\app\globals.css:671: transition:
+src\app\globals.css:786: transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+src\app\globals.css:876: transition-duration: var(--duration-instant) !important;
+src\app\page.tsx:50: <span className="type-overline hero-enter inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-2 text-lime-300 shadow-lg shadow-black/10 backdrop-blur">
+src\app\page.tsx:65: className="ui-button ui-button--primary ui-button--lg shadow-lg shadow-black/30 transition hover:-translate-y-0.5"
+src\app\page.tsx:83: className="hero-enter hero-enter-delay-3 mt-8 max-w-xl rounded-2xl border border-white/15 bg-white/8 p-2 backdrop-blur-sm shadow-xl shadow-black/10"
+src\app\page.tsx:94: className="min-w-0 flex-1 rounded-xl border border-transparent bg-white/95 px-4 py-3 text-sm text-slate-900 outline-none placeholder:text-slate-500 focus:border-lime-400 focus:ring-2 focus:ring-lime-300/40"
+src\app\page.tsx:98: className="inline-flex items-center justify-center rounded-xl bg-lime-400 px-4 py-3 text-sm font-black text-slate-950 transition hover:bg-lime-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-300/70"
+src\app\page.tsx:112: className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1.5 transition hover:border-lime-300 hover:text-lime-300"
+src\app\page.tsx:143: className="group flex items-center justify-between gap-5 py-1 text-sm font-bold uppercase tracking-wide text-white/90 transition hover:text-lime-300"
+src\app\page.tsx:146: <span aria-hidden="true" className="text-lime-300 opacity-0 transition group-hover:translate-x-1 group-hover:opacity-100">?</span>
+src\app\page.tsx:159: <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-lime-400/10 text-lime-300" aria-hidden="true">
+src\app\page.tsx:171: <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-lime-400/10 text-lime-300" aria-hidden="true">
+src\app\page.tsx:180: <Link href="/shipping-policy" className="transition hover:text-lime-300">Delivery Options ?</Link>
+src\app\page.tsx:186: <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-lime-400/10 text-lime-300" aria-hidden="true">
+src\app\page.tsx:193: <Link href="/retailer" className="transition hover:text-lime-300">Retailer Pricing ?</Link>
+src\app\page.tsx:199: <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-lime-400/10 text-lime-300" aria-hidden="true">
+src\app\page.tsx:206: <Link href="/customer-care" className="transition hover:text-lime-300">Customer Support ?</Link>
+src\app\page.tsx:262: className="group overflow-hidden transition duration-200 hover:-translate-y-1 hover:border-brand-primary hover:shadow-lg"
+src\app\page.tsx:274: <span aria-hidden="true" className="text-content-secondary transition group-hover:translate-x-1 group-hover:text-brand-primary">?</span>
+src\app\page.tsx:283: className="rounded-full bg-surface px-2.5 py-1 text-xs font-semibold text-content-secondary transition hover:bg-brand-primary hover:text-brand-primary-foreground"
+src\app\page.tsx:321: className="ui-card flex min-h-14 items-center justify-center px-4 py-3 font-bold text-content-primary transition hover:border-brand-primary hover:bg-lime-50"
+src\app\page.tsx:378: <span className="hidden h-14 w-14 shrink-0 place-items-center rounded-xl bg-slate-950/10 text-3xl md:grid" aria-hidden="true">¦</span>
+src\app\page.tsx:428: className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+src\components\AdminShell.tsx:65: className={`block rounded-xl px-3 py-2.5 text-sm font-bold transition ${
+src\components\AdminShell.tsx:67: ? "bg-lime-300 text-slate-950 shadow-sm shadow-lime-900/10"
+src\components\AdminShell.tsx:177: <section className="max-w-lg rounded-2xl border border-slate-200 bg-white p-7 text-center shadow-sm">
+src\components\AdminShell.tsx:194: className="mt-5 inline-flex rounded-xl bg-brand-primary px-5 py-3 text-sm font-black text-brand-primary-foreground"
+src\components\AdminShell.tsx:216: <div className="mt-5 rounded-2xl border border-amber-300/20 bg-amber-300/10 p-3 text-xs leading-5 text-amber-100 shadow-inner shadow-amber-900/20">
+src\components\AdminShell.tsx:238: className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 disabled:opacity-60"
+src\components\AdminShell.tsx:254: className="text-sm font-bold text-lime-700 transition hover:text-lime-800"
+src\components\AdminShell.tsx:262: className="text-sm font-bold text-slate-600 transition hover:text-red-700 disabled:opacity-60"
+src\components\BannerCarousel.tsx:51: <div className="relative overflow-hidden rounded-2xl bg-slate-950 shadow-lg">
+src\components\BannerCarousel.tsx:53: className="flex transition-transform duration-700 ease-in-out motion-reduce:transition-none"
+src\components\BannerCarousel.tsx:75: <span className="text-xl font-black text-white transition group-hover:text-lime-300 sm:text-2xl lg:text-3xl">
+src\components\BannerCarousel.tsx:90: className="pointer-events-auto grid h-10 w-10 place-items-center rounded-full bg-white/90 text-xl font-black text-slate-900 shadow transition hover:bg-white sm:h-12 sm:w-12"
+src\components\BannerCarousel.tsx:98: className="pointer-events-auto grid h-10 w-10 place-items-center rounded-full bg-white/90 text-xl font-black text-slate-900 shadow transition hover:bg-white sm:h-12 sm:w-12"
+src\components\BannerCarousel.tsx:109: className="absolute right-4 top-4 rounded-full bg-slate-950/70 px-3 py-2 text-xs font-bold text-white transition hover:bg-slate-950"
+src\components\BannerCarousel.tsx:126: className={`h-2.5 rounded-full transition-all ${
+src\components\BannerDetailClient.tsx:21: className="inline-flex items-center gap-2 text-sm font-bold text-slate-600 transition hover:text-lime-700"
+src\components\BannerDetailClient.tsx:30: className="mt-6 aspect-banner-card-mobile min-h-64 rounded-2xl bg-slate-950 bg-contain bg-center bg-no-repeat shadow-xl sm:aspect-banner-card-tablet lg:aspect-banner-card-desktop"
+src\components\BannerDetailClient.tsx:48: className="inline-flex min-h-12 items-center justify-center rounded-xl bg-brand-primary px-5 py-3 font-bold text-brand-primary-foreground transition hover:bg-brand-primary-hover"
+src\components\BannerDetailClient.tsx:56: className="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-3 font-bold text-slate-800 transition hover:border-lime-300 hover:text-lime-700"
+src\components\BannerDetailClient.tsx:85: className="mt-6 inline-flex rounded-xl bg-brand-primary px-5 py-3 font-black text-brand-primary-foreground"
+src\components\Footer.tsx:9: const linkClass = "text-sm text-slate-400 transition hover:text-brand-primary";
+src\components\Footer.tsx:132: className="w-full rounded-xl border border-market-700 bg-market-900 px-3 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-brand-primary"
+src\components\Footer.tsx:141: className="w-full rounded-xl bg-brand-primary px-4 py-3 text-sm font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:opacity-60"
+src\components\Footer.tsx:196: className="font-semibold text-slate-400 transition hover:text-brand-primary"
+src\components\Header.tsx:98: <header className="sticky top-0 z-50 border-b border-market-800 bg-market-950 text-white shadow-sm">
+src\components\Header.tsx:120: <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-primary text-2xl font-black text-brand-primary-foreground shadow-sm">
+src\components\Header.tsx:145: <div className="flex h-12 overflow-hidden rounded-xl border border-market-800 bg-market-900 transition focus-within:border-brand-primary focus-within:bg-market-800">
+src\components\Header.tsx:157: className="bg-brand-primary px-5 font-bold text-brand-primary-foreground transition hover:bg-brand-primary-hover"
+src\components\Header.tsx:168: className="ml-auto flex shrink-0 items-center gap-2 rounded-xl border border-market-800 px-3 py-2.5 transition hover:border-brand-primary hover:bg-market-900 md:ml-0"
+src\components\Header.tsx:178: <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-brand-primary px-1.5 text-xs font-black text-brand-primary-foreground">
+src\components\Header.tsx:187: className="flex shrink-0 items-center gap-1.5 rounded-xl border border-lime-400/40 bg-lime-400/10 px-2 py-2.5 text-xs font-bold text-lime-200 transition hover:border-lime-300 hover:bg-lime-400/20 sm:gap-2 sm:px-3 sm:text-sm"
+src\components\Header.tsx:218: className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-market-800 text-slate-200 transition hover:border-brand-primary hover:text-brand-primary"
+src\components\Header.tsx:239: className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-market-800 text-2xl text-white transition hover:border-brand-primary hover:text-brand-primary md:hidden"
+src\components\Header.tsx:267: className={`flex h-full items-center gap-2 border-b-active-nav px-4 text-sm font-bold transition ${
+src\components\Header.tsx:281: className="absolute left-0 top-full z-50 grid max-h-dropdown-height w-dropdown-width grid-cols-category-menu overflow-hidden rounded-b-2xl border border-slate-200 bg-white shadow-xl"
+src\components\Header.tsx:302: className={`flex items-center rounded-xl ${
+src\components\Header.tsx:314: <img src={category.icon_image_url} alt="" className="h-8 w-8 rounded-md object-cover" />
+src\components\Header.tsx:316: <span aria-hidden="true" className="grid h-8 w-8 place-items-center rounded-md bg-lime-100 text-lime-700">
+src\components\Header.tsx:378: className="rounded-full bg-lime-50 px-3 py-2 text-xs font-bold text-lime-800 hover:bg-lime-100"
+src\components\Header.tsx:393: className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-700 hover:bg-lime-50 hover:text-lime-900"
+src\components\Header.tsx:418: className="text-sm font-semibold text-slate-200 transition hover:text-brand-primary"
+src\components\Header.tsx:425: className="text-sm font-semibold text-slate-200 transition hover:text-brand-primary"
+src\components\Header.tsx:432: className="text-sm font-semibold text-slate-200 transition hover:text-brand-primary"
+src\components\Header.tsx:439: className="text-sm font-semibold text-slate-200 transition hover:text-brand-primary"
+src\components\Header.tsx:447: className="ml-auto rounded-lg px-3 py-2 text-sm font-bold text-brand-primary transition hover:bg-slate-900"
+src\components\Header.tsx:464: className="mb-4 flex overflow-hidden rounded-xl border border-slate-700 bg-slate-900 focus-within:border-brand-primary"
+src\components\Header.tsx:493: className="flex items-center justify-between rounded-lg px-3 py-3 text-left text-sm font-bold text-slate-100 hover:bg-slate-900 hover:text-brand-primary"
+src\components\Header.tsx:521: className="flex min-w-0 flex-1 items-center gap-2 rounded-lg px-3 py-3 text-sm font-semibold text-slate-200 hover:bg-slate-900 hover:text-brand-primary"
+src\components\Header.tsx:524: <img src={category.icon_image_url} alt="" className="h-8 w-8 shrink-0 rounded-md object-cover" />
+src\components\Header.tsx:526: <span aria-hidden="true" className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-lime-400/10 text-lime-300">
+src\components\Header.tsx:540: className="rounded-lg px-4 py-3 text-brand-primary"
+src\components\Header.tsx:552: className="block rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-slate-900 hover:text-brand-primary"
+src\components\Header.tsx:574: className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-100 hover:bg-slate-900 hover:text-brand-primary"
+src\components\Header.tsx:582: className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-100 hover:bg-slate-900 hover:text-brand-primary"
+src\components\Header.tsx:590: className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-100 hover:bg-slate-900 hover:text-brand-primary"
+src\components\Header.tsx:598: className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-100 hover:bg-slate-900 hover:text-brand-primary"
+src\components\Header.tsx:606: className="rounded-lg px-3 py-3 text-sm font-bold text-brand-primary hover:bg-slate-900"
+src\components\Header.tsx:614: className="rounded-lg px-3 py-3 text-sm font-bold text-brand-primary hover:bg-slate-900"
+src\components\Header.tsx:622: className="mt-2 flex items-center justify-between rounded-xl bg-brand-primary px-4 py-3 text-sm font-bold text-brand-primary-foreground hover:bg-brand-primary-hover"
+src\components\Header.tsx:625: <span className="rounded-full bg-slate-950 px-2 py-1 text-xs text-brand-primary">
+src\components\PolicyPage.tsx:26: <section className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-amber-950">
+src\components\PolicyPage.tsx:47: <p className="mt-8 rounded-xl border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-600">
+src\components\ProductCard.tsx:50: className="group flex h-full flex-col overflow-hidden transition duration-300 hover:-translate-y-1 hover:border-lime-200 hover:shadow-xl hover:shadow-slate-900/5"
+src\components\ProductCard.tsx:68: className="object-cover transition duration-500 group-hover:scale-105"
+src\components\ProductCard.tsx:75: <Badge variant="solid" className="absolute left-3 top-3 rounded-lg px-2.5 py-1.5 shadow-sm">
+src\components\ProductCard.tsx:81: <Badge variant="neutral" className="absolute right-3 top-3 rounded-lg bg-slate-900/90 px-2.5 py-1.5 text-white">
+src\components\ProductCard.tsx:85: <Badge variant="danger" className="absolute right-3 top-3 rounded-lg px-2.5 py-1.5">
+src\components\ProductCard.tsx:90: <Badge variant="neutral" className="absolute bottom-3 left-3 rounded-lg border border-white/70 bg-white/90 px-2.5 py-1.5 text-slate-700 backdrop-blur">
+src\components\ProductCard.tsx:110: <h3 className="min-h-12 text-base font-extrabold leading-6 text-slate-900 transition group-hover:text-lime-800">
+src\components\ProductCard.tsx:131: <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2.5">
+src\components\ProductCard.tsx:141: className={`h-2 w-2 rounded-full ${
+src\components\ProductDetailClient.tsx:192: <Link href="/" className="transition hover:text-lime-700">Home</Link>
+src\components\ProductDetailClient.tsx:194: <Link href="/search" className="transition hover:text-lime-700">Shop</Link>
+src\components\ProductDetailClient.tsx:196: <Link href={`/shop/${categorySlug(product.category)}`} className="transition hover:text-lime-700">
+src\components\ProductDetailClient.tsx:205: <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-5 shadow-sm sm:p-8">
+src\components\ProductDetailClient.tsx:207: <span className="rounded-full bg-slate-900 px-3 py-1.5 text-xs font-bold text-white">
+src\components\ProductDetailClient.tsx:211: <span className="rounded-full bg-brand-primary px-3 py-1.5 text-xs font-bold text-brand-primary-foreground">
+src\components\ProductDetailClient.tsx:224: className="object-contain p-5 transition duration-500 hover:scale-105 sm:p-10"
+src\components\ProductDetailClient.tsx:228: <div className="absolute bottom-5 right-5 rounded-xl border border-slate-100 bg-white/95 px-3 py-2 text-xs font-bold text-slate-600 shadow-sm">
+src\components\ProductDetailClient.tsx:239: <div key={item.title} className="rounded-2xl border border-slate-200/80 bg-white p-3 text-center sm:p-4">
+src\components\ProductDetailClient.tsx:248: <section className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-sm sm:p-8 lg:p-9">
+src\components\ProductDetailClient.tsx:260: className="mt-4 rounded-2xl border border-amber-100 bg-amber-50/70 p-4"
+src\components\ProductDetailClient.tsx:320: className="rounded-xl bg-brand-primary px-4 py-2.5 text-sm font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:cursor-not-allowed disabled:bg-slate-300"
+src\components\ProductDetailClient.tsx:339: <p role="alert" className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+src\components\ProductDetailClient.tsx:347: className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-bold text-amber-700 transition hover:bg-amber-100"
+src\components\ProductDetailClient.tsx:362: <span className={`rounded-full px-3 py-1 text-xs font-bold ${
+src\components\ProductDetailClient.tsx:369: <div className="mt-7 rounded-2xl bg-slate-50 p-5">
+src\components\ProductDetailClient.tsx:386: <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+src\components\ProductDetailClient.tsx:413: <dl className="mt-3 divide-y divide-slate-100 rounded-2xl border border-slate-200 px-4">
+src\components\ProductDetailClient.tsx:434: <div className="flex h-12 w-fit items-center rounded-xl border border-slate-200 bg-white">
+src\components\ProductDetailClient.tsx:475: className="min-h-12 flex-1 rounded-xl bg-brand-primary px-5 py-3 font-extrabold text-brand-primary-foreground shadow-lg shadow-lime-500/20 transition hover:bg-brand-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
+src\components\ProductDetailClient.tsx:482: <p role="status" aria-live="polite" className="mt-3 rounded-xl bg-emerald-50 p-3 text-sm font-bold text-emerald-700">
+src\components\ProductDetailClient.tsx:487: <Link href="/cart" className="mt-3 flex min-h-12 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 text-sm font-extrabold transition hover:border-lime-300 hover:bg-lime-50 hover:text-lime-800">
+src\components\ProductDetailClient.tsx:506: <section className="mt-8 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-8">
+src\components\ProductDetailClient.tsx:510: <div className="rounded-2xl bg-slate-50 p-4">
+src\components\ProductDetailClient.tsx:514: <div className="rounded-2xl bg-slate-50 p-4">
+src\components\ProductDetailClient.tsx:518: <div className="rounded-2xl bg-slate-50 p-4">
+src\components\ShopCategoryClient.tsx:147: className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm outline-none focus:border-brand-primary focus:ring-2 focus:ring-lime-100"
+src\components\ShopCategoryClient.tsx:163: className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm outline-none focus:border-brand-primary focus:ring-2 focus:ring-lime-100"
+src\components\ShopCategoryClient.tsx:177: className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm outline-none focus:border-brand-primary focus:ring-2 focus:ring-lime-100"
+src\components\ShopCategoryClient.tsx:196: className="min-w-0 rounded-xl border border-slate-200 p-3 text-sm outline-none focus:border-brand-primary"
+src\components\ShopCategoryClient.tsx:205: className="min-w-0 rounded-xl border border-slate-200 p-3 text-sm outline-none focus:border-brand-primary"
+src\components\ShopCategoryClient.tsx:221: className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm outline-none focus:border-brand-primary focus:ring-2 focus:ring-lime-100"
+src\components\ShopCategoryClient.tsx:232: className="w-full rounded-xl border border-lime-200 px-4 py-3 text-sm font-bold text-lime-800 transition hover:bg-lime-50"
+src\components\ShopCategoryClient.tsx:252: className="mt-6 inline-flex rounded-xl bg-brand-primary px-6 py-3 font-bold text-brand-primary-foreground hover:bg-brand-primary-hover"
+src\components\ShopCategoryClient.tsx:280: className="mt-6 inline-flex rounded-xl bg-brand-primary px-5 py-3 font-black text-brand-primary-foreground"
+src\components\ShopCategoryClient.tsx:293: <Link href="/" className="transition hover:text-lime-700">Home</Link>
+src\components\ShopCategoryClient.tsx:295: <Link href="/search" className="transition hover:text-lime-700">Shop</Link>
+src\components\ShopCategoryClient.tsx:301: className="transition hover:text-lime-700"
+src\components\ShopCategoryClient.tsx:315: <span className="inline-flex rounded-full border border-lime-200 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-lime-800">
+src\components\ShopCategoryClient.tsx:338: className="rounded-full border border-lime-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 transition hover:border-lime-400 hover:text-lime-800"
+src\components\ShopCategoryClient.tsx:348: <div className="flex shrink-0 items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+src\components\ShopCategoryClient.tsx:349: <span className="grid h-11 w-11 place-items-center overflow-hidden rounded-xl bg-lime-50 text-xl text-lime-700">
+src\components\ShopCategoryClient.tsx:361: <div className="mt-7 flex max-w-2xl items-center gap-3 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition focus-within:border-lime-300 focus-within:ring-4 focus-within:ring-lime-100">
+src\components\ShopCategoryClient.tsx:374: className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-500 hover:bg-slate-100"
+src\components\ShopCategoryClient.tsx:406: className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold shadow-sm transition hover:border-lime-300 lg:hidden"
+src\components\ShopCategoryClient.tsx:412: <span className="grid h-5 min-w-5 place-items-center rounded-full bg-brand-primary px-1 text-xs text-brand-primary-foreground">
+src\components\ShopCategoryClient.tsx:423: className="max-w-filter-select rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-semibold outline-none focus:border-brand-primary focus:ring-2 focus:ring-lime-100"
+src\components\ShopCategoryClient.tsx:440: <span className="rounded-full bg-lime-50 px-3 py-1.5 text-xs font-bold text-lime-800">{brand}</span>
+src\components\ShopCategoryClient.tsx:443: <span className="rounded-full bg-lime-50 px-3 py-1.5 text-xs font-bold text-lime-800">{model}</span>
+src\components\ShopCategoryClient.tsx:446: <span className="rounded-full bg-lime-50 px-3 py-1.5 text-xs font-bold text-lime-800">{quality}</span>
+src\components\ShopCategoryClient.tsx:449: <span className="rounded-full bg-lime-50 px-3 py-1.5 text-xs font-bold text-lime-800">
+src\components\ShopCategoryClient.tsx:454: <span className="rounded-full bg-lime-50 px-3 py-1.5 text-xs font-bold text-lime-800">
+src\components\ShopCategoryClient.tsx:459: <span className="rounded-full bg-lime-50 px-3 py-1.5 text-xs font-bold text-lime-800">
+src\components\ShopCategoryClient.tsx:474: <aside className="hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:block">
+src\components\ShopCategoryClient.tsx:492: <div className="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
+src\components\ShopCategoryClient.tsx:503: className="mt-6 rounded-xl bg-brand-primary px-6 py-3 font-bold text-brand-primary-foreground transition hover:bg-brand-primary-hover"
+src\components\ShopCategoryClient.tsx:527: <section className="absolute inset-y-0 right-0 flex w-full max-w-sm flex-col bg-white shadow-2xl">
+src\components\ShopCategoryClient.tsx:539: className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 text-xl hover:bg-slate-50"
+src\components\ShopCategoryClient.tsx:553: className="rounded-xl border border-slate-200 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50"
+src\components\ShopCategoryClient.tsx:560: className="rounded-xl bg-brand-primary px-4 py-3 text-sm font-bold text-brand-primary-foreground hover:bg-brand-primary-hover"
+src\components\WhatsAppButton.tsx:19: className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-2xl font-black text-white shadow-lg transition hover:scale-105 hover:bg-green-600"
+
+===== DESIGN SYSTEM RELATED FILES =====
+src\app\admin\layout.tsx
+src\app\globals.css
+src\app\layout.tsx
+src\components\Layout.tsx
+src\components\ProductCard.tsx
+src\components\WhatsAppButton.tsx

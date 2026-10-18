@@ -101,7 +101,7 @@ export default function TrackOrderPage() {
               {loading ? "Checking…" : "Check Order Status"}
             </button>
           </form>
-          {error && <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-red-600">{error}</p>}
+          {error && <p role="alert" className="ui-feedback ui-feedback--error mt-4">{error}</p>}
           {order && (
             <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <p className="text-xs font-black uppercase tracking-eyebrow text-slate-400">Order Status</p>

@@ -57,8 +57,8 @@ Deno.serve(async (request) => {
   if (callerError || !callerData.user) {
     return jsonResponse({ error: "Your admin session is invalid or expired. Sign in again." }, 401);
   }
-  if (callerData.user.app_metadata.role !== "admin") {
-    return jsonResponse({ error: "Only CMS admins can provision retailer access." }, 403);
+  if (!["admin", "store_manager"].includes(String(callerData.user.app_metadata.role))) {
+    return jsonResponse({ error: "Only CMS admins and store managers can provision retailer access." }, 403);
   }
 
   let body: unknown;

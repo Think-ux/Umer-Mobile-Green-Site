@@ -33,18 +33,32 @@ const navigation = [
   },
 ];
 
-function NavigationLinks({ mobile = false }: { mobile?: boolean }) {
+function NavigationLinks({
+  mobile = false,
+  role,
+}: {
+  mobile?: boolean;
+  role: string | null;
+}) {
   const pathname = usePathname();
+  const visibleGroups = navigation
+    .map((group) => ({
+      ...group,
+      items: group.items.filter(
+        (item) => item.href !== "/admin/accounts" || role === "admin",
+      ),
+    }))
+    .filter((group) => group.items.length > 0);
 
   return (
     <nav
       aria-label="CMS navigation"
       className={mobile ? "flex min-w-max gap-5 px-4 pb-3" : "space-y-6"}
     >
-      {navigation.map((group) => (
+      {visibleGroups.map((group) => (
         <div key={group.label} className={mobile ? "shrink-0" : undefined}>
           <p
-            className={`mb-2 px-3 text-[10px] font-black uppercase tracking-[0.2em] ${
+            className={`mb-2 px-3 text-3xs font-black uppercase tracking-eyebrow-wide ${
               mobile ? "text-lime-300" : "text-slate-500"
             }`}
           >
@@ -91,6 +105,7 @@ export default function AdminShell({
   const [authState, setAuthState] = useState<
     "checking" | "ready" | "signed-out" | "not-admin" | "unconfigured"
   >("checking");
+  const [userRole, setUserRole] = useState<string | null>(null);
   const [signingOut, setSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState("");
 
@@ -124,12 +139,16 @@ export default function AdminShell({
     void supabase.auth.getSession().then(({ data, error }) => {
       if (!active) return;
       if (error || !data.session) {
+        setUserRole(null);
         setAuthState("signed-out");
         router.replace("/admin/login");
         return;
       }
+      setUserRole(String(data.session.user.app_metadata.role ?? ""));
       setAuthState(
-        data.session.user.app_metadata.role === "admin" ? "ready" : "not-admin"
+        ["admin", "store_manager"].includes(String(data.session.user.app_metadata.role))
+          ? "ready"
+          : "not-admin"
       );
     });
 
@@ -138,11 +157,15 @@ export default function AdminShell({
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!active) return;
       if (!session) {
+        setUserRole(null);
         setAuthState("signed-out");
         router.replace("/admin/login");
       } else {
+        setUserRole(String(session.user.app_metadata.role ?? ""));
         setAuthState(
-          session.user.app_metadata.role === "admin" ? "ready" : "not-admin"
+          ["admin", "store_manager"].includes(String(session.user.app_metadata.role))
+            ? "ready"
+            : "not-admin"
         );
       }
     });
@@ -167,15 +190,15 @@ export default function AdminShell({
       visibleAuthState === "unconfigured"
         ? "Supabase is not configured. Add the project URL and anon key to .env.local, then restart the development server."
         : visibleAuthState === "not-admin"
-          ? "This account does not have CMS admin access. Ask the project owner to assign the admin app role."
+          ? "This account does not have CMS access. Ask the project owner to assign an admin or store_manager role."
           : visibleAuthState === "signed-out"
             ? "Redirecting to the secure admin sign-in page…"
             : "Checking admin session…";
 
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
-        <section className="max-w-lg rounded-2xl border border-slate-200 bg-white p-7 text-center shadow-sm">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-lime-700">
+        <section className="ui-card max-w-lg p-7 text-center">
+          <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">
             Umer CMS
           </p>
           <h1 className="mt-3 text-xl font-black">
@@ -185,7 +208,7 @@ export default function AdminShell({
                 ? "Access not authorized"
                 : "Secure admin access"}
           </h1>
-          <p role="status" className="mt-3 text-sm leading-6 text-slate-600">
+          <p role="status" className="mt-3 text-sm leading-6 text-content-secondary">
             {message}
           </p>
           {authState === "unconfigured" && (
@@ -201,17 +224,39 @@ export default function AdminShell({
     );
   }
 
+  if (pathname.startsWith("/admin/accounts") && userRole !== "admin") {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
+        <section className="ui-card max-w-lg p-7 text-center">
+          <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">
+            Umer CMS
+          </p>
+          <h1 className="mt-3 text-xl font-black">Admin access required</h1>
+          <p role="status" className="mt-3 text-sm leading-6 text-content-secondary">
+            Customer account records and role invitations are available only to CMS admins.
+          </p>
+          <Link
+            href="/admin"
+            className="mt-5 inline-flex rounded-xl bg-brand-primary px-5 py-3 text-sm font-black text-brand-primary-foreground"
+          >
+            Back to store dashboard
+          </Link>
+        </section>
+      </main>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col bg-slate-950 p-5 text-white md:flex">
         <Link href="/admin" className="border-b border-white/10 px-3 pb-5">
-          <p className="text-[10px] font-black uppercase tracking-[0.24em] text-lime-300">
+          <p className="text-3xs font-black uppercase tracking-eyebrow-display text-lime-300">
             Store management
           </p>
           <span className="mt-1 block text-xl font-black">UMER CMS</span>
         </Link>
         <div className="mt-7 flex-1 overflow-y-auto">
-          <NavigationLinks />
+          <NavigationLinks role={userRole} />
         </div>
         <div className="mt-5 rounded-2xl border border-amber-300/20 bg-amber-300/10 p-3 text-xs leading-5 text-amber-100 shadow-inner shadow-amber-900/20">
           {status === "ready"
@@ -241,11 +286,11 @@ export default function AdminShell({
             </button>
           </div>
           <div className="mt-3 overflow-x-auto">
-            <NavigationLinks mobile />
+            <NavigationLinks mobile role={userRole} />
           </div>
         </header>
         <div className="hidden h-12 items-center justify-between border-b border-slate-200 bg-white px-8 md:flex">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
+          <p className="text-xs font-bold uppercase tracking-eyebrow-wide text-slate-500">
             Umer Mobile Parts <span className="mx-2 text-lime-700">/</span> CMS
           </p>
           <div className="flex items-center gap-5">
@@ -268,7 +313,7 @@ export default function AdminShell({
         {signOutError && (
           <p
             role="alert"
-            className="border-b border-red-200 bg-red-50 px-4 py-2 text-sm text-red-700 md:px-8"
+            className="ui-feedback ui-feedback--error rounded-none border-x-0 border-t-0 px-4 py-2 md:px-8"
           >
             {signOutError}
           </p>

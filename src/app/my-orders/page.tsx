@@ -74,7 +74,7 @@ export default function MyOrdersPage() {
               {loading ? "Searching…" : "Find Order"}
             </button>
           </form>
-          {error && <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-600">{error}</p>}
+          {error && <p role="alert" className="ui-feedback ui-feedback--error mt-4 font-medium">{error}</p>}
           {searched && !loading && !error && !order && (
             <p className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-slate-600">No order matched those details.</p>
           )}

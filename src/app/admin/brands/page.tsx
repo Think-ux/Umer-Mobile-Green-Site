@@ -120,8 +120,8 @@ export default function AdminBrandsPage() {
         <p className="text-xs font-black uppercase tracking-eyebrow-wide text-lime-700">Catalog</p>
         <h1 className="mt-2 text-3xl font-black tracking-tight">Brands</h1>
         <p className="mt-2 text-sm text-slate-500">Manage brands displayed in the storefront’s Shop by Brand section.</p>
-        {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
-        {notice && <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{notice}</p>}
+        {error && <p role="alert" className="ui-feedback ui-feedback--error mt-5">{error}</p>}
+        {notice && <p role="status" className="ui-feedback ui-feedback--success mt-5">{notice}</p>}
         <form onSubmit={addBrand} className="mt-6 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 sm:flex-row sm:items-end">
           <label className="flex-1 text-sm font-bold text-slate-700">
             Brand name

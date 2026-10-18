@@ -225,8 +225,8 @@ export default function AdminBannersPage() {
           </button>
         </div>
 
-        {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
-        {notice && <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{notice}</p>}
+        {error && <p role="alert" className="ui-feedback ui-feedback--error mt-5">{error}</p>}
+        {notice && <p role="status" className="ui-feedback ui-feedback--success mt-5">{notice}</p>}
 
         {formOpen && (
           <form onSubmit={saveBanner} className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">

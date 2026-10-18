@@ -820,7 +820,7 @@ function CheckoutForm() {
             </div>
 
             {error && (
-              <div role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-semibold text-red-700">
+              <div role="alert" className="ui-feedback ui-feedback--error mt-5 font-semibold">
                 {error}
               </div>
             )}

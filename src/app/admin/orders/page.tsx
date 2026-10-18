@@ -207,7 +207,7 @@ export default function OrdersPage() {
           </label>
         </div>
 
-        {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</p>}
+        {error && <p role="alert" className="ui-feedback ui-feedback--error mt-5">{error}</p>}
         {loading ? (
           <p role="status" className="mt-6 rounded-xl bg-slate-50 p-5 text-sm text-slate-500">Loading shared orders…</p>
         ) : visibleOrders.length === 0 ? (

@@ -174,8 +174,8 @@ export default function AdminContentPage() {
           description="Manage the key messages and sections customers see on your storefront."
         />
 
-        {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
-        {notice && <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{notice}</p>}
+        {error && <p role="alert" className="ui-feedback ui-feedback--error mt-5">{error}</p>}
+        {notice && <p role="status" className="ui-feedback ui-feedback--success mt-5">{notice}</p>}
 
         <form onSubmit={saveContent} className="mt-6 grid gap-6 xl:grid-cols-admin-content">
           <div className="space-y-6">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type Account = {
@@ -40,6 +40,10 @@ export default function AdminAccountsPage() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState<"admin" | "store_manager">("store_manager");
+  const [inviteBusy, setInviteBusy] = useState(false);
+  const [inviteNotice, setInviteNotice] = useState("");
 
   const loadAccounts = useCallback(async (requestedPage: number, requestedSource: AccountSource) => {
     setLoading(true);
@@ -85,6 +89,47 @@ export default function AdminAccountsPage() {
     );
   }, [accounts, search]);
 
+  async function inviteCmsUser(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setInviteBusy(true);
+    setError("");
+    setInviteNotice("");
+
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      setError("Supabase is not configured. No admin invitation was sent.");
+      setInviteBusy(false);
+      return;
+    }
+
+    const email = inviteEmail.trim().toLowerCase();
+    const { data, error: inviteError } = await supabase.functions.invoke<{
+      status: string;
+      role: "admin" | "store_manager";
+    }>(
+      "invite-cms-user",
+      { body: { email, role: inviteRole } },
+    );
+    if (inviteError) {
+      setError(`Could not send the CMS invitation: ${inviteError.message}`);
+      setInviteBusy(false);
+      return;
+    }
+    if (data?.status !== "invited" || data.role !== inviteRole) {
+      setError("The CMS invitation could not be confirmed. No success was reported.");
+      setInviteBusy(false);
+      return;
+    }
+
+    setInviteEmail("");
+    setInviteNotice(
+      `A ${inviteRole === "admin" ? "CMS admin" : "store manager"} setup invitation has been sent to ${email}.`,
+    );
+    setSource("registered");
+    await loadAccounts(1, "registered");
+    setInviteBusy(false);
+  }
+
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
@@ -94,7 +139,50 @@ export default function AdminAccountsPage() {
           View registered Supabase accounts, retailer applications, and guest checkout contacts. Guest checkout does not create a login, and browsing without signing in or ordering creates no account record.
         </p>
 
-        {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+        <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+          <h2 className="text-lg font-black">Create account</h2>
+          <p className="mt-1 text-sm leading-6 text-slate-500">
+            Create a CMS admin or store manager account by sending a secure setup link. The recipient sets their own password from the email.
+          </p>
+          {inviteNotice && <p role="status" className="ui-feedback ui-feedback--success mt-4">{inviteNotice}</p>}
+          <form onSubmit={inviteCmsUser} className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
+            <label className="block flex-1 text-sm font-bold text-slate-700">
+              Email
+              <input
+                required
+                type="email"
+                autoComplete="email"
+                maxLength={254}
+                value={inviteEmail}
+                onChange={(event) => setInviteEmail(event.target.value)}
+                className="ui-field mt-2"
+              />
+            </label>
+            <label className="block text-sm font-bold text-slate-700">
+              Role
+              <select
+                value={inviteRole}
+                onChange={(event) => setInviteRole(event.target.value as "admin" | "store_manager")}
+                className="ui-field mt-2"
+              >
+                <option value="store_manager">Store manager</option>
+                <option value="admin">CMS admin</option>
+              </select>
+            </label>
+            <button
+              type="submit"
+              disabled={inviteBusy}
+              className="ui-button-primary disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {inviteBusy ? "Sending invitation…" : "Send setup invitation"}
+            </button>
+          </form>
+          <p className="mt-3 text-xs leading-5 text-slate-500">
+            The first CMS admin must be created and assigned the admin role by the project owner in Supabase. Managers cannot view customer account records or invite users.
+          </p>
+        </section>
+
+        {error && <p role="alert" className="ui-feedback ui-feedback--error mt-5">{error}</p>}
         <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Account records">
           {sources.map((option) => (
             <button
@@ -170,9 +258,10 @@ export default function AdminAccountsPage() {
                     <td className="px-5 py-4">
                       <span className={`rounded-full px-2.5 py-1 text-xs font-bold capitalize ${
                         account.role === "admin" ? "bg-violet-100 text-violet-800" :
+                        account.role === "store_manager" ? "bg-blue-100 text-blue-800" :
                         account.role === "retailer" ? "bg-lime-100 text-lime-900" :
                         "bg-slate-100 text-slate-700"
-                      }`}>{account.role}</span>
+                      }`}>{account.role === "store_manager" ? "Store Manager" : account.role}</span>
                     </td>
                     <td className="max-w-xs px-5 py-4 text-slate-600">
                       <span className="font-bold">{account.status}</span>

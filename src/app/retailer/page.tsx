@@ -23,12 +23,12 @@ export default function RetailerPage() {
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <section className="relative overflow-hidden bg-slate-950 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(198,255,0,0.2),transparent_28%),radial-gradient(circle_at_bottom_left,_rgba(198,255,0,0.12),transparent_20%)]" />
+        <div className="retailer-hero-glow absolute inset-0" />
 
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="grid items-center gap-10 lg:grid-cols-retailer-hero">
             <div className="max-w-3xl">
-              <div className="inline-flex rounded-full border border-lime-400/40 bg-lime-400/10 px-3 py-1.5 text-sm font-black uppercase tracking-[0.18em] text-lime-300">
+              <div className="inline-flex rounded-full border border-lime-400/40 bg-lime-400/10 px-3 py-1.5 text-sm font-black uppercase tracking-eyebrow text-lime-300">
                 Umer Wholesale
               </div>
 
@@ -59,7 +59,7 @@ export default function RetailerPage() {
               </div>
             </div>
 
-            <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-lime-950/20 backdrop-blur-sm">
+            <div className="rounded-hero border border-white/10 bg-white/5 p-6 shadow-2xl shadow-lime-950/20 backdrop-blur-sm">
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                   <p className="text-sm text-slate-300">Pricing</p>
@@ -88,7 +88,7 @@ export default function RetailerPage() {
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="text-center">
-          <p className="text-sm font-black uppercase tracking-[0.2em] text-lime-700">
+          <p className="text-sm font-black uppercase tracking-eyebrow-wide text-lime-700">
             Retailer applications
           </p>
           <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
@@ -111,7 +111,7 @@ export default function RetailerPage() {
       <section className="bg-white py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
-            <p className="text-sm font-black uppercase tracking-[0.2em] text-lime-700">
+            <p className="text-sm font-black uppercase tracking-eyebrow-wide text-lime-700">
               How it works
             </p>
             <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
@@ -135,7 +135,7 @@ export default function RetailerPage() {
         <div className="rounded-3xl bg-gradient-to-r from-lime-500 to-lime-600 px-6 py-10 text-white shadow-xl shadow-lime-500/25 sm:px-10">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-sm font-black uppercase tracking-[0.2em] text-lime-100">
+              <p className="text-sm font-black uppercase tracking-eyebrow-wide text-lime-100">
                 Grow your business
               </p>
               <h2 className="mt-3 text-3xl font-black sm:text-4xl">

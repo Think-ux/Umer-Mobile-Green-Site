@@ -139,6 +139,18 @@
   --color-error: var(--error);
   --color-warning: var(--warning);
   --color-info: var(--info);
+  --color-success-surface: var(--success-surface);
+  --color-success-border: var(--success-border);
+  --color-success-strong: var(--success-strong);
+  --color-warning-surface: var(--warning-surface);
+  --color-warning-border: var(--warning-border);
+  --color-warning-strong: var(--warning-strong);
+  --color-error-surface: var(--error-surface);
+  --color-error-border: var(--error-border);
+  --color-error-strong: var(--error-strong);
+  --color-info-surface: var(--info-surface);
+  --color-info-border: var(--info-border);
+  --color-info-strong: var(--info-strong);
 
   --text-xs: var(--type-xs);
   --text-xs--line-height: var(--leading-xs);
@@ -208,6 +220,7 @@
   --tracking-eyebrow-prominent: var(--letter-spacing-eyebrow-prominent);
   --tracking-eyebrow-display: var(--letter-spacing-eyebrow-display);
   --tracking-eyebrow-strong: var(--letter-spacing-eyebrow-strong);
+  --tracking-eyebrow-tight: var(--letter-spacing-eyebrow-tight);
 
   --leading-display: var(--line-height-display);
   --aspect-banner-mobile: var(--ratio-banner-mobile);
@@ -227,6 +240,7 @@
   --radius-2xl: var(--ds-radius-2xl);
   --radius-3xl: var(--ds-radius-3xl);
   --radius-card: var(--ds-radius-card);
+  --radius-hero: var(--ds-radius-hero);
 
   --shadow-xs: var(--ds-shadow-xs);
   --shadow-sm: var(--ds-shadow-sm);
@@ -307,6 +321,18 @@
   --error: var(--color-red-600);
   --warning: var(--color-amber-600);
   --info: var(--color-blue-600);
+  --success-surface: var(--color-green-50);
+  --success-border: var(--color-green-200);
+  --success-strong: var(--color-green-800);
+  --warning-surface: var(--color-amber-50);
+  --warning-border: var(--color-amber-200);
+  --warning-strong: var(--color-amber-900);
+  --error-surface: var(--color-red-50);
+  --error-border: var(--color-red-200);
+  --error-strong: var(--color-red-700);
+  --info-surface: var(--color-blue-50);
+  --info-border: var(--color-blue-200);
+  --info-strong: var(--color-blue-800);
   --border: #e5e7eb;
   --font-family-sans: Inter, ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -336,6 +362,7 @@
   --ds-radius-2xl: 1rem;
   --ds-radius-3xl: 1.5rem;
   --ds-radius-card: 2rem;
+  --ds-radius-hero: 1.75rem;
   --ds-radius-full: 9999px;
   --border-active-nav: 3px;
   --position-hero: 68% center;
@@ -400,6 +427,7 @@
   --letter-spacing-eyebrow-prominent: 0.22em;
   --letter-spacing-eyebrow-display: 0.24em;
   --letter-spacing-eyebrow-strong: 0.25em;
+  --letter-spacing-eyebrow-tight: 0.14em;
   --letter-spacing-heading: -0.035em;
   --line-height-display: 0.98;
   --line-height-page-heading: 1.15;
@@ -411,6 +439,11 @@
   --focus-outline-offset: 3px;
   --outline-ring-width: 3px;
   --outline-ring-opacity: 15%;
+  --component-control-height: 2.75rem;
+  --component-control-radius: var(--ds-radius-xl);
+  --component-card-radius: var(--ds-radius-2xl);
+  --component-card-shadow: var(--ds-shadow-sm);
+  --market-hero-glow: color-mix(in srgb, var(--brand-primary) 18%, transparent);
   --banner-overlay-strong: color-mix(in srgb, var(--foreground) 78%, transparent);
   --banner-overlay-soft: color-mix(in srgb, var(--foreground) 8%, transparent);
 
@@ -469,6 +502,18 @@ html[data-theme="dark"] {
   --text-secondary: #aab5ac;
   --border: #303a32;
   --canvas-muted: #111713;
+  --success-surface: color-mix(in srgb, var(--color-green-900) 48%, var(--surface));
+  --success-border: color-mix(in srgb, var(--color-green-500) 45%, var(--border));
+  --success-strong: var(--color-green-200);
+  --warning-surface: color-mix(in srgb, var(--color-amber-900) 42%, var(--surface));
+  --warning-border: color-mix(in srgb, var(--color-amber-500) 45%, var(--border));
+  --warning-strong: var(--color-amber-200);
+  --error-surface: color-mix(in srgb, var(--color-red-900) 42%, var(--surface));
+  --error-border: color-mix(in srgb, var(--color-red-500) 45%, var(--border));
+  --error-strong: var(--color-red-200);
+  --info-surface: color-mix(in srgb, var(--color-blue-900) 42%, var(--surface));
+  --info-border: color-mix(in srgb, var(--color-blue-500) 45%, var(--border));
+  --info-strong: var(--color-blue-200);
 }
 
 * {
@@ -628,11 +673,46 @@ textarea {
   }
 
   .retailer-hero-glow {
-    background-image: radial-gradient(
-      circle at top right,
-      color-mix(in srgb, var(--brand-primary) 28%, transparent),
-      transparent 35%
-    );
+    background-image:
+      radial-gradient(circle at top right, color-mix(in srgb, var(--brand-primary) 20%, transparent), transparent 28%),
+      radial-gradient(circle at bottom left, color-mix(in srgb, var(--brand-primary) 12%, transparent), transparent 20%);
+  }
+
+  .ui-market-hero {
+    background-image:
+      radial-gradient(circle at top right, var(--market-hero-glow), transparent 28%),
+      linear-gradient(135deg, var(--market-black) 0%, var(--market-dark) 48%, var(--market-black) 100%);
+  }
+
+  .ui-feedback {
+    border: 1px solid transparent;
+    border-radius: var(--component-control-radius);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--type-sm);
+  }
+
+  .ui-feedback--success {
+    border-color: var(--success-border);
+    background: var(--success-surface);
+    color: var(--success-strong);
+  }
+
+  .ui-feedback--warning {
+    border-color: var(--warning-border);
+    background: var(--warning-surface);
+    color: var(--warning-strong);
+  }
+
+  .ui-feedback--error {
+    border-color: var(--error-border);
+    background: var(--error-surface);
+    color: var(--error-strong);
+  }
+
+  .ui-feedback--info {
+    border-color: var(--info-border);
+    background: var(--info-surface);
+    color: var(--info-strong);
   }
 
   .banner-slide-background {
@@ -646,20 +726,20 @@ textarea {
 
   .ui-card {
     border: 1px solid var(--border);
-    border-radius: var(--ds-radius-2xl);
+    border-radius: var(--component-card-radius);
     background: var(--surface);
-    box-shadow: var(--ds-shadow-sm);
+    box-shadow: var(--component-card-shadow);
   }
 
   .ui-button,
   .ui-button-primary {
     display: inline-flex;
-    min-height: 2.75rem;
+    min-height: var(--component-control-height);
     align-items: center;
     justify-content: center;
     gap: var(--space-2);
     border: 1px solid transparent;
-    border-radius: var(--ds-radius-xl);
+    border-radius: var(--component-control-radius);
     padding: var(--space-3) var(--space-5);
     font: inherit;
     font-size: var(--type-sm);
@@ -775,9 +855,9 @@ textarea {
 
   .ui-input {
     width: 100%;
-    min-height: 2.75rem;
+    min-height: var(--component-control-height);
     border: 1px solid var(--border);
-    border-radius: var(--ds-radius-xl);
+    border-radius: var(--component-control-radius);
     background: var(--surface);
     padding: var(--space-3) var(--space-4);
     color: var(--foreground);

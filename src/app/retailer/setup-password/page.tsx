@@ -5,10 +5,16 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
+type VerificationType = "invite" | "recovery";
+
 export default function RetailerSetupPasswordPage() {
   const router = useRouter();
   const [ready, setReady] = useState(false);
   const [accountRole, setAccountRole] = useState("");
+  const [pendingVerification, setPendingVerification] = useState<{
+    tokenHash: string;
+    type: VerificationType;
+  } | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [password, setPassword] = useState("");
@@ -20,11 +26,42 @@ export default function RetailerSetupPasswordPage() {
     if (!supabase) return;
 
     let active = true;
-    const verifySession = async () => {
+    const initialize = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
+      const tokenHash = params.get("token_hash");
+      const type = params.get("type");
+
+      const linkError = params.get("error_description")
+        ?? new URLSearchParams(window.location.hash.slice(1)).get("error_description");
+      if (linkError) {
+        setError(`The password link could not be verified: ${linkError}`);
+        return;
+      }
+
+      if (tokenHash) {
+        if (type !== "invite" && type !== "recovery") {
+          setError("This password setup link has an invalid type. Request a new password reset link.");
+          return;
+        }
+        setPendingVerification({ tokenHash, type });
+        return;
+      }
+
+      if (code) {
+        const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+        if (!active) return;
+        if (exchangeError) {
+          setError(`Could not verify the password link: ${exchangeError.message}`);
+          return;
+        }
+        window.history.replaceState(null, "", window.location.pathname);
+      }
+
       const { data, error: sessionError } = await supabase.auth.getSession();
       if (!active) return;
       if (sessionError) {
-        setError(`Could not verify the invitation: ${sessionError.message}`);
+        setError(`Could not verify the password link: ${sessionError.message}`);
         return;
       }
       if (!data.session) {
@@ -34,33 +71,39 @@ export default function RetailerSetupPasswordPage() {
       setAccountRole(String(data.session.user.app_metadata.role ?? ""));
       setReady(true);
     };
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!active || !session) return;
-      setAccountRole(String(session.user.app_metadata.role ?? ""));
-      setReady(true);
-    });
-
-    const code = new URLSearchParams(window.location.search).get("code");
-    const initialize = async () => {
-      if (code) {
-        const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
-        if (!active) return;
-        window.history.replaceState(null, "", window.location.pathname);
-        if (exchangeError) {
-          setError(`Could not verify the invitation: ${exchangeError.message}`);
-          return;
-        }
-      }
-      await verifySession();
-    };
     void initialize();
 
     return () => {
       active = false;
-      subscription.unsubscribe();
     };
   }, []);
+
+  async function verifyPasswordLink() {
+    if (!pendingVerification) return;
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) {
+      setError("Password setup is unavailable because the backend is not configured.");
+      return;
+    }
+
+    setBusy(true);
+    setError("");
+    const { data, error: verifyError } = await supabase.auth.verifyOtp({
+      token_hash: pendingVerification.tokenHash,
+      type: pendingVerification.type,
+    });
+    if (verifyError || !data.user) {
+      setError(`Could not verify the password link: ${verifyError?.message ?? "Supabase returned no account."}`);
+      setBusy(false);
+      return;
+    }
+
+    setAccountRole(String(data.user.app_metadata.role ?? ""));
+    setReady(true);
+    setPendingVerification(null);
+    window.history.replaceState(null, "", window.location.pathname);
+    setBusy(false);
+  }
 
   async function setAccountPassword(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -96,6 +139,7 @@ export default function RetailerSetupPasswordPage() {
     }
     router.replace(
       accountRole === "admin"
+        || accountRole === "store_manager"
         ? "/admin"
         : accountRole === "retailer"
           ? "/retailer/dashboard"
@@ -103,7 +147,7 @@ export default function RetailerSetupPasswordPage() {
     );
   }
 
-  const isAdmin = accountRole === "admin";
+  const isAdmin = accountRole === "admin" || accountRole === "store_manager";
 
   return (
     <main className="grid min-h-page-content place-items-center bg-slate-50 px-4 py-12">
@@ -117,9 +161,24 @@ export default function RetailerSetupPasswordPage() {
             ? "Choose a new password for your secure CMS admin account."
             : "Choose a private password for your account. The store cannot see it."}
         </p>
-        {!configured && <p role="alert" className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">Retailer account setup is unavailable because the backend is not configured.</p>}
+        {!configured && <p role="alert" className="ui-feedback ui-feedback--warning mt-5">Retailer account setup is unavailable because the backend is not configured.</p>}
         {configured && !ready && !error && <p role="status" className="mt-5 text-sm text-slate-500">Verifying your secure setup link…</p>}
-        {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</p>}
+        {error && <p role="alert" className="ui-feedback ui-feedback--error mt-5">{error}</p>}
+        {pendingVerification && !ready && (
+          <div className="mt-6">
+            <p className="text-sm leading-6 text-slate-600">
+              Your secure link is ready. Continue to verify it and choose a password.
+            </p>
+            <button
+              type="button"
+              onClick={() => void verifyPasswordLink()}
+              disabled={busy}
+              className="ui-button-primary mt-4 w-full disabled:cursor-not-allowed disabled:bg-slate-300"
+            >
+              {busy ? "Verifying link…" : "Verify link and continue"}
+            </button>
+          </div>
+        )}
         {ready && (
           <form onSubmit={setAccountPassword} className="mt-6 space-y-4">
             <label className="block text-sm font-bold text-slate-700">

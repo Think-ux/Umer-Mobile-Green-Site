@@ -105,7 +105,7 @@ export default function CustomerCarePage() {
           </a>}
 
           {!hasContactMethod && (
-            <div role="status" className="rounded-2xl border border-amber-200 bg-amber-50 p-6 text-sm leading-6 text-amber-950 md:col-span-3">
+            <div role="status" className="ui-feedback ui-feedback--warning p-6 leading-6 md:col-span-3">
               Store contact methods have not been configured yet. Please use the FAQs and policy pages for information.
             </div>
           )}

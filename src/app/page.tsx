@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import heroImage from "./images/hero.png";
 import { useCatalog } from "@/components/CatalogProvider";
 import ProductCard from "@/components/ProductCard";
-import { Card } from "@/components/ui";
+import { Button, Card, Input } from "@/components/ui";
 import { categorySlug } from "@/data/store";
 
 const categoryIcons: Record<string, string> = {
@@ -75,6 +75,47 @@ export default function HomePage() {
                 Explore Categories
               </a>
             </div>
+
+            <form
+              action="/search"
+              method="GET"
+              role="search"
+              className="hero-enter hero-enter-delay-3 mt-8 max-w-xl rounded-2xl border border-white/15 bg-white/8 p-2 backdrop-blur-sm shadow-xl shadow-black/10"
+            >
+              <label htmlFor="hero-product-search" className="sr-only">
+                Search mobile spare parts
+              </label>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                <Input
+                  id="hero-product-search"
+                  type="search"
+                  name="q"
+                  placeholder="Search by brand, part, or model..."
+                  className="min-w-0 flex-1 rounded-xl border border-transparent bg-white/95 px-4 py-3 text-sm text-slate-900 outline-none placeholder:text-slate-500 focus:border-lime-400 focus:ring-2 focus:ring-lime-300/40"
+                />
+                <Button
+                  type="submit"
+                  className="shrink-0 px-4"
+                >
+                  Search Parts
+                </Button>
+              </div>
+            </form>
+
+            {brands.length > 0 && (
+              <div className="hero-enter hero-enter-delay-3 mt-4 flex flex-wrap items-center gap-2 text-xs text-white/75">
+                <span className="font-semibold uppercase tracking-eyebrow text-white/60">Popular:</span>
+                {brands.slice(0, 4).map((brand) => (
+                  <Link
+                    key={brand}
+                    href={`/search?q=${encodeURIComponent(brand)}`}
+                    className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1.5 transition hover:border-lime-300 hover:text-lime-300"
+                  >
+                    {brand}
+                  </Link>
+                ))}
+              </div>
+            )}
 
             {homepage.hero_highlights.filter((highlight) => highlight.trim()).length > 0 && (
               <ul className="hero-enter hero-enter-delay-3 mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/80">

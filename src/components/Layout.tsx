@@ -59,7 +59,7 @@ function RouteLayout({
           {(status === "error" || status === "unconfigured") && (
             <p
               role="status"
-              className="bg-amber-50 px-4 py-2 text-center text-xs font-semibold text-amber-900"
+              className="ui-feedback ui-feedback--warning text-center text-xs font-semibold"
             >
               {status === "unconfigured"
                 ? "The live catalog is unavailable because Supabase is not configured."

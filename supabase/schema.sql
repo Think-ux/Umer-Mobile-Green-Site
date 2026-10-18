@@ -50,6 +50,21 @@ create trigger enforce_category_hierarchy
 before insert or update of parent_id on public.categories
 for each row execute function public.enforce_category_hierarchy();
 
+create or replace function public.can_manage_store()
+returns boolean
+language sql
+stable
+set search_path = public, pg_temp
+as $$
+  select coalesce(
+    (auth.jwt() -> 'app_metadata' ->> 'role') in ('admin', 'store_manager'),
+    false
+  );
+$$;
+
+revoke all on function public.can_manage_store() from public, anon;
+grant execute on function public.can_manage_store() to authenticated;
+
 create or replace function public.move_category(
   p_category_id bigint,
   p_direction integer
@@ -66,8 +81,8 @@ declare
   v_category_id bigint;
   v_parent_id bigint;
 begin
-  if (auth.jwt() -> 'app_metadata' ->> 'role') is distinct from 'admin' then
-    raise exception 'Only admins can reorder categories.';
+  if not public.can_manage_store() then
+    raise exception 'Only admins and store managers can reorder categories.';
   end if;
   if p_direction not in (-1, 1) then
     raise exception 'Choose a valid category direction.';
@@ -890,10 +905,11 @@ grant select, update on public.customer_orders to authenticated;
 grant select on public.customer_order_items, public.customer_order_status_history to authenticated;
 
 drop policy if exists "Admins manage customer orders" on public.customer_orders;
-create policy "Admins manage customer orders"
+drop policy if exists "Store team manage customer orders" on public.customer_orders;
+create policy "Store team manage customer orders"
   on public.customer_orders for all to authenticated
-  using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
-  with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+  using (public.can_manage_store())
+  with check (public.can_manage_store());
 
 drop policy if exists "Admins manage newsletter subscribers" on public.newsletter_subscribers;
 create policy "Admins manage newsletter subscribers"
@@ -902,14 +918,16 @@ create policy "Admins manage newsletter subscribers"
   with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
 drop policy if exists "Admins read customer order items" on public.customer_order_items;
-create policy "Admins read customer order items"
+drop policy if exists "Store team read customer order items" on public.customer_order_items;
+create policy "Store team read customer order items"
   on public.customer_order_items for select to authenticated
-  using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+  using (public.can_manage_store());
 
 drop policy if exists "Admins read customer order status history" on public.customer_order_status_history;
-create policy "Admins read customer order status history"
+drop policy if exists "Store team read customer order status history" on public.customer_order_status_history;
+create policy "Store team read customer order status history"
   on public.customer_order_status_history for select to authenticated
-  using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+  using (public.can_manage_store());
 
 drop policy if exists "Public submits retailer applications" on public.retailer_applications;
 create policy "Public submits retailer applications"
@@ -923,10 +941,11 @@ create policy "Public submits retailer applications"
   );
 
 drop policy if exists "Admins manage retailer applications" on public.retailer_applications;
-create policy "Admins manage retailer applications"
+drop policy if exists "Store team manage retailer applications" on public.retailer_applications;
+create policy "Store team manage retailer applications"
   on public.retailer_applications for all to authenticated
-  using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
-  with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+  using (public.can_manage_store())
+  with check (public.can_manage_store());
 
 drop policy if exists "Public reads approved reviews" on public.reviews;
 create policy "Public reads approved reviews"
@@ -940,10 +959,11 @@ create policy "Authenticated submits pending reviews"
   with check (auth.uid() is not null and status = 'pending');
 
 drop policy if exists "Admins manage reviews" on public.reviews;
-create policy "Admins manage reviews"
+drop policy if exists "Store team manage reviews" on public.reviews;
+create policy "Store team manage reviews"
   on public.reviews for all to authenticated
-  using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
-  with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+  using (public.can_manage_store())
+  with check (public.can_manage_store());
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values (
@@ -964,31 +984,34 @@ create policy "Public reads product images"
   using (bucket_id = 'product-images');
 
 drop policy if exists "Admins upload product images" on storage.objects;
-create policy "Admins upload product images"
+drop policy if exists "Store team upload product images" on storage.objects;
+create policy "Store team upload product images"
   on storage.objects for insert to authenticated
   with check (
     bucket_id = 'product-images'
-    and (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    and public.can_manage_store()
   );
 
 drop policy if exists "Admins update product images" on storage.objects;
-create policy "Admins update product images"
+drop policy if exists "Store team update product images" on storage.objects;
+create policy "Store team update product images"
   on storage.objects for update to authenticated
   using (
     bucket_id = 'product-images'
-    and (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    and public.can_manage_store()
   )
   with check (
     bucket_id = 'product-images'
-    and (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    and public.can_manage_store()
   );
 
 drop policy if exists "Admins delete product images" on storage.objects;
-create policy "Admins delete product images"
+drop policy if exists "Store team delete product images" on storage.objects;
+create policy "Store team delete product images"
   on storage.objects for delete to authenticated
   using (
     bucket_id = 'product-images'
-    and (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    and public.can_manage_store()
   );
 
 drop policy if exists "Public reads enabled categories" on public.categories;
@@ -997,10 +1020,11 @@ create policy "Public reads enabled categories"
   using (is_enabled);
 
 drop policy if exists "Admins manage categories" on public.categories;
-create policy "Admins manage categories"
+drop policy if exists "Store team manage categories" on public.categories;
+create policy "Store team manage categories"
   on public.categories for all to authenticated
-  using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
-  with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+  using (public.can_manage_store())
+  with check (public.can_manage_store());
 
 drop policy if exists "Public reads enabled brands" on public.brands;
 create policy "Public reads enabled brands"
@@ -1008,10 +1032,11 @@ create policy "Public reads enabled brands"
   using (is_enabled);
 
 drop policy if exists "Admins manage brands" on public.brands;
-create policy "Admins manage brands"
+drop policy if exists "Store team manage brands" on public.brands;
+create policy "Store team manage brands"
   on public.brands for all to authenticated
-  using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
-  with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+  using (public.can_manage_store())
+  with check (public.can_manage_store());
 
 drop policy if exists "Public reads published products" on public.products;
 create policy "Public reads published products"
@@ -1019,10 +1044,11 @@ create policy "Public reads published products"
   using (is_published);
 
 drop policy if exists "Admins manage products" on public.products;
-create policy "Admins manage products"
+drop policy if exists "Store team manage products" on public.products;
+create policy "Store team manage products"
   on public.products for all to authenticated
-  using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
-  with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+  using (public.can_manage_store())
+  with check (public.can_manage_store());
 
 drop policy if exists "Public reads homepage content" on public.site_content;
 create policy "Public reads homepage content"
@@ -1030,10 +1056,11 @@ create policy "Public reads homepage content"
   using (content_key = 'homepage');
 
 drop policy if exists "Admins manage site content" on public.site_content;
-create policy "Admins manage site content"
+drop policy if exists "Store team manage site content" on public.site_content;
+create policy "Store team manage site content"
   on public.site_content for all to authenticated
-  using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
-  with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+  using (public.can_manage_store())
+  with check (public.can_manage_store());
 
 drop policy if exists "Public reads published banners" on public.banners;
 create policy "Public reads published banners"
@@ -1041,10 +1068,11 @@ create policy "Public reads published banners"
   using (status = 'published');
 
 drop policy if exists "Admins manage banners" on public.banners;
-create policy "Admins manage banners"
+drop policy if exists "Store team manage banners" on public.banners;
+create policy "Store team manage banners"
   on public.banners for all to authenticated
-  using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
-  with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+  using (public.can_manage_store())
+  with check (public.can_manage_store());
 
 drop policy if exists "Public reads site settings" on public.site_settings;
 create policy "Public reads site settings"
@@ -1052,10 +1080,11 @@ create policy "Public reads site settings"
   using (true);
 
 drop policy if exists "Admins manage site settings" on public.site_settings;
-create policy "Admins manage site settings"
+drop policy if exists "Store team manage site settings" on public.site_settings;
+create policy "Store team manage site settings"
   on public.site_settings for all to authenticated
-  using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
-  with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+  using (public.can_manage_store())
+  with check (public.can_manage_store());
 
 insert into public.categories (name, icon, count, sort_order)
 values
@@ -1158,11 +1187,12 @@ create policy "Applicants upload retailer documents"
   );
 
 drop policy if exists "Admins read retailer documents" on storage.objects;
-create policy "Admins read retailer documents"
+drop policy if exists "Store team read retailer documents" on storage.objects;
+create policy "Store team read retailer documents"
   on storage.objects for select to authenticated
   using (
     bucket_id = 'retailer-documents'
-    and (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
+    and public.can_manage_store()
   );
 
 drop policy if exists "Admins delete retailer documents" on storage.objects;

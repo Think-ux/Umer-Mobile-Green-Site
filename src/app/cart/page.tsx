@@ -61,7 +61,7 @@ export default function CartPage() {
         </div>
 
         {isRetailer && (
-          <p role="status" className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-900">
+          <p role="status" className="ui-feedback ui-feedback--warning mb-6 leading-6">
             Retailer discounts are shown on product pages, but discounted wholesale checkout is not enabled yet. This cart and any customer checkout use the listed retail prices; contact the store for approved wholesale ordering.
           </p>
         )}

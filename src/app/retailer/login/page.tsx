@@ -73,7 +73,7 @@ export default function RetailerLogin() {
         <Link href="/retailer" className="inline-flex items-center text-sm font-bold text-lime-800 hover:text-lime-900">
           ← Retailer information
         </Link>
-        <div className="mt-5 rounded-[28px] border border-slate-200 bg-white p-7 shadow-lg shadow-slate-200/60 sm:p-9">
+        <div className="mt-5 rounded-hero border border-slate-200 bg-white p-7 shadow-lg shadow-slate-200/60 sm:p-9">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-primary text-xl font-black text-brand-primary-foreground">
             U
           </div>
@@ -83,12 +83,12 @@ export default function RetailerLogin() {
           </p>
 
           {!configured && (
-            <p role="status" className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
+            <p role="status" className="ui-feedback ui-feedback--warning mt-5 leading-6">
               The retailer account service is not configured. Contact the store for assistance.
             </p>
           )}
-          {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</p>}
-          {notice && <p role="status" className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">{notice}</p>}
+          {error && <p role="alert" className="ui-feedback ui-feedback--error mt-5">{error}</p>}
+          {notice && <p role="status" className="ui-feedback ui-feedback--success mt-5">{notice}</p>}
 
           <form onSubmit={signIn} className="mt-6 space-y-4">
             <label className="block text-sm font-bold text-slate-700">

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCatalog } from "@/components/CatalogProvider";
 import { categorySlug } from "@/data/store";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { Button, Input } from "@/components/ui";
 
 const linkClass = "text-sm text-slate-400 transition hover:text-brand-primary";
 
@@ -120,7 +121,7 @@ export default function Footer() {
           </p>
           <form onSubmit={subscribe} className="mt-4 space-y-3">
             <label htmlFor="footer-newsletter-email" className="sr-only">Email address</label>
-            <input
+            <Input
               id="footer-newsletter-email"
               type="email"
               required
@@ -129,19 +130,19 @@ export default function Footer() {
               value={newsletterEmail}
               onChange={(event) => setNewsletterEmail(event.target.value)}
               placeholder="you@example.com"
-              className="w-full rounded-xl border border-market-700 bg-market-900 px-3 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-brand-primary"
+              className="border-market-700 bg-market-900 px-3 py-3 text-sm text-white placeholder:text-slate-500 focus:border-brand-primary"
             />
             <label className="flex items-start gap-2 text-xs leading-5 text-slate-400">
               <input type="checkbox" required className="mt-1 accent-lime-400" />
               <span>I agree to receive email updates from Umer Mobile Parts.</span>
             </label>
-            <button
+            <Button
               type="submit"
               disabled={newsletterBusy}
-              className="w-full rounded-xl bg-brand-primary px-4 py-3 text-sm font-black text-brand-primary-foreground transition hover:bg-brand-primary-hover disabled:opacity-60"
+              className="w-full px-4 disabled:opacity-60"
             >
               {newsletterBusy ? "Subscribing…" : "Subscribe"}
-            </button>
+            </Button>
           </form>
           {newsletterError && <p role="alert" className="mt-3 text-xs text-red-300">{newsletterError}</p>}
           {newsletterNotice && <p role="status" className="mt-3 text-xs text-emerald-300">{newsletterNotice}</p>}

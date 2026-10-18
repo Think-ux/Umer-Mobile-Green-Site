@@ -336,7 +336,7 @@ export default function ProductDetailClient({ product }: Props) {
               </div>
             </form>
             {reviewError && (
-              <p role="alert" className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+              <p role="alert" className="ui-feedback ui-feedback--error mt-3">
                 {reviewError}
               </p>
             )}
@@ -479,7 +479,7 @@ export default function ProductDetailClient({ product }: Props) {
               </div>
 
               {added && (
-                <p role="status" aria-live="polite" className="mt-3 rounded-xl bg-emerald-50 p-3 text-sm font-bold text-emerald-700">
+                <p role="status" aria-live="polite" className="ui-feedback ui-feedback--success mt-3 font-bold">
                   Product added to your cart successfully.
                 </p>
               )}

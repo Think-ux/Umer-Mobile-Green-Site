@@ -1,7 +1,9 @@
 ﻿"use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useCatalog } from "@/components/CatalogProvider";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 const modules = [
   {
@@ -53,10 +55,38 @@ const modules = [
     href: "/admin/retailers",
     icon: "◇",
   },
+  {
+    group: "Store",
+    title: "Create account",
+    description: "Invite a CMS admin or store manager and send them a secure account setup link.",
+    href: "/admin/accounts",
+    icon: "+",
+  },
 ];
 
 export default function AdminPage() {
   const { products, categories, banners, status } = useCatalog();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [roleError, setRoleError] = useState("");
+
+  useEffect(() => {
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) return;
+
+    let active = true;
+    void supabase.auth.getSession().then(({ data, error }) => {
+      if (!active) return;
+      if (error) {
+        setRoleError(`Could not verify account permissions: ${error.message}`);
+        return;
+      }
+      setIsAdmin(data.session?.user.app_metadata.role === "admin");
+    });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const connectionLabel =
     status === "ready"
@@ -76,10 +106,10 @@ export default function AdminPage() {
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
-        <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-slate-950 text-white shadow-2xl shadow-slate-900/15">
-          <div className="flex flex-col gap-6 bg-[radial-gradient(circle_at_top_right,_rgba(198,255,0,0.18),transparent_28%),linear-gradient(135deg,#0b0d0b_0%,#111712_35%,#0b0d0b_100%)] p-6 sm:p-8 lg:flex-row lg:items-end lg:justify-between">
+        <div className="overflow-hidden rounded-hero border border-slate-200 bg-slate-950 text-white shadow-2xl shadow-slate-900/15">
+          <div className="ui-market-hero flex flex-col gap-6 p-6 sm:p-8 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
-              <p className="text-xs font-black uppercase tracking-[0.24em] text-lime-300">
+              <p className="text-xs font-black uppercase tracking-eyebrow-prominent text-lime-300">
                 Store control centre
               </p>
               <h1 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
@@ -93,7 +123,7 @@ export default function AdminPage() {
 
             <div className="flex flex-wrap items-center gap-3">
               <span
-                className={`inline-flex rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[0.14em] ${
+                className={`inline-flex rounded-full border px-4 py-2 text-xs font-black uppercase tracking-eyebrow-tight ${
                   status === "ready"
                     ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-200"
                     : "border-amber-300/30 bg-amber-300/10 text-amber-200"
@@ -111,19 +141,25 @@ export default function AdminPage() {
           </div>
         </div>
 
+        {roleError && (
+          <p role="alert" className="ui-feedback ui-feedback--error mt-5">
+            {roleError}
+          </p>
+        )}
+
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
           {quickStats.map(({ label, value, tone }) => (
             <section
               key={label}
               className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
             >
-              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">
+              <p className="text-2xs font-black uppercase tracking-eyebrow text-slate-500">
                 Live catalog
               </p>
               <div className="mt-4 flex items-end justify-between gap-3">
                 <span className="text-3xl font-black text-slate-900">{value}</span>
                 <span
-                  className={`rounded-full px-2 py-1 text-[10px] font-black uppercase tracking-[0.14em] ${
+                  className={`rounded-full px-2 py-1 text-3xs font-black uppercase tracking-eyebrow-tight ${
                     tone === "lime"
                       ? "bg-lime-100 text-lime-700"
                       : tone === "amber"
@@ -142,7 +178,7 @@ export default function AdminPage() {
         <section className="mt-8">
           <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-[11px] font-black uppercase tracking-[0.2em] text-lime-700">
+              <p className="text-2xs font-black uppercase tracking-eyebrow-wide text-lime-700">
                 Website management
               </p>
               <h2 className="mt-1 text-xl font-black">Storefront updates</h2>
@@ -163,7 +199,7 @@ export default function AdminPage() {
         <section className="mt-8">
           <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-[11px] font-black uppercase tracking-[0.2em] text-lime-700">
+              <p className="text-2xs font-black uppercase tracking-eyebrow-wide text-lime-700">
                 Store operations
               </p>
               <h2 className="mt-1 text-xl font-black">Daily workflows</h2>
@@ -174,14 +210,18 @@ export default function AdminPage() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {modules
-              .filter((module) => module.group === "Store")
+              .filter(
+                (module) =>
+                  module.group === "Store" &&
+                  (module.href !== "/admin/accounts" || isAdmin),
+              )
               .map((module) => (
                 <ModuleCard key={module.href} {...module} />
               ))}
           </div>
         </section>
 
-        <div className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm leading-6 text-amber-900 shadow-sm">
+        <div className="ui-feedback ui-feedback--warning mt-8 p-5 leading-6 shadow-sm">
           Customer orders and registered accounts are shared through Supabase and
           can be managed from this CMS. Retailer applications and customer
           product reviews are managed here as well.
